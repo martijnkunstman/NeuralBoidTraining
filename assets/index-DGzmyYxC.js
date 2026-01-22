@@ -2,54 +2,54 @@
     (function() {
         const $ = document.createElement("link").relList;
         if ($ && $.supports && $.supports("modulepreload")) return;
-        for (const G of document.querySelectorAll('link[rel="modulepreload"]'))V(G);
-        new MutationObserver((G)=>{
-            for (const X of G)if (X.type === "childList") for (const Z of X.addedNodes)Z.tagName === "LINK" && Z.rel === "modulepreload" && V(Z);
+        for (const z of document.querySelectorAll('link[rel="modulepreload"]'))V(z);
+        new MutationObserver((z)=>{
+            for (const j of z)if (j.type === "childList") for (const H of j.addedNodes)H.tagName === "LINK" && H.rel === "modulepreload" && V(H);
         }).observe(document, {
             childList: !0,
             subtree: !0
         });
-        function P(G) {
-            const X = {};
-            return G.integrity && (X.integrity = G.integrity), G.referrerPolicy && (X.referrerPolicy = G.referrerPolicy), G.crossOrigin === "use-credentials" ? X.credentials = "include" : G.crossOrigin === "anonymous" ? X.credentials = "omit" : X.credentials = "same-origin", X;
+        function N(z) {
+            const j = {};
+            return z.integrity && (j.integrity = z.integrity), z.referrerPolicy && (j.referrerPolicy = z.referrerPolicy), z.crossOrigin === "use-credentials" ? j.credentials = "include" : z.crossOrigin === "anonymous" ? j.credentials = "omit" : j.credentials = "same-origin", j;
         }
-        function V(G) {
-            if (G.ep) return;
-            G.ep = !0;
-            const X = P(G);
-            fetch(G.href, X);
+        function V(z) {
+            if (z.ep) return;
+            z.ep = !0;
+            const j = N(z);
+            fetch(z.href, j);
         }
     })();
     const ro = "modulepreload", ao = function(At, $) {
         return new URL(At, $).href;
-    }, un = {}, oo = function($, P, V) {
-        let G = Promise.resolve();
-        if (P && P.length > 0) {
-            const Z = document.getElementsByTagName("link"), H = document.querySelector("meta[property=csp-nonce]"), bt = H?.nonce || H?.getAttribute("nonce");
-            G = Promise.allSettled(P.map((ht)=>{
-                if (ht = ao(ht, V), ht in un) return;
-                un[ht] = !0;
-                const Tt = ht.endsWith(".css"), kt = Tt ? '[rel="stylesheet"]' : "";
-                if (!!V) for(let ot = Z.length - 1; ot >= 0; ot--){
-                    const mt = Z[ot];
-                    if (mt.href === ht && (!Tt || mt.rel === "stylesheet")) return;
+    }, un = {}, oo = function($, N, V) {
+        let z = Promise.resolve();
+        if (N && N.length > 0) {
+            const H = document.getElementsByTagName("link"), Y = document.querySelector("meta[property=csp-nonce]"), bt = Y?.nonce || Y?.getAttribute("nonce");
+            z = Promise.allSettled(N.map((ot)=>{
+                if (ot = ao(ot, V), ot in un) return;
+                un[ot] = !0;
+                const Tt = ot.endsWith(".css"), kt = Tt ? '[rel="stylesheet"]' : "";
+                if (!!V) for(let ut = H.length - 1; ut >= 0; ut--){
+                    const lt = H[ut];
+                    if (lt.href === ot && (!Tt || lt.rel === "stylesheet")) return;
                 }
-                else if (document.querySelector(`link[href="${ht}"]${kt}`)) return;
-                const ut = document.createElement("link");
-                if (ut.rel = Tt ? "stylesheet" : ro, Tt || (ut.as = "script"), ut.crossOrigin = "", ut.href = ht, bt && ut.setAttribute("nonce", bt), document.head.appendChild(ut), Tt) return new Promise((ot, mt)=>{
-                    ut.addEventListener("load", ot), ut.addEventListener("error", ()=>mt(new Error(`Unable to preload CSS for ${ht}`)));
+                else if (document.querySelector(`link[href="${ot}"]${kt}`)) return;
+                const ht = document.createElement("link");
+                if (ht.rel = Tt ? "stylesheet" : ro, Tt || (ht.as = "script"), ht.crossOrigin = "", ht.href = ot, bt && ht.setAttribute("nonce", bt), document.head.appendChild(ht), Tt) return new Promise((ut, lt)=>{
+                    ht.addEventListener("load", ut), ht.addEventListener("error", ()=>lt(new Error(`Unable to preload CSS for ${ot}`)));
                 });
             }));
         }
-        function X(Z) {
-            const H = new Event("vite:preloadError", {
+        function j(H) {
+            const Y = new Event("vite:preloadError", {
                 cancelable: !0
             });
-            if (H.payload = Z, window.dispatchEvent(H), !H.defaultPrevented) throw Z;
+            if (Y.payload = H, window.dispatchEvent(Y), !Y.defaultPrevented) throw H;
         }
-        return G.then((Z)=>{
-            for (const H of Z || [])H.status === "rejected" && X(H.reason);
-            return $().catch(X);
+        return z.then((H)=>{
+            for (const Y of H || [])Y.status === "rejected" && j(Y.reason);
+            return $().catch(j);
         });
     };
     class uo {
@@ -69,11 +69,11 @@
         random() {
             return this.seed = (this.a * this.seed + this.c) % this.m, this.seed / this.m;
         }
-        randomRange($, P) {
-            return $ + this.random() * (P - $);
+        randomRange($, N) {
+            return $ + this.random() * (N - $);
         }
-        randomInt($, P) {
-            return Math.floor(this.randomRange($, P + 1));
+        randomInt($, N) {
+            return Math.floor(this.randomRange($, N + 1));
         }
     }
     var Li = typeof globalThis < "u" ? globalThis : typeof window < "u" ? window : typeof global < "u" ? global : typeof self < "u" ? self : {};
@@ -84,32 +84,32 @@
         exports: {}
     };
     (function(At, $) {
-        (function(P, V) {
+        (function(N, V) {
             V($);
-        })(Li, function(P) {
+        })(Li, function(N) {
             function V(c) {
                 return Math.max(0, c);
             }
-            function G(c, t) {
+            function z(c, t) {
                 return c <= 0 ? 0 : t;
             }
-            var X = Object.freeze({
+            var j = Object.freeze({
                 __proto__: null,
                 activate: V,
-                measure: G
+                measure: z
             });
-            function Z(c) {
+            function H(c) {
                 return 1 / (1 + Math.exp(-c));
             }
-            function H(c, t) {
+            function Y(c, t) {
                 return c * (1 - c) * t;
             }
             var bt = Object.freeze({
                 __proto__: null,
-                activate: Z,
-                measure: H
+                activate: H,
+                measure: Y
             });
-            function ht(c) {
+            function ot(c) {
                 return Math.tanh(c);
             }
             function Tt(c, t) {
@@ -117,25 +117,25 @@
             }
             var kt = Object.freeze({
                 __proto__: null,
-                activate: ht,
+                activate: ot,
                 measure: Tt
             });
-            function lt(c) {
+            function ct(c) {
                 return c > 0 ? c : .01 * c;
             }
-            function ut(c, t) {
+            function ht(c, t) {
                 return c > 0 ? t : .01 * t;
             }
-            var ot = Object.freeze({
+            var ut = Object.freeze({
                 __proto__: null,
-                activate: lt,
-                measure: ut
-            }), mt = Object.freeze({
+                activate: ct,
+                measure: ht
+            }), lt = Object.freeze({
                 __proto__: null,
-                relu: X,
+                relu: j,
                 sigmoid: bt,
                 tanh: kt,
-                leakyRelu: ot
+                leakyRelu: ut
             }), vt = typeof globalThis < "u" ? globalThis : typeof window < "u" ? window : typeof Li < "u" ? Li : typeof self < "u" ? self : {};
             function Kt(c, t, e) {
                 return e = {
@@ -914,17 +914,17 @@
                                     }
                                     var k = {
                                         beforeExpr: !0
-                                    }, O = {
+                                    }, C = {
                                         startsExpr: !0
                                     }, M = {};
                                     function x(s, f) {
                                         return f === void 0 && (f = {}), f.keyword = s, M[s] = new T(s, f);
                                     }
                                     var g = {
-                                        num: new T("num", O),
-                                        regexp: new T("regexp", O),
-                                        string: new T("string", O),
-                                        name: new T("name", O),
+                                        num: new T("num", C),
+                                        regexp: new T("regexp", C),
+                                        string: new T("string", C),
+                                        name: new T("name", C),
                                         eof: new T("eof"),
                                         bracketL: new T("[", {
                                             beforeExpr: !0,
@@ -950,7 +950,7 @@
                                         template: new T("template"),
                                         invalidTemplate: new T("invalidTemplate"),
                                         ellipsis: new T("...", k),
-                                        backQuote: new T("`", O),
+                                        backQuote: new T("`", C),
                                         dollarBraceL: new T("${", {
                                             beforeExpr: !0,
                                             startsExpr: !0
@@ -1008,7 +1008,7 @@
                                         _for: x("for", {
                                             isLoop: !0
                                         }),
-                                        _function: x("function", O),
+                                        _function: x("function", C),
                                         _if: x("if"),
                                         _return: x("return", k),
                                         _switch: x("switch"),
@@ -1024,15 +1024,15 @@
                                             beforeExpr: !0,
                                             startsExpr: !0
                                         }),
-                                        _this: x("this", O),
-                                        _super: x("super", O),
-                                        _class: x("class", O),
+                                        _this: x("this", C),
+                                        _super: x("super", C),
+                                        _class: x("class", C),
                                         _extends: x("extends", k),
                                         _export: x("export"),
-                                        _import: x("import", O),
-                                        _null: x("null", O),
-                                        _true: x("true", O),
-                                        _false: x("false", O),
+                                        _import: x("import", C),
+                                        _null: x("null", C),
+                                        _true: x("true", C),
+                                        _false: x("false", C),
                                         _in: x("in", {
                                             beforeExpr: !0,
                                             binop: 7
@@ -1057,10 +1057,10 @@
                                             startsExpr: !0
                                         })
                                     }, I = /\r\n?|\n|\u2028|\u2029/, A = new RegExp(I.source, "g");
-                                    function z(s, f) {
+                                    function P(s, f) {
                                         return s === 10 || s === 13 || !f && (s === 8232 || s === 8233);
                                     }
-                                    var C = /[\u1680\u2000-\u200a\u202f\u205f\u3000\ufeff]/, R = /(?:\s|\/\/.*|\/\*[^]*?\*\/)*/g, K = Object.prototype, U = K.hasOwnProperty, it = K.toString;
+                                    var O = /[\u1680\u2000-\u200a\u202f\u205f\u3000\ufeff]/, R = /(?:\s|\/\/.*|\/\*[^]*?\*\/)*/g, G = Object.prototype, U = G.hasOwnProperty, it = G.toString;
                                     function q(s, f) {
                                         return U.call(s, f);
                                     }
@@ -1076,7 +1076,7 @@
                                     rt.prototype.offset = function(f) {
                                         return new rt(this.line, this.column + f);
                                     };
-                                    var gt = function(f, S, L) {
+                                    var mt = function(f, S, L) {
                                         this.start = S, this.end = L, f.sourceFile !== null && (this.source = f.sourceFile);
                                     };
                                     function tt(s, f) {
@@ -1106,7 +1106,7 @@
                                         directSourceFile: null,
                                         preserveParens: !1
                                     };
-                                    function Y(s) {
+                                    function J(s) {
                                         var f = {};
                                         for(var S in et)f[S] = s && q(s, S) ? s[S] : et[S];
                                         if (f.ecmaVersion >= 2015 && (f.ecmaVersion -= 2009), f.allowReserved == null && (f.allowReserved = f.ecmaVersion < 5), B(f.onToken)) {
@@ -1118,33 +1118,33 @@
                                         return B(f.onComment) && (f.onComment = yt(f, f.onComment)), f;
                                     }
                                     function yt(s, f) {
-                                        return function(S, L, D, F, N, W) {
+                                        return function(S, L, D, F, K, W) {
                                             var nt = {
                                                 type: S ? "Block" : "Line",
                                                 value: L,
                                                 start: D,
                                                 end: F
                                             };
-                                            s.locations && (nt.loc = new gt(this, N, W)), s.ranges && (nt.range = [
+                                            s.locations && (nt.loc = new mt(this, K, W)), s.ranges && (nt.range = [
                                                 D,
                                                 F
                                             ]), f.push(nt);
                                         };
                                     }
-                                    var Pt = 1, ct = 2, _t = Pt | ct, Dt = 4, Ut = 8, Gt = 16, at = 32, Lt = 64, Nt = 128;
+                                    var Pt = 1, pt = 2, _t = Pt | pt, Dt = 4, Ut = 8, Gt = 16, at = 32, Lt = 64, Nt = 128;
                                     function Ht(s, f) {
-                                        return ct | (s ? Dt : 0) | (f ? Ut : 0);
+                                        return pt | (s ? Dt : 0) | (f ? Ut : 0);
                                     }
-                                    var ie = 0, Si = 1, se = 2, Ks = 3, Gs = 4, Us = 5, Ot = function(f, S, L) {
-                                        this.options = f = Y(f), this.sourceFile = f.sourceFile, this.keywords = st(l[f.ecmaVersion >= 6 ? 6 : f.sourceType === "module" ? "5module" : 5]);
+                                    var ie = 0, Si = 1, se = 2, Ks = 3, Gs = 4, Us = 5, Ct = function(f, S, L) {
+                                        this.options = f = J(f), this.sourceFile = f.sourceFile, this.keywords = st(l[f.ecmaVersion >= 6 ? 6 : f.sourceType === "module" ? "5module" : 5]);
                                         var D = "";
                                         if (f.allowReserved !== !0) {
                                             for(var F = f.ecmaVersion; !(D = p[F]); F--);
                                             f.sourceType === "module" && (D += " await");
                                         }
                                         this.reservedWords = st(D);
-                                        var N = (D ? D + " " : "") + p.strict;
-                                        this.reservedWordsStrict = st(N), this.reservedWordsStrictBind = st(N + " " + p.strictBind), this.input = String(S), this.containsEsc = !1, L ? (this.pos = L, this.lineStart = this.input.lastIndexOf(`
+                                        var K = (D ? D + " " : "") + p.strict;
+                                        this.reservedWordsStrict = st(K), this.reservedWordsStrictBind = st(K + " " + p.strictBind), this.input = String(S), this.containsEsc = !1, L ? (this.pos = L, this.lineStart = this.input.lastIndexOf(`
 `, L - 1) + 1, this.curLine = this.input.slice(0, this.lineStart).split(I).length) : (this.pos = this.lineStart = 0, this.curLine = 1), this.type = g.eof, this.value = null, this.start = this.end = this.pos, this.startLoc = this.endLoc = this.curPosition(), this.lastTokEndLoc = this.lastTokStartLoc = null, this.lastTokStart = this.lastTokEnd = this.pos, this.context = this.initialContext(), this.exprAllowed = !0, this.inModule = f.sourceType === "module", this.strict = this.inModule || this.strictDirective(this.pos), this.potentialArrowAt = -1, this.yieldPos = this.awaitPos = this.awaitIdentPos = 0, this.labels = [], this.undefinedExports = {}, this.pos === 0 && f.allowHashBang && this.input.slice(0, 2) === "#!" && this.skipLineComment(2), this.scopeStack = [], this.enterScope(Pt), this.regexpState = null;
                                     }, me = {
                                         inFunction: {
@@ -1166,11 +1166,11 @@
                                             configurable: !0
                                         }
                                     };
-                                    Ot.prototype.parse = function() {
+                                    Ct.prototype.parse = function() {
                                         var f = this.options.program || this.startNode();
                                         return this.nextToken(), this.parseTopLevel(f);
                                     }, me.inFunction.get = function() {
-                                        return (this.currentVarScope().flags & ct) > 0;
+                                        return (this.currentVarScope().flags & pt) > 0;
                                     }, me.inGenerator.get = function() {
                                         return (this.currentVarScope().flags & Ut) > 0;
                                     }, me.inAsync.get = function() {
@@ -1181,21 +1181,21 @@
                                         return (this.currentThisScope().flags & Nt) > 0;
                                     }, me.treatFunctionsAsVar.get = function() {
                                         return this.treatFunctionsAsVarInScope(this.currentScope());
-                                    }, Ot.prototype.inNonArrowFunction = function() {
-                                        return (this.currentThisScope().flags & ct) > 0;
-                                    }, Ot.extend = function() {
+                                    }, Ct.prototype.inNonArrowFunction = function() {
+                                        return (this.currentThisScope().flags & pt) > 0;
+                                    }, Ct.extend = function() {
                                         for(var f = [], S = arguments.length; S--;)f[S] = arguments[S];
                                         for(var L = this, D = 0; D < f.length; D++)L = f[D](L);
                                         return L;
-                                    }, Ot.parse = function(f, S) {
+                                    }, Ct.parse = function(f, S) {
                                         return new this(S, f).parse();
-                                    }, Ot.parseExpressionAt = function(f, S, L) {
+                                    }, Ct.parseExpressionAt = function(f, S, L) {
                                         var D = new this(L, f, S);
                                         return D.nextToken(), D.parseExpression();
-                                    }, Ot.tokenizer = function(f, S) {
+                                    }, Ct.tokenizer = function(f, S) {
                                         return new this(S, f);
-                                    }, Object.defineProperties(Ot.prototype, me);
-                                    var Bt = Ot.prototype, Va = /^(?:'((?:\\.|[^'])*?)'|"((?:\\.|[^"])*?)")/;
+                                    }, Object.defineProperties(Ct.prototype, me);
+                                    var Bt = Ct.prototype, Va = /^(?:'((?:\\.|[^'])*?)'|"((?:\\.|[^"])*?)")/;
                                     Bt.strictDirective = function(s) {
                                         for(;;){
                                             R.lastIndex = s, s += R.exec(this.input)[0].length;
@@ -1225,7 +1225,7 @@
                                     }, Bt.unexpected = function(s) {
                                         this.raise(s ?? this.start, "Unexpected token");
                                     };
-                                    function qe() {
+                                    function Ze() {
                                         this.shorthandAssign = this.trailingComma = this.parenthesizedAssign = this.parenthesizedBind = this.doubleProto = -1;
                                     }
                                     Bt.checkPatternErrors = function(s, f) {
@@ -1244,8 +1244,8 @@
                                     }, Bt.isSimpleAssignTarget = function(s) {
                                         return s.type === "ParenthesizedExpression" ? this.isSimpleAssignTarget(s.expression) : s.type === "Identifier" || s.type === "MemberExpression";
                                     };
-                                    var pt = Ot.prototype;
-                                    pt.parseTopLevel = function(s) {
+                                    var ft = Ct.prototype;
+                                    ft.parseTopLevel = function(s) {
                                         var f = {};
                                         for(s.body || (s.body = []); this.type !== g.eof;){
                                             var S = this.parseStatement(null, !0, f);
@@ -1262,7 +1262,7 @@
                                     }, Ka = {
                                         kind: "switch"
                                     };
-                                    pt.isLet = function(s) {
+                                    ft.isLet = function(s) {
                                         if (this.options.ecmaVersion < 6 || !this.isContextual("let")) return !1;
                                         R.lastIndex = this.pos;
                                         var f = R.exec(this.input), S = this.pos + f[0].length, L = this.input.charCodeAt(S);
@@ -1275,12 +1275,12 @@
                                             if (!a.test(F)) return !0;
                                         }
                                         return !1;
-                                    }, pt.isAsyncFunction = function() {
+                                    }, ft.isAsyncFunction = function() {
                                         if (this.options.ecmaVersion < 8 || !this.isContextual("async")) return !1;
                                         R.lastIndex = this.pos;
                                         var s = R.exec(this.input), f = this.pos + s[0].length;
                                         return !I.test(this.input.slice(this.pos, f)) && this.input.slice(f, f + 8) === "function" && (f + 8 === this.input.length || !y(this.input.charAt(f + 8)));
-                                    }, pt.parseStatement = function(s, f, S) {
+                                    }, ft.parseStatement = function(s, f, S) {
                                         var L = this.type, D = this.startNode(), F;
                                         switch(this.isLet(s) && (L = g._var, F = "let"), L){
                                             case g._break:
@@ -1321,7 +1321,7 @@
                                             case g._import:
                                                 if (this.options.ecmaVersion > 10 && L === g._import) {
                                                     R.lastIndex = this.pos;
-                                                    var N = R.exec(this.input), W = this.pos + N[0].length, nt = this.input.charCodeAt(W);
+                                                    var K = R.exec(this.input), W = this.pos + K[0].length, nt = this.input.charCodeAt(W);
                                                     if (nt === 40) return this.parseExpressionStatement(D, this.parseExpression());
                                                 }
                                                 return this.options.allowImportExportEverywhere || (f || this.raise(this.start, "'import' and 'export' may only appear at the top level"), this.inModule || this.raise(this.start, "'import' and 'export' may appear only with 'sourceType: module'")), L === g._import ? this.parseImport(D) : this.parseExport(D, S);
@@ -1330,7 +1330,7 @@
                                                 var Et = this.value, jt = this.parseExpression();
                                                 return L === g.name && jt.type === "Identifier" && this.eat(g.colon) ? this.parseLabeledStatement(D, Et, jt, s) : this.parseExpressionStatement(D, jt);
                                         }
-                                    }, pt.parseBreakContinueStatement = function(s, f) {
+                                    }, ft.parseBreakContinueStatement = function(s, f) {
                                         var S = f === "break";
                                         this.next(), this.eat(g.semi) || this.insertSemicolon() ? s.label = null : this.type !== g.name ? this.unexpected() : (s.label = this.parseIdent(), this.semicolon());
                                         for(var L = 0; L < this.labels.length; ++L){
@@ -1338,11 +1338,11 @@
                                             if ((s.label == null || D.name === s.label.name) && (D.kind != null && (S || D.kind === "loop") || s.label && S)) break;
                                         }
                                         return L === this.labels.length && this.raise(s.start, "Unsyntactic " + f), this.finishNode(s, S ? "BreakStatement" : "ContinueStatement");
-                                    }, pt.parseDebuggerStatement = function(s) {
+                                    }, ft.parseDebuggerStatement = function(s) {
                                         return this.next(), this.semicolon(), this.finishNode(s, "DebuggerStatement");
-                                    }, pt.parseDoStatement = function(s) {
+                                    }, ft.parseDoStatement = function(s) {
                                         return this.next(), this.labels.push(vi), s.body = this.parseStatement("do"), this.labels.pop(), this.expect(g._while), s.test = this.parseParenExpression(), this.options.ecmaVersion >= 6 ? this.eat(g.semi) : this.semicolon(), this.finishNode(s, "DoWhileStatement");
-                                    }, pt.parseForStatement = function(s) {
+                                    }, ft.parseForStatement = function(s) {
                                         this.next();
                                         var f = this.options.ecmaVersion >= 9 && (this.inAsync || !this.inFunction && this.options.allowAwaitOutsideFunction) && this.eatContextual("await") ? this.lastTokStart : -1;
                                         if (this.labels.push(vi), this.enterScope(0), this.expect(g.parenL), this.type === g.semi) return f > -1 && this.unexpected(f), this.parseFor(s, null);
@@ -1351,26 +1351,26 @@
                                             var L = this.startNode(), D = S ? "let" : this.value;
                                             return this.next(), this.parseVar(L, !0, D), this.finishNode(L, "VariableDeclaration"), (this.type === g._in || this.options.ecmaVersion >= 6 && this.isContextual("of")) && L.declarations.length === 1 ? (this.options.ecmaVersion >= 9 && (this.type === g._in ? f > -1 && this.unexpected(f) : s.await = f > -1), this.parseForIn(s, L)) : (f > -1 && this.unexpected(f), this.parseFor(s, L));
                                         }
-                                        var F = new qe, N = this.parseExpression(!0, F);
-                                        return this.type === g._in || this.options.ecmaVersion >= 6 && this.isContextual("of") ? (this.options.ecmaVersion >= 9 && (this.type === g._in ? f > -1 && this.unexpected(f) : s.await = f > -1), this.toAssignable(N, !1, F), this.checkLVal(N), this.parseForIn(s, N)) : (this.checkExpressionErrors(F, !0), f > -1 && this.unexpected(f), this.parseFor(s, N));
-                                    }, pt.parseFunctionStatement = function(s, f, S) {
-                                        return this.next(), this.parseFunction(s, Pe | (S ? 0 : _i), !1, f);
-                                    }, pt.parseIfStatement = function(s) {
+                                        var F = new Ze, K = this.parseExpression(!0, F);
+                                        return this.type === g._in || this.options.ecmaVersion >= 6 && this.isContextual("of") ? (this.options.ecmaVersion >= 9 && (this.type === g._in ? f > -1 && this.unexpected(f) : s.await = f > -1), this.toAssignable(K, !1, F), this.checkLVal(K), this.parseForIn(s, K)) : (this.checkExpressionErrors(F, !0), f > -1 && this.unexpected(f), this.parseFor(s, K));
+                                    }, ft.parseFunctionStatement = function(s, f, S) {
+                                        return this.next(), this.parseFunction(s, ze | (S ? 0 : _i), !1, f);
+                                    }, ft.parseIfStatement = function(s) {
                                         return this.next(), s.test = this.parseParenExpression(), s.consequent = this.parseStatement("if"), s.alternate = this.eat(g._else) ? this.parseStatement("if") : null, this.finishNode(s, "IfStatement");
-                                    }, pt.parseReturnStatement = function(s) {
+                                    }, ft.parseReturnStatement = function(s) {
                                         return !this.inFunction && !this.options.allowReturnOutsideFunction && this.raise(this.start, "'return' outside of function"), this.next(), this.eat(g.semi) || this.insertSemicolon() ? s.argument = null : (s.argument = this.parseExpression(), this.semicolon()), this.finishNode(s, "ReturnStatement");
-                                    }, pt.parseSwitchStatement = function(s) {
+                                    }, ft.parseSwitchStatement = function(s) {
                                         this.next(), s.discriminant = this.parseParenExpression(), s.cases = [], this.expect(g.braceL), this.labels.push(Ka), this.enterScope(0);
                                         for(var f, S = !1; this.type !== g.braceR;)if (this.type === g._case || this.type === g._default) {
                                             var L = this.type === g._case;
                                             f && this.finishNode(f, "SwitchCase"), s.cases.push(f = this.startNode()), f.consequent = [], this.next(), L ? f.test = this.parseExpression() : (S && this.raiseRecoverable(this.lastTokStart, "Multiple default clauses"), S = !0, f.test = null), this.expect(g.colon);
                                         } else f || this.unexpected(), f.consequent.push(this.parseStatement(null));
                                         return this.exitScope(), f && this.finishNode(f, "SwitchCase"), this.next(), this.labels.pop(), this.finishNode(s, "SwitchStatement");
-                                    }, pt.parseThrowStatement = function(s) {
+                                    }, ft.parseThrowStatement = function(s) {
                                         return this.next(), I.test(this.input.slice(this.lastTokEnd, this.start)) && this.raise(this.lastTokEnd, "Illegal newline after throw"), s.argument = this.parseExpression(), this.semicolon(), this.finishNode(s, "ThrowStatement");
                                     };
                                     var Ga = [];
-                                    pt.parseTryStatement = function(s) {
+                                    ft.parseTryStatement = function(s) {
                                         if (this.next(), s.block = this.parseBlock(), s.handler = null, this.type === g._catch) {
                                             var f = this.startNode();
                                             if (this.next(), this.eat(g.parenL)) {
@@ -1381,18 +1381,18 @@
                                             f.body = this.parseBlock(!1), this.exitScope(), s.handler = this.finishNode(f, "CatchClause");
                                         }
                                         return s.finalizer = this.eat(g._finally) ? this.parseBlock() : null, !s.handler && !s.finalizer && this.raise(s.start, "Missing catch or finally clause"), this.finishNode(s, "TryStatement");
-                                    }, pt.parseVarStatement = function(s, f) {
+                                    }, ft.parseVarStatement = function(s, f) {
                                         return this.next(), this.parseVar(s, !1, f), this.semicolon(), this.finishNode(s, "VariableDeclaration");
-                                    }, pt.parseWhileStatement = function(s) {
+                                    }, ft.parseWhileStatement = function(s) {
                                         return this.next(), s.test = this.parseParenExpression(), this.labels.push(vi), s.body = this.parseStatement("while"), this.labels.pop(), this.finishNode(s, "WhileStatement");
-                                    }, pt.parseWithStatement = function(s) {
+                                    }, ft.parseWithStatement = function(s) {
                                         return this.strict && this.raise(this.start, "'with' in strict mode"), this.next(), s.object = this.parseParenExpression(), s.body = this.parseStatement("with"), this.finishNode(s, "WithStatement");
-                                    }, pt.parseEmptyStatement = function(s) {
+                                    }, ft.parseEmptyStatement = function(s) {
                                         return this.next(), this.finishNode(s, "EmptyStatement");
-                                    }, pt.parseLabeledStatement = function(s, f, S, L) {
+                                    }, ft.parseLabeledStatement = function(s, f, S, L) {
                                         for(var D = 0, F = this.labels; D < F.length; D += 1){
-                                            var N = F[D];
-                                            N.name === f && this.raise(S.start, "Label '" + f + "' is already declared");
+                                            var K = F[D];
+                                            K.name === f && this.raise(S.start, "Label '" + f + "' is already declared");
                                         }
                                         for(var W = this.type.isLoop ? "loop" : this.type === g._switch ? "switch" : null, nt = this.labels.length - 1; nt >= 0; nt--){
                                             var Et = this.labels[nt];
@@ -1404,36 +1404,36 @@
                                             kind: W,
                                             statementStart: this.start
                                         }), s.body = this.parseStatement(L ? L.indexOf("label") === -1 ? L + "label" : L : "label"), this.labels.pop(), s.label = S, this.finishNode(s, "LabeledStatement");
-                                    }, pt.parseExpressionStatement = function(s, f) {
+                                    }, ft.parseExpressionStatement = function(s, f) {
                                         return s.expression = f, this.semicolon(), this.finishNode(s, "ExpressionStatement");
-                                    }, pt.parseBlock = function(s, f) {
+                                    }, ft.parseBlock = function(s, f) {
                                         for(s === void 0 && (s = !0), f === void 0 && (f = this.startNode()), f.body = [], this.expect(g.braceL), s && this.enterScope(0); !this.eat(g.braceR);){
                                             var S = this.parseStatement(null);
                                             f.body.push(S);
                                         }
                                         return s && this.exitScope(), this.finishNode(f, "BlockStatement");
-                                    }, pt.parseFor = function(s, f) {
+                                    }, ft.parseFor = function(s, f) {
                                         return s.init = f, this.expect(g.semi), s.test = this.type === g.semi ? null : this.parseExpression(), this.expect(g.semi), s.update = this.type === g.parenR ? null : this.parseExpression(), this.expect(g.parenR), s.body = this.parseStatement("for"), this.exitScope(), this.labels.pop(), this.finishNode(s, "ForStatement");
-                                    }, pt.parseForIn = function(s, f) {
+                                    }, ft.parseForIn = function(s, f) {
                                         var S = this.type === g._in;
                                         return this.next(), f.type === "VariableDeclaration" && f.declarations[0].init != null && (!S || this.options.ecmaVersion < 8 || this.strict || f.kind !== "var" || f.declarations[0].id.type !== "Identifier") ? this.raise(f.start, (S ? "for-in" : "for-of") + " loop variable declaration may not have an initializer") : f.type === "AssignmentPattern" && this.raise(f.start, "Invalid left-hand side in for-loop"), s.left = f, s.right = S ? this.parseExpression() : this.parseMaybeAssign(), this.expect(g.parenR), s.body = this.parseStatement("for"), this.exitScope(), this.labels.pop(), this.finishNode(s, S ? "ForInStatement" : "ForOfStatement");
-                                    }, pt.parseVar = function(s, f, S) {
+                                    }, ft.parseVar = function(s, f, S) {
                                         for(s.declarations = [], s.kind = S;;){
                                             var L = this.startNode();
                                             if (this.parseVarId(L, S), this.eat(g.eq) ? L.init = this.parseMaybeAssign(f) : S === "const" && !(this.type === g._in || this.options.ecmaVersion >= 6 && this.isContextual("of")) ? this.unexpected() : L.id.type !== "Identifier" && !(f && (this.type === g._in || this.isContextual("of"))) ? this.raise(this.lastTokEnd, "Complex binding patterns require an initialization value") : L.init = null, s.declarations.push(this.finishNode(L, "VariableDeclarator")), !this.eat(g.comma)) break;
                                         }
                                         return s;
-                                    }, pt.parseVarId = function(s, f) {
+                                    }, ft.parseVarId = function(s, f) {
                                         s.id = this.parseBindingAtom(), this.checkLVal(s.id, f === "var" ? Si : se, !1);
                                     };
-                                    var Pe = 1, _i = 2, Bs = 4;
-                                    pt.parseFunction = function(s, f, S, L) {
-                                        this.initFunction(s), (this.options.ecmaVersion >= 9 || this.options.ecmaVersion >= 6 && !L) && (this.type === g.star && f & _i && this.unexpected(), s.generator = this.eat(g.star)), this.options.ecmaVersion >= 8 && (s.async = !!L), f & Pe && (s.id = f & Bs && this.type !== g.name ? null : this.parseIdent(), s.id && !(f & _i) && this.checkLVal(s.id, this.strict || s.generator || s.async ? this.treatFunctionsAsVar ? Si : se : Ks));
-                                        var D = this.yieldPos, F = this.awaitPos, N = this.awaitIdentPos;
-                                        return this.yieldPos = 0, this.awaitPos = 0, this.awaitIdentPos = 0, this.enterScope(Ht(s.async, s.generator)), f & Pe || (s.id = this.type === g.name ? this.parseIdent() : null), this.parseFunctionParams(s), this.parseFunctionBody(s, S, !1), this.yieldPos = D, this.awaitPos = F, this.awaitIdentPos = N, this.finishNode(s, f & Pe ? "FunctionDeclaration" : "FunctionExpression");
-                                    }, pt.parseFunctionParams = function(s) {
+                                    var ze = 1, _i = 2, Bs = 4;
+                                    ft.parseFunction = function(s, f, S, L) {
+                                        this.initFunction(s), (this.options.ecmaVersion >= 9 || this.options.ecmaVersion >= 6 && !L) && (this.type === g.star && f & _i && this.unexpected(), s.generator = this.eat(g.star)), this.options.ecmaVersion >= 8 && (s.async = !!L), f & ze && (s.id = f & Bs && this.type !== g.name ? null : this.parseIdent(), s.id && !(f & _i) && this.checkLVal(s.id, this.strict || s.generator || s.async ? this.treatFunctionsAsVar ? Si : se : Ks));
+                                        var D = this.yieldPos, F = this.awaitPos, K = this.awaitIdentPos;
+                                        return this.yieldPos = 0, this.awaitPos = 0, this.awaitIdentPos = 0, this.enterScope(Ht(s.async, s.generator)), f & ze || (s.id = this.type === g.name ? this.parseIdent() : null), this.parseFunctionParams(s), this.parseFunctionBody(s, S, !1), this.yieldPos = D, this.awaitPos = F, this.awaitIdentPos = K, this.finishNode(s, f & ze ? "FunctionDeclaration" : "FunctionExpression");
+                                    }, ft.parseFunctionParams = function(s) {
                                         this.expect(g.parenL), s.params = this.parseBindingList(g.parenR, !1, this.options.ecmaVersion >= 8), this.checkYieldAwaitInDefaultParams();
-                                    }, pt.parseClass = function(s, f) {
+                                    }, ft.parseClass = function(s, f) {
                                         this.next();
                                         var S = this.strict;
                                         this.strict = !0, this.parseClassId(s, f), this.parseClassSuper(s);
@@ -1443,7 +1443,7 @@
                                             F && (L.body.push(F), F.type === "MethodDefinition" && F.kind === "constructor" && (D && this.raise(F.start, "Duplicate constructor in the same class"), D = !0));
                                         }
                                         return s.body = this.finishNode(L, "ClassBody"), this.strict = S, this.finishNode(s, f ? "ClassDeclaration" : "ClassExpression");
-                                    }, pt.parseClassElement = function(s) {
+                                    }, ft.parseClassElement = function(s) {
                                         var f = this;
                                         if (this.eat(g.semi)) return null;
                                         var S = this.startNode(), L = function(nt, Et) {
@@ -1454,22 +1454,22 @@
                                         S.kind = "method", S.static = L("static");
                                         var D = this.eat(g.star), F = !1;
                                         D || (this.options.ecmaVersion >= 8 && L("async", !0) ? (F = !0, D = this.options.ecmaVersion >= 9 && this.eat(g.star)) : L("get") ? S.kind = "get" : L("set") && (S.kind = "set")), S.key || this.parsePropertyName(S);
-                                        var N = S.key, W = !1;
-                                        return !S.computed && !S.static && (N.type === "Identifier" && N.name === "constructor" || N.type === "Literal" && N.value === "constructor") ? (S.kind !== "method" && this.raise(N.start, "Constructor can't have get/set modifier"), D && this.raise(N.start, "Constructor can't be a generator"), F && this.raise(N.start, "Constructor can't be an async method"), S.kind = "constructor", W = s) : S.static && N.type === "Identifier" && N.name === "prototype" && this.raise(N.start, "Classes may not have a static property named prototype"), this.parseClassMethod(S, D, F, W), S.kind === "get" && S.value.params.length !== 0 && this.raiseRecoverable(S.value.start, "getter should have no params"), S.kind === "set" && S.value.params.length !== 1 && this.raiseRecoverable(S.value.start, "setter should have exactly one param"), S.kind === "set" && S.value.params[0].type === "RestElement" && this.raiseRecoverable(S.value.params[0].start, "Setter cannot use rest params"), S;
-                                    }, pt.parseClassMethod = function(s, f, S, L) {
+                                        var K = S.key, W = !1;
+                                        return !S.computed && !S.static && (K.type === "Identifier" && K.name === "constructor" || K.type === "Literal" && K.value === "constructor") ? (S.kind !== "method" && this.raise(K.start, "Constructor can't have get/set modifier"), D && this.raise(K.start, "Constructor can't be a generator"), F && this.raise(K.start, "Constructor can't be an async method"), S.kind = "constructor", W = s) : S.static && K.type === "Identifier" && K.name === "prototype" && this.raise(K.start, "Classes may not have a static property named prototype"), this.parseClassMethod(S, D, F, W), S.kind === "get" && S.value.params.length !== 0 && this.raiseRecoverable(S.value.start, "getter should have no params"), S.kind === "set" && S.value.params.length !== 1 && this.raiseRecoverable(S.value.start, "setter should have exactly one param"), S.kind === "set" && S.value.params[0].type === "RestElement" && this.raiseRecoverable(S.value.params[0].start, "Setter cannot use rest params"), S;
+                                    }, ft.parseClassMethod = function(s, f, S, L) {
                                         return s.value = this.parseMethod(f, S, L), this.finishNode(s, "MethodDefinition");
-                                    }, pt.parseClassId = function(s, f) {
+                                    }, ft.parseClassId = function(s, f) {
                                         this.type === g.name ? (s.id = this.parseIdent(), f && this.checkLVal(s.id, se, !1)) : (f === !0 && this.unexpected(), s.id = null);
-                                    }, pt.parseClassSuper = function(s) {
+                                    }, ft.parseClassSuper = function(s) {
                                         s.superClass = this.eat(g._extends) ? this.parseExprSubscripts() : null;
-                                    }, pt.parseExport = function(s, f) {
+                                    }, ft.parseExport = function(s, f) {
                                         if (this.next(), this.eat(g.star)) return this.expectContextual("from"), this.type !== g.string && this.unexpected(), s.source = this.parseExprAtom(), this.semicolon(), this.finishNode(s, "ExportAllDeclaration");
                                         if (this.eat(g._default)) {
                                             this.checkExport(f, "default", this.lastTokStart);
                                             var S;
                                             if (this.type === g._function || (S = this.isAsyncFunction())) {
                                                 var L = this.startNode();
-                                                this.next(), S && this.next(), s.declaration = this.parseFunction(L, Pe | Bs, !1, S);
+                                                this.next(), S && this.next(), s.declaration = this.parseFunction(L, ze | Bs, !1, S);
                                             } else if (this.type === g._class) {
                                                 var D = this.startNode();
                                                 s.declaration = this.parseClass(D, "nullableID");
@@ -1480,8 +1480,8 @@
                                         else {
                                             if (s.declaration = null, s.specifiers = this.parseExportSpecifiers(f), this.eatContextual("from")) this.type !== g.string && this.unexpected(), s.source = this.parseExprAtom();
                                             else {
-                                                for(var F = 0, N = s.specifiers; F < N.length; F += 1){
-                                                    var W = N[F];
+                                                for(var F = 0, K = s.specifiers; F < K.length; F += 1){
+                                                    var W = K[F];
                                                     this.checkUnreserved(W.local), this.checkLocalExport(W.local);
                                                 }
                                                 s.source = null;
@@ -1489,28 +1489,28 @@
                                             this.semicolon();
                                         }
                                         return this.finishNode(s, "ExportNamedDeclaration");
-                                    }, pt.checkExport = function(s, f, S) {
+                                    }, ft.checkExport = function(s, f, S) {
                                         s && (q(s, f) && this.raiseRecoverable(S, "Duplicate export '" + f + "'"), s[f] = !0);
-                                    }, pt.checkPatternExport = function(s, f) {
+                                    }, ft.checkPatternExport = function(s, f) {
                                         var S = f.type;
                                         if (S === "Identifier") this.checkExport(s, f.name, f.start);
                                         else if (S === "ObjectPattern") for(var L = 0, D = f.properties; L < D.length; L += 1){
                                             var F = D[L];
                                             this.checkPatternExport(s, F);
                                         }
-                                        else if (S === "ArrayPattern") for(var N = 0, W = f.elements; N < W.length; N += 1){
-                                            var nt = W[N];
+                                        else if (S === "ArrayPattern") for(var K = 0, W = f.elements; K < W.length; K += 1){
+                                            var nt = W[K];
                                             nt && this.checkPatternExport(s, nt);
                                         }
                                         else S === "Property" ? this.checkPatternExport(s, f.value) : S === "AssignmentPattern" ? this.checkPatternExport(s, f.left) : S === "RestElement" ? this.checkPatternExport(s, f.argument) : S === "ParenthesizedExpression" && this.checkPatternExport(s, f.expression);
-                                    }, pt.checkVariableExport = function(s, f) {
+                                    }, ft.checkVariableExport = function(s, f) {
                                         if (s) for(var S = 0, L = f; S < L.length; S += 1){
                                             var D = L[S];
                                             this.checkPatternExport(s, D.id);
                                         }
-                                    }, pt.shouldParseExportStatement = function() {
+                                    }, ft.shouldParseExportStatement = function() {
                                         return this.type.keyword === "var" || this.type.keyword === "const" || this.type.keyword === "class" || this.type.keyword === "function" || this.isLet() || this.isAsyncFunction();
-                                    }, pt.parseExportSpecifiers = function(s) {
+                                    }, ft.parseExportSpecifiers = function(s) {
                                         var f = [], S = !0;
                                         for(this.expect(g.braceL); !this.eat(g.braceR);){
                                             if (S) S = !1;
@@ -1519,9 +1519,9 @@
                                             L.local = this.parseIdent(!0), L.exported = this.eatContextual("as") ? this.parseIdent(!0) : L.local, this.checkExport(s, L.exported.name, L.exported.start), f.push(this.finishNode(L, "ExportSpecifier"));
                                         }
                                         return f;
-                                    }, pt.parseImport = function(s) {
+                                    }, ft.parseImport = function(s) {
                                         return this.next(), this.type === g.string ? (s.specifiers = Ga, s.source = this.parseExprAtom()) : (s.specifiers = this.parseImportSpecifiers(), this.expectContextual("from"), s.source = this.type === g.string ? this.parseExprAtom() : this.unexpected()), this.semicolon(), this.finishNode(s, "ImportDeclaration");
-                                    }, pt.parseImportSpecifiers = function() {
+                                    }, ft.parseImportSpecifiers = function() {
                                         var s = [], f = !0;
                                         if (this.type === g.name) {
                                             var S = this.startNode();
@@ -1538,12 +1538,12 @@
                                             D.imported = this.parseIdent(!0), this.eatContextual("as") ? D.local = this.parseIdent() : (this.checkUnreserved(D.imported), D.local = D.imported), this.checkLVal(D.local, se), s.push(this.finishNode(D, "ImportSpecifier"));
                                         }
                                         return s;
-                                    }, pt.adaptDirectivePrologue = function(s) {
+                                    }, ft.adaptDirectivePrologue = function(s) {
                                         for(var f = 0; f < s.length && this.isDirectiveCandidate(s[f]); ++f)s[f].directive = s[f].expression.raw.slice(1, -1);
-                                    }, pt.isDirectiveCandidate = function(s) {
+                                    }, ft.isDirectiveCandidate = function(s) {
                                         return s.type === "ExpressionStatement" && s.expression.type === "Literal" && typeof s.expression.value == "string" && (this.input[s.start] === '"' || this.input[s.start] === "'");
                                     };
-                                    var ne = Ot.prototype;
+                                    var ne = Ct.prototype;
                                     ne.toAssignable = function(s, f, S) {
                                         if (this.options.ecmaVersion >= 6 && s) switch(s.type){
                                             case "Identifier":
@@ -1617,8 +1617,8 @@
                                                 this.parseBindingListItem(F), L.push(F), this.type === g.comma && this.raise(this.start, "Comma is not permitted after the rest element"), this.expect(s);
                                                 break;
                                             } else {
-                                                var N = this.parseMaybeDefault(this.start, this.startLoc);
-                                                this.parseBindingListItem(N), L.push(N);
+                                                var K = this.parseMaybeDefault(this.start, this.startLoc);
+                                                this.parseBindingListItem(K), L.push(K);
                                             }
                                         }
                                         return L;
@@ -1646,8 +1646,8 @@
                                                 this.checkLVal(s.value, f, S);
                                                 break;
                                             case "ArrayPattern":
-                                                for(var N = 0, W = s.elements; N < W.length; N += 1){
-                                                    var nt = W[N];
+                                                for(var K = 0, W = s.elements; K < W.length; K += 1){
+                                                    var nt = W[K];
                                                     nt && this.checkLVal(nt, f, S);
                                                 }
                                                 break;
@@ -1664,7 +1664,7 @@
                                                 this.raise(s.start, (f ? "Binding" : "Assigning to") + " rvalue");
                                         }
                                     };
-                                    var xt = Ot.prototype;
+                                    var xt = Ct.prototype;
                                     xt.checkPropClash = function(s, f, S) {
                                         if (!(this.options.ecmaVersion >= 9 && s.type === "SpreadElement") && !(this.options.ecmaVersion >= 6 && (s.computed || s.method || s.shorthand))) {
                                             var L = s.key, D;
@@ -1684,16 +1684,16 @@
                                                 return;
                                             }
                                             D = "$" + D;
-                                            var N = f[D];
-                                            if (N) {
+                                            var K = f[D];
+                                            if (K) {
                                                 var W;
-                                                F === "init" ? W = this.strict && N.init || N.get || N.set : W = N.init || N[F], W && this.raiseRecoverable(L.start, "Redefinition of property");
-                                            } else N = f[D] = {
+                                                F === "init" ? W = this.strict && K.init || K.get || K.set : W = K.init || K[F], W && this.raiseRecoverable(L.start, "Redefinition of property");
+                                            } else K = f[D] = {
                                                 init: !1,
                                                 get: !1,
                                                 set: !1
                                             };
-                                            N[F] = !0;
+                                            K[F] = !0;
                                         }
                                     }, xt.parseExpression = function(s, f) {
                                         var S = this.start, L = this.startLoc, D = this.parseMaybeAssign(s, f);
@@ -1711,12 +1711,12 @@
                                             this.exprAllowed = !1;
                                         }
                                         var L = !1, D = -1, F = -1;
-                                        f ? (D = f.parenthesizedAssign, F = f.trailingComma, f.parenthesizedAssign = f.trailingComma = -1) : (f = new qe, L = !0);
-                                        var N = this.start, W = this.startLoc;
+                                        f ? (D = f.parenthesizedAssign, F = f.trailingComma, f.parenthesizedAssign = f.trailingComma = -1) : (f = new Ze, L = !0);
+                                        var K = this.start, W = this.startLoc;
                                         (this.type === g.parenL || this.type === g.name) && (this.potentialArrowAt = this.start);
                                         var nt = this.parseMaybeConditional(s, f);
-                                        if (S && (nt = S.call(this, nt, N, W)), this.type.isAssign) {
-                                            var Et = this.startNodeAt(N, W);
+                                        if (S && (nt = S.call(this, nt, K, W)), this.type.isAssign) {
+                                            var Et = this.startNodeAt(K, W);
                                             return Et.operator = this.value, Et.left = this.type === g.eq ? this.toAssignable(nt, !1, f) : nt, L || (f.parenthesizedAssign = f.trailingComma = f.doubleProto = -1), f.shorthandAssign >= Et.left.start && (f.shorthandAssign = -1), this.checkLVal(nt), this.next(), Et.right = this.parseMaybeAssign(s), this.finishNode(Et, "AssignmentExpression");
                                         } else L && this.checkExpressionErrors(f, !0);
                                         return D > -1 && (f.parenthesizedAssign = D), F > -1 && (f.trailingComma = F), nt;
@@ -1734,21 +1734,21 @@
                                     }, xt.parseExprOp = function(s, f, S, L, D) {
                                         var F = this.type.binop;
                                         if (F != null && (!D || this.type !== g._in) && F > L) {
-                                            var N = this.type === g.logicalOR || this.type === g.logicalAND, W = this.value;
+                                            var K = this.type === g.logicalOR || this.type === g.logicalAND, W = this.value;
                                             this.next();
-                                            var nt = this.start, Et = this.startLoc, jt = this.parseExprOp(this.parseMaybeUnary(null, !1), nt, Et, F, D), ae = this.buildBinary(f, S, s, jt, W, N);
+                                            var nt = this.start, Et = this.startLoc, jt = this.parseExprOp(this.parseMaybeUnary(null, !1), nt, Et, F, D), ae = this.buildBinary(f, S, s, jt, W, K);
                                             return this.parseExprOp(ae, f, S, L, D);
                                         }
                                         return s;
                                     }, xt.buildBinary = function(s, f, S, L, D, F) {
-                                        var N = this.startNodeAt(s, f);
-                                        return N.left = S, N.operator = D, N.right = L, this.finishNode(N, F ? "LogicalExpression" : "BinaryExpression");
+                                        var K = this.startNodeAt(s, f);
+                                        return K.left = S, K.operator = D, K.right = L, this.finishNode(K, F ? "LogicalExpression" : "BinaryExpression");
                                     }, xt.parseMaybeUnary = function(s, f) {
                                         var S = this.start, L = this.startLoc, D;
                                         if (this.isContextual("await") && (this.inAsync || !this.inFunction && this.options.allowAwaitOutsideFunction)) D = this.parseAwait(), f = !0;
                                         else if (this.type.prefix) {
-                                            var F = this.startNode(), N = this.type === g.incDec;
-                                            F.operator = this.value, F.prefix = !0, this.next(), F.argument = this.parseMaybeUnary(null, !0), this.checkExpressionErrors(s, !0), N ? this.checkLVal(F.argument) : this.strict && F.operator === "delete" && F.argument.type === "Identifier" ? this.raiseRecoverable(F.start, "Deleting local variable in strict mode") : f = !0, D = this.finishNode(F, N ? "UpdateExpression" : "UnaryExpression");
+                                            var F = this.startNode(), K = this.type === g.incDec;
+                                            F.operator = this.value, F.prefix = !0, this.next(), F.argument = this.parseMaybeUnary(null, !0), this.checkExpressionErrors(s, !0), K ? this.checkLVal(F.argument) : this.strict && F.operator === "delete" && F.argument.type === "Identifier" ? this.raiseRecoverable(F.start, "Deleting local variable in strict mode") : f = !0, D = this.finishNode(F, K ? "UpdateExpression" : "UnaryExpression");
                                         } else {
                                             if (D = this.parseExprSubscripts(s), this.checkExpressionErrors(s)) return D;
                                             for(; this.type.postfix && !this.canInsertSemicolon();){
@@ -1771,10 +1771,10 @@
                                     }, xt.parseSubscript = function(s, f, S, L, D) {
                                         var F = this.eat(g.bracketL);
                                         if (F || this.eat(g.dot)) {
-                                            var N = this.startNodeAt(f, S);
-                                            N.object = s, N.property = F ? this.parseExpression() : this.parseIdent(this.options.allowReserved !== "never"), N.computed = !!F, F && this.expect(g.bracketR), s = this.finishNode(N, "MemberExpression");
+                                            var K = this.startNodeAt(f, S);
+                                            K.object = s, K.property = F ? this.parseExpression() : this.parseIdent(this.options.allowReserved !== "never"), K.computed = !!F, F && this.expect(g.bracketR), s = this.finishNode(K, "MemberExpression");
                                         } else if (!L && this.eat(g.parenL)) {
-                                            var W = new qe, nt = this.yieldPos, Et = this.awaitPos, jt = this.awaitIdentPos;
+                                            var W = new Ze, nt = this.yieldPos, Et = this.awaitPos, jt = this.awaitIdentPos;
                                             this.yieldPos = 0, this.awaitPos = 0, this.awaitIdentPos = 0;
                                             var ae = this.parseExprList(g.parenR, this.options.ecmaVersion >= 8, !1, W);
                                             if (D && !this.canInsertSemicolon() && this.eat(g.arrow)) return this.checkPatternErrors(W, !1), this.checkYieldAwaitInDefaultParams(), this.awaitIdentPos > 0 && this.raise(this.awaitIdentPos, "Cannot use 'await' as identifier inside an async function"), this.yieldPos = nt, this.awaitPos = Et, this.awaitIdentPos = jt, this.parseArrowExpression(this.startNodeAt(f, S), ae, !0);
@@ -1797,17 +1797,17 @@
                                             case g._this:
                                                 return f = this.startNode(), this.next(), this.finishNode(f, "ThisExpression");
                                             case g.name:
-                                                var L = this.start, D = this.startLoc, F = this.containsEsc, N = this.parseIdent(!1);
-                                                if (this.options.ecmaVersion >= 8 && !F && N.name === "async" && !this.canInsertSemicolon() && this.eat(g._function)) return this.parseFunction(this.startNodeAt(L, D), 0, !1, !0);
+                                                var L = this.start, D = this.startLoc, F = this.containsEsc, K = this.parseIdent(!1);
+                                                if (this.options.ecmaVersion >= 8 && !F && K.name === "async" && !this.canInsertSemicolon() && this.eat(g._function)) return this.parseFunction(this.startNodeAt(L, D), 0, !1, !0);
                                                 if (S && !this.canInsertSemicolon()) {
                                                     if (this.eat(g.arrow)) return this.parseArrowExpression(this.startNodeAt(L, D), [
-                                                        N
+                                                        K
                                                     ], !1);
-                                                    if (this.options.ecmaVersion >= 8 && N.name === "async" && this.type === g.name && !F) return N = this.parseIdent(!1), (this.canInsertSemicolon() || !this.eat(g.arrow)) && this.unexpected(), this.parseArrowExpression(this.startNodeAt(L, D), [
-                                                        N
+                                                    if (this.options.ecmaVersion >= 8 && K.name === "async" && this.type === g.name && !F) return K = this.parseIdent(!1), (this.canInsertSemicolon() || !this.eat(g.arrow)) && this.unexpected(), this.parseArrowExpression(this.startNodeAt(L, D), [
+                                                        K
                                                     ], !0);
                                                 }
-                                                return N;
+                                                return K;
                                             case g.regexp:
                                                 var W = this.value;
                                                 return f = this.parseLiteral(W.value), f.regex = {
@@ -1866,7 +1866,7 @@
                                         var f = this.start, S = this.startLoc, L, D = this.options.ecmaVersion >= 8;
                                         if (this.options.ecmaVersion >= 6) {
                                             this.next();
-                                            var F = this.start, N = this.startLoc, W = [], nt = !0, Et = !1, jt = new qe, ae = this.yieldPos, _e = this.awaitPos, ye;
+                                            var F = this.start, K = this.startLoc, W = [], nt = !0, Et = !1, jt = new Ze, ae = this.yieldPos, _e = this.awaitPos, ye;
                                             for(this.yieldPos = 0, this.awaitPos = 0; this.type !== g.parenR;)if (nt ? nt = !1 : this.expect(g.comma), D && this.afterTrailingComma(g.parenR, !0)) {
                                                 Et = !0;
                                                 break;
@@ -1876,7 +1876,7 @@
                                             } else W.push(this.parseMaybeAssign(!1, jt, this.parseParenItem));
                                             var so = this.start, no = this.startLoc;
                                             if (this.expect(g.parenR), s && !this.canInsertSemicolon() && this.eat(g.arrow)) return this.checkPatternErrors(jt, !1), this.checkYieldAwaitInDefaultParams(), this.yieldPos = ae, this.awaitPos = _e, this.parseParenArrowList(f, S, W);
-                                            (!W.length || Et) && this.unexpected(this.lastTokStart), ye && this.unexpected(ye), this.checkExpressionErrors(jt, !0), this.yieldPos = ae || this.yieldPos, this.awaitPos = _e || this.awaitPos, W.length > 1 ? (L = this.startNodeAt(F, N), L.expressions = W, this.finishNodeAt(L, "SequenceExpression", so, no)) : L = W[0];
+                                            (!W.length || Et) && this.unexpected(this.lastTokStart), ye && this.unexpected(ye), this.checkExpressionErrors(jt, !0), this.yieldPos = ae || this.yieldPos, this.awaitPos = _e || this.awaitPos, W.length > 1 ? (L = this.startNodeAt(F, K), L.expressions = W, this.finishNodeAt(L, "SequenceExpression", so, no)) : L = W[0];
                                         } else L = this.parseParenExpression();
                                         if (this.options.preserveParens) {
                                             var on = this.startNodeAt(f, S);
@@ -1935,13 +1935,13 @@
                                         }
                                         return this.finishNode(S, s ? "ObjectPattern" : "ObjectExpression");
                                     }, xt.parseProperty = function(s, f) {
-                                        var S = this.startNode(), L, D, F, N;
+                                        var S = this.startNode(), L, D, F, K;
                                         if (this.options.ecmaVersion >= 9 && this.eat(g.ellipsis)) return s ? (S.argument = this.parseIdent(!1), this.type === g.comma && this.raise(this.start, "Comma is not permitted after the rest element"), this.finishNode(S, "RestElement")) : (this.type === g.parenL && f && (f.parenthesizedAssign < 0 && (f.parenthesizedAssign = this.start), f.parenthesizedBind < 0 && (f.parenthesizedBind = this.start)), S.argument = this.parseMaybeAssign(!1, f), this.type === g.comma && f && f.trailingComma < 0 && (f.trailingComma = this.start), this.finishNode(S, "SpreadElement"));
-                                        this.options.ecmaVersion >= 6 && (S.method = !1, S.shorthand = !1, (s || f) && (F = this.start, N = this.startLoc), s || (L = this.eat(g.star)));
+                                        this.options.ecmaVersion >= 6 && (S.method = !1, S.shorthand = !1, (s || f) && (F = this.start, K = this.startLoc), s || (L = this.eat(g.star)));
                                         var W = this.containsEsc;
-                                        return this.parsePropertyName(S), !s && !W && this.options.ecmaVersion >= 8 && !L && this.isAsyncProp(S) ? (D = !0, L = this.options.ecmaVersion >= 9 && this.eat(g.star), this.parsePropertyName(S, f)) : D = !1, this.parsePropertyValue(S, s, L, D, F, N, f, W), this.finishNode(S, "Property");
-                                    }, xt.parsePropertyValue = function(s, f, S, L, D, F, N, W) {
-                                        if ((S || L) && this.type === g.colon && this.unexpected(), this.eat(g.colon)) s.value = f ? this.parseMaybeDefault(this.start, this.startLoc) : this.parseMaybeAssign(!1, N), s.kind = "init";
+                                        return this.parsePropertyName(S), !s && !W && this.options.ecmaVersion >= 8 && !L && this.isAsyncProp(S) ? (D = !0, L = this.options.ecmaVersion >= 9 && this.eat(g.star), this.parsePropertyName(S, f)) : D = !1, this.parsePropertyValue(S, s, L, D, F, K, f, W), this.finishNode(S, "Property");
+                                    }, xt.parsePropertyValue = function(s, f, S, L, D, F, K, W) {
+                                        if ((S || L) && this.type === g.colon && this.unexpected(), this.eat(g.colon)) s.value = f ? this.parseMaybeDefault(this.start, this.startLoc) : this.parseMaybeAssign(!1, K), s.kind = "init";
                                         else if (this.options.ecmaVersion >= 6 && this.type === g.parenL) f && this.unexpected(), s.kind = "init", s.method = !0, s.value = this.parseMethod(S, L);
                                         else if (!f && !W && this.options.ecmaVersion >= 5 && !s.computed && s.key.type === "Identifier" && (s.key.name === "get" || s.key.name === "set") && this.type !== g.comma && this.type !== g.braceR) {
                                             (S || L) && this.unexpected(), s.kind = s.key.name, this.parsePropertyName(s), s.value = this.parseMethod(!1);
@@ -1950,7 +1950,7 @@
                                                 var Et = s.value.start;
                                                 s.kind === "get" ? this.raiseRecoverable(Et, "getter should have no params") : this.raiseRecoverable(Et, "setter should have exactly one param");
                                             } else s.kind === "set" && s.value.params[0].type === "RestElement" && this.raiseRecoverable(s.value.params[0].start, "Setter cannot use rest params");
-                                        } else this.options.ecmaVersion >= 6 && !s.computed && s.key.type === "Identifier" ? ((S || L) && this.unexpected(), this.checkUnreserved(s.key), s.key.name === "await" && !this.awaitIdentPos && (this.awaitIdentPos = D), s.kind = "init", f ? s.value = this.parseMaybeDefault(D, F, s.key) : this.type === g.eq && N ? (N.shorthandAssign < 0 && (N.shorthandAssign = this.start), s.value = this.parseMaybeDefault(D, F, s.key)) : s.value = s.key, s.shorthand = !0) : this.unexpected();
+                                        } else this.options.ecmaVersion >= 6 && !s.computed && s.key.type === "Identifier" ? ((S || L) && this.unexpected(), this.checkUnreserved(s.key), s.key.name === "await" && !this.awaitIdentPos && (this.awaitIdentPos = D), s.kind = "init", f ? s.value = this.parseMaybeDefault(D, F, s.key) : this.type === g.eq && K ? (K.shorthandAssign < 0 && (K.shorthandAssign = this.start), s.value = this.parseMaybeDefault(D, F, s.key)) : s.value = s.key, s.shorthand = !0) : this.unexpected();
                                     }, xt.parsePropertyName = function(s) {
                                         if (this.options.ecmaVersion >= 6) {
                                             if (this.eat(g.bracketL)) return s.computed = !0, s.key = this.parseMaybeAssign(), this.expect(g.bracketR), s.key;
@@ -1960,8 +1960,8 @@
                                     }, xt.initFunction = function(s) {
                                         s.id = null, this.options.ecmaVersion >= 6 && (s.generator = s.expression = !1), this.options.ecmaVersion >= 8 && (s.async = !1);
                                     }, xt.parseMethod = function(s, f, S) {
-                                        var L = this.startNode(), D = this.yieldPos, F = this.awaitPos, N = this.awaitIdentPos;
-                                        return this.initFunction(L), this.options.ecmaVersion >= 6 && (L.generator = s), this.options.ecmaVersion >= 8 && (L.async = !!f), this.yieldPos = 0, this.awaitPos = 0, this.awaitIdentPos = 0, this.enterScope(Ht(f, L.generator) | Lt | (S ? Nt : 0)), this.expect(g.parenL), L.params = this.parseBindingList(g.parenR, !1, this.options.ecmaVersion >= 8), this.checkYieldAwaitInDefaultParams(), this.parseFunctionBody(L, !1, !0), this.yieldPos = D, this.awaitPos = F, this.awaitIdentPos = N, this.finishNode(L, "FunctionExpression");
+                                        var L = this.startNode(), D = this.yieldPos, F = this.awaitPos, K = this.awaitIdentPos;
+                                        return this.initFunction(L), this.options.ecmaVersion >= 6 && (L.generator = s), this.options.ecmaVersion >= 8 && (L.async = !!f), this.yieldPos = 0, this.awaitPos = 0, this.awaitIdentPos = 0, this.enterScope(Ht(f, L.generator) | Lt | (S ? Nt : 0)), this.expect(g.parenL), L.params = this.parseBindingList(g.parenR, !1, this.options.ecmaVersion >= 8), this.checkYieldAwaitInDefaultParams(), this.parseFunctionBody(L, !1, !0), this.yieldPos = D, this.awaitPos = F, this.awaitIdentPos = K, this.finishNode(L, "FunctionExpression");
                                     }, xt.parseArrowExpression = function(s, f, S) {
                                         var L = this.yieldPos, D = this.awaitPos, F = this.awaitIdentPos;
                                         return this.enterScope(Ht(S, !1) | Gt), this.initFunction(s), this.options.ecmaVersion >= 8 && (s.async = !!S), this.yieldPos = 0, this.awaitPos = 0, this.awaitIdentPos = 0, s.params = this.toAssignableList(f, !0), this.parseFunctionBody(s, !0, !1), this.yieldPos = L, this.awaitPos = D, this.awaitIdentPos = F, this.finishNode(s, "ArrowFunctionExpression");
@@ -1969,8 +1969,8 @@
                                         var L = f && this.type !== g.braceL, D = this.strict, F = !1;
                                         if (L) s.body = this.parseMaybeAssign(), s.expression = !0, this.checkParams(s, !1);
                                         else {
-                                            var N = this.options.ecmaVersion >= 7 && !this.isSimpleParamList(s.params);
-                                            (!D || N) && (F = this.strictDirective(this.end), F && N && this.raiseRecoverable(s.start, "Illegal 'use strict' directive in function with non-simple parameter list"));
+                                            var K = this.options.ecmaVersion >= 7 && !this.isSimpleParamList(s.params);
+                                            (!D || K) && (F = this.strictDirective(this.end), F && K && this.raiseRecoverable(s.start, "Illegal 'use strict' directive in function with non-simple parameter list"));
                                             var W = this.labels;
                                             this.labels = [], F && (this.strict = !0), this.checkParams(s, !D && !F && !f && !S && this.isSimpleParamList(s.params)), s.body = this.parseBlock(!1), s.expression = !1, this.adaptDirectivePrologue(s.body.body), this.labels = W;
                                         }
@@ -1990,8 +1990,8 @@
                                         for(var D = [], F = !0; !this.eat(s);){
                                             if (F) F = !1;
                                             else if (this.expect(g.comma), f && this.afterTrailingComma(s)) break;
-                                            var N = void 0;
-                                            S && this.type === g.comma ? N = null : this.type === g.ellipsis ? (N = this.parseSpread(L), L && this.type === g.comma && L.trailingComma < 0 && (L.trailingComma = this.start)) : N = this.parseMaybeAssign(!1, L), D.push(N);
+                                            var K = void 0;
+                                            S && this.type === g.comma ? K = null : this.type === g.ellipsis ? (K = this.parseSpread(L), L && this.type === g.comma && L.trailingComma < 0 && (L.trailingComma = this.start)) : K = this.parseMaybeAssign(!1, L), D.push(K);
                                         }
                                         return D;
                                     }, xt.checkUnreserved = function(s) {
@@ -2012,16 +2012,16 @@
                                         var s = this.startNode();
                                         return this.next(), s.argument = this.parseMaybeUnary(null, !1), this.finishNode(s, "AwaitExpression");
                                     };
-                                    var Qe = Ot.prototype;
-                                    Qe.raise = function(s, f) {
+                                    var qe = Ct.prototype;
+                                    qe.raise = function(s, f) {
                                         var S = tt(this.input, s);
                                         f += " (" + S.line + ":" + S.column + ")";
                                         var L = new SyntaxError(f);
                                         throw L.pos = s, L.loc = S, L.raisedAt = this.pos, L;
-                                    }, Qe.raiseRecoverable = Qe.raise, Qe.curPosition = function() {
+                                    }, qe.raiseRecoverable = qe.raise, qe.curPosition = function() {
                                         if (this.options.locations) return new rt(this.curLine, this.pos - this.lineStart);
                                     };
-                                    var pe = Ot.prototype, Ba = function(f) {
+                                    var pe = Ct.prototype, Ba = function(f) {
                                         this.flags = f, this.var = [], this.lexical = [], this.functions = [];
                                     };
                                     pe.enterScope = function(s) {
@@ -2029,7 +2029,7 @@
                                     }, pe.exitScope = function() {
                                         this.scopeStack.pop();
                                     }, pe.treatFunctionsAsVarInScope = function(s) {
-                                        return s.flags & ct || !this.inModule && s.flags & Pt;
+                                        return s.flags & pt || !this.inModule && s.flags & Pt;
                                     }, pe.declareName = function(s, f, S) {
                                         var L = !1;
                                         if (f === se) {
@@ -2039,8 +2039,8 @@
                                             var F = this.currentScope();
                                             F.lexical.push(s);
                                         } else if (f === Ks) {
-                                            var N = this.currentScope();
-                                            this.treatFunctionsAsVar ? L = N.lexical.indexOf(s) > -1 : L = N.lexical.indexOf(s) > -1 || N.var.indexOf(s) > -1, N.functions.push(s);
+                                            var K = this.currentScope();
+                                            this.treatFunctionsAsVar ? L = K.lexical.indexOf(s) > -1 : L = K.lexical.indexOf(s) > -1 || K.var.indexOf(s) > -1, K.functions.push(s);
                                         } else for(var W = this.scopeStack.length - 1; W >= 0; --W){
                                             var nt = this.scopeStack[W];
                                             if (nt.lexical.indexOf(s) > -1 && !(nt.flags & at && nt.lexical[0] === s) || !this.treatFunctionsAsVarInScope(nt) && nt.functions.indexOf(s) > -1) {
@@ -2065,23 +2065,23 @@
                                             if (f.flags & _t && !(f.flags & Gt)) return f;
                                         }
                                     };
-                                    var ti = function(f, S, L) {
-                                        this.type = "", this.start = S, this.end = 0, f.options.locations && (this.loc = new gt(f, L)), f.options.directSourceFile && (this.sourceFile = f.options.directSourceFile), f.options.ranges && (this.range = [
+                                    var Qe = function(f, S, L) {
+                                        this.type = "", this.start = S, this.end = 0, f.options.locations && (this.loc = new mt(f, L)), f.options.directSourceFile && (this.sourceFile = f.options.directSourceFile), f.options.ranges && (this.range = [
                                             S,
                                             0
                                         ]);
-                                    }, ei = Ot.prototype;
-                                    ei.startNode = function() {
-                                        return new ti(this, this.start, this.startLoc);
-                                    }, ei.startNodeAt = function(s, f) {
-                                        return new ti(this, s, f);
+                                    }, ti = Ct.prototype;
+                                    ti.startNode = function() {
+                                        return new Qe(this, this.start, this.startLoc);
+                                    }, ti.startNodeAt = function(s, f) {
+                                        return new Qe(this, s, f);
                                     };
                                     function Ws(s, f, S, L) {
                                         return s.type = f, s.end = S, this.options.locations && (s.loc.end = L), this.options.ranges && (s.range[1] = S), s;
                                     }
-                                    ei.finishNode = function(s, f) {
+                                    ti.finishNode = function(s, f) {
                                         return Ws.call(this, s, f, this.lastTokEnd, this.lastTokEndLoc);
-                                    }, ei.finishNodeAt = function(s, f, S, L) {
+                                    }, ti.finishNodeAt = function(s, f, S, L) {
                                         return Ws.call(this, s, f, S, L);
                                     };
                                     var Yt = function(f, S, L, D, F) {
@@ -2099,21 +2099,21 @@
                                         f_expr: new Yt("function", !0),
                                         f_expr_gen: new Yt("function", !0, !1, null, !0),
                                         f_gen: new Yt("function", !1, !1, null, !0)
-                                    }, ii = Ot.prototype;
-                                    ii.initialContext = function() {
+                                    }, ei = Ct.prototype;
+                                    ei.initialContext = function() {
                                         return [
                                             Ft.b_stat
                                         ];
-                                    }, ii.braceIsBlock = function(s) {
+                                    }, ei.braceIsBlock = function(s) {
                                         var f = this.curContext();
                                         return f === Ft.f_expr || f === Ft.f_stat ? !0 : s === g.colon && (f === Ft.b_stat || f === Ft.b_expr) ? !f.isExpr : s === g._return || s === g.name && this.exprAllowed ? I.test(this.input.slice(this.lastTokEnd, this.start)) : s === g._else || s === g.semi || s === g.eof || s === g.parenR || s === g.arrow ? !0 : s === g.braceL ? f === Ft.b_stat : s === g._var || s === g._const || s === g.name ? !1 : !this.exprAllowed;
-                                    }, ii.inGeneratorContext = function() {
+                                    }, ei.inGeneratorContext = function() {
                                         for(var s = this.context.length - 1; s >= 1; s--){
                                             var f = this.context[s];
                                             if (f.token === "function") return f.generator;
                                         }
                                         return !1;
-                                    }, ii.updateContext = function(s) {
+                                    }, ei.updateContext = function(s) {
                                         var f, S = this.type;
                                         S.keyword && s === g.dot ? this.exprAllowed = !1 : (f = S.updateContext) ? f.call(this, s) : this.exprAllowed = S.beforeExpr;
                                     }, g.parenR.updateContext = g.braceR.updateContext = function() {
@@ -2164,7 +2164,7 @@
                                         f.nonBinary.Script_Extensions = f.nonBinary.Script, f.nonBinary.gc = f.nonBinary.General_Category, f.nonBinary.sc = f.nonBinary.Script, f.nonBinary.scx = f.nonBinary.Script_Extensions;
                                     }
                                     Ei(9), Ei(10), Ei(11);
-                                    var Q = Ot.prototype, re = function(f) {
+                                    var Q = Ct.prototype, re = function(f) {
                                         this.parser = f, this.validFlags = "gim" + (f.options.ecmaVersion >= 6 ? "uy" : "") + (f.options.ecmaVersion >= 9 ? "s" : ""), this.unicodeProperties = Zs[f.options.ecmaVersion >= 11 ? 11 : f.options.ecmaVersion], this.source = "", this.flags = "", this.start = 0, this.switchU = !1, this.switchN = !1, this.pos = 0, this.lastIntValue = 0, this.lastStringValue = "", this.lastAssertionIsQuantifiable = !1, this.numCapturingParens = 0, this.maxBackReference = 0, this.groupNames = [], this.backReferenceNames = [];
                                     };
                                     re.prototype.reset = function(f, S, L) {
@@ -2193,7 +2193,7 @@
                                     }, re.prototype.eat = function(f) {
                                         return this.current() === f ? (this.advance(), !0) : !1;
                                     };
-                                    function si(s) {
+                                    function ii(s) {
                                         return s <= 65535 ? String.fromCharCode(s) : (s -= 65536, String.fromCharCode((s >> 10) + 55296, (s & 1023) + 56320));
                                     }
                                     Q.validateRegExpFlags = function(s) {
@@ -2298,7 +2298,7 @@
                                         return !1;
                                     }, Q.regexp_eatRegExpIdentifierName = function(s) {
                                         if (s.lastStringValue = "", this.regexp_eatRegExpIdentifierStart(s)) {
-                                            for(s.lastStringValue += si(s.lastIntValue); this.regexp_eatRegExpIdentifierPart(s);)s.lastStringValue += si(s.lastIntValue);
+                                            for(s.lastStringValue += ii(s.lastIntValue); this.regexp_eatRegExpIdentifierPart(s);)s.lastStringValue += ii(s.lastIntValue);
                                             return !0;
                                         }
                                         return !1;
@@ -2343,7 +2343,7 @@
                                         }
                                         return !1;
                                     }, Q.regexp_eatZero = function(s) {
-                                        return s.current() === 48 && !ni(s.lookahead()) ? (s.lastIntValue = 0, s.advance(), !0) : !1;
+                                        return s.current() === 48 && !si(s.lookahead()) ? (s.lastIntValue = 0, s.advance(), !0) : !1;
                                     }, Q.regexp_eatControlEscape = function(s) {
                                         var f = s.current();
                                         return f === 116 ? (s.lastIntValue = 9, s.advance(), !0) : f === 110 ? (s.lastIntValue = 10, s.advance(), !0) : f === 118 ? (s.lastIntValue = 11, s.advance(), !0) : f === 102 ? (s.lastIntValue = 12, s.advance(), !0) : f === 114 ? (s.lastIntValue = 13, s.advance(), !0) : !1;
@@ -2422,7 +2422,7 @@
                                         s.unicodeProperties.binary.test(f) || s.raise("Invalid property name");
                                     }, Q.regexp_eatUnicodePropertyName = function(s) {
                                         var f = 0;
-                                        for(s.lastStringValue = ""; tn(f = s.current());)s.lastStringValue += si(f), s.advance();
+                                        for(s.lastStringValue = ""; tn(f = s.current());)s.lastStringValue += ii(f), s.advance();
                                         return s.lastStringValue !== "";
                                     };
                                     function tn(s) {
@@ -2430,11 +2430,11 @@
                                     }
                                     Q.regexp_eatUnicodePropertyValue = function(s) {
                                         var f = 0;
-                                        for(s.lastStringValue = ""; Qa(f = s.current());)s.lastStringValue += si(f), s.advance();
+                                        for(s.lastStringValue = ""; Qa(f = s.current());)s.lastStringValue += ii(f), s.advance();
                                         return s.lastStringValue !== "";
                                     };
                                     function Qa(s) {
-                                        return tn(s) || ni(s);
+                                        return tn(s) || si(s);
                                     }
                                     Q.regexp_eatLoneUnicodePropertyNameOrValue = function(s) {
                                         return this.regexp_eatUnicodePropertyValue(s);
@@ -2475,7 +2475,7 @@
                                         return this.regexp_eatCharacterClassEscape(s) || this.regexp_eatCharacterEscape(s);
                                     }, Q.regexp_eatClassControlLetter = function(s) {
                                         var f = s.current();
-                                        return ni(f) || f === 95 ? (s.lastIntValue = f % 32, s.advance(), !0) : !1;
+                                        return si(f) || f === 95 ? (s.lastIntValue = f % 32, s.advance(), !0) : !1;
                                     }, Q.regexp_eatHexEscapeSequence = function(s) {
                                         var f = s.pos;
                                         if (s.eat(120)) {
@@ -2485,10 +2485,10 @@
                                         return !1;
                                     }, Q.regexp_eatDecimalDigits = function(s) {
                                         var f = s.pos, S = 0;
-                                        for(s.lastIntValue = 0; ni(S = s.current());)s.lastIntValue = 10 * s.lastIntValue + (S - 48), s.advance();
+                                        for(s.lastIntValue = 0; si(S = s.current());)s.lastIntValue = 10 * s.lastIntValue + (S - 48), s.advance();
                                         return s.pos !== f;
                                     };
-                                    function ni(s) {
+                                    function si(s) {
                                         return s >= 48 && s <= 57;
                                     }
                                     Q.regexp_eatHexDigits = function(s) {
@@ -2529,16 +2529,16 @@
                                         }
                                         return !0;
                                     };
-                                    var ri = function(f) {
-                                        this.type = f.type, this.value = f.value, this.start = f.start, this.end = f.end, f.options.locations && (this.loc = new gt(f, f.startLoc, f.endLoc)), f.options.ranges && (this.range = [
+                                    var ni = function(f) {
+                                        this.type = f.type, this.value = f.value, this.start = f.start, this.end = f.end, f.options.locations && (this.loc = new mt(f, f.startLoc, f.endLoc)), f.options.ranges && (this.range = [
                                             f.start,
                                             f.end
                                         ]);
-                                    }, St = Ot.prototype;
+                                    }, St = Ct.prototype;
                                     St.next = function(s) {
-                                        !s && this.type.keyword && this.containsEsc && this.raiseRecoverable(this.start, "Escape sequence in keyword " + this.type.keyword), this.options.onToken && this.options.onToken(new ri(this)), this.lastTokEnd = this.end, this.lastTokStart = this.start, this.lastTokEndLoc = this.endLoc, this.lastTokStartLoc = this.startLoc, this.nextToken();
+                                        !s && this.type.keyword && this.containsEsc && this.raiseRecoverable(this.start, "Escape sequence in keyword " + this.type.keyword), this.options.onToken && this.options.onToken(new ni(this)), this.lastTokEnd = this.end, this.lastTokStart = this.start, this.lastTokEndLoc = this.endLoc, this.lastTokStartLoc = this.startLoc, this.nextToken();
                                     }, St.getToken = function() {
-                                        return this.next(), new ri(this);
+                                        return this.next(), new ni(this);
                                     }, typeof Symbol < "u" && (St[Symbol.iterator] = function() {
                                         var s = this;
                                         return {
@@ -2572,7 +2572,7 @@
                                         }
                                         this.options.onComment && this.options.onComment(!0, this.input.slice(f + 2, S), f, this.pos, s, this.curPosition());
                                     }, St.skipLineComment = function(s) {
-                                        for(var f = this.pos, S = this.options.onComment && this.curPosition(), L = this.input.charCodeAt(this.pos += s); this.pos < this.input.length && !z(L);)L = this.input.charCodeAt(++this.pos);
+                                        for(var f = this.pos, S = this.options.onComment && this.curPosition(), L = this.input.charCodeAt(this.pos += s); this.pos < this.input.length && !P(L);)L = this.input.charCodeAt(++this.pos);
                                         this.options.onComment && this.options.onComment(!1, this.input.slice(f + s, this.pos), f, this.pos, S, this.curPosition());
                                     }, St.skipSpace = function() {
                                         t: for(; this.pos < this.input.length;){
@@ -2602,7 +2602,7 @@
                                                     }
                                                     break;
                                                 default:
-                                                    if (s > 8 && s < 14 || s >= 5760 && C.test(String.fromCharCode(s))) ++this.pos;
+                                                    if (s > 8 && s < 14 || s >= 5760 && O.test(String.fromCharCode(s))) ++this.pos;
                                                     else break t;
                                             }
                                         }
@@ -2724,23 +2724,23 @@
                                         }
                                         var D = this.input.slice(S, this.pos);
                                         ++this.pos;
-                                        var F = this.pos, N = this.readWord1();
+                                        var F = this.pos, K = this.readWord1();
                                         this.containsEsc && this.unexpected(F);
                                         var W = this.regexpState || (this.regexpState = new re(this));
-                                        W.reset(S, D, N), this.validateRegExpFlags(W), this.validateRegExpPattern(W);
+                                        W.reset(S, D, K), this.validateRegExpFlags(W), this.validateRegExpPattern(W);
                                         var nt = null;
                                         try {
-                                            nt = new RegExp(D, N);
+                                            nt = new RegExp(D, K);
                                         } catch  {}
                                         return this.finishToken(g.regexp, {
                                             pattern: D,
-                                            flags: N,
+                                            flags: K,
                                             value: nt
                                         });
                                     }, St.readInt = function(s, f) {
                                         for(var S = this.pos, L = 0, D = 0, F = f ?? 1 / 0; D < F; ++D){
-                                            var N = this.input.charCodeAt(this.pos), W = void 0;
-                                            if (N >= 97 ? W = N - 97 + 10 : N >= 65 ? W = N - 65 + 10 : N >= 48 && N <= 57 ? W = N - 48 : W = 1 / 0, W >= s) break;
+                                            var K = this.input.charCodeAt(this.pos), W = void 0;
+                                            if (K >= 97 ? W = K - 97 + 10 : K >= 65 ? W = K - 65 + 10 : K >= 48 && K <= 57 ? W = K - 48 : W = 1 / 0, W >= s) break;
                                             ++this.pos, L = L * s + W;
                                         }
                                         return this.pos === S || f != null && this.pos - S !== f ? null : L;
@@ -2760,7 +2760,7 @@
                                             return ++this.pos, v(this.fullCharCodeAtPos()) && this.raise(this.pos, "Identifier directly after number"), this.finishToken(g.num, F);
                                         }
                                         S && /[89]/.test(this.input.slice(f, this.pos)) && (S = !1), L === 46 && !S && (++this.pos, this.readInt(10), L = this.input.charCodeAt(this.pos)), (L === 69 || L === 101) && !S && (L = this.input.charCodeAt(++this.pos), (L === 43 || L === 45) && ++this.pos, this.readInt(10) === null && this.raise(f, "Invalid number")), v(this.fullCharCodeAtPos()) && this.raise(this.pos, "Identifier directly after number");
-                                        var N = this.input.slice(f, this.pos), W = S ? parseInt(N, 8) : parseFloat(N);
+                                        var K = this.input.slice(f, this.pos), W = S ? parseInt(K, 8) : parseFloat(K);
                                         return this.finishToken(g.num, W);
                                     }, St.readCodePoint = function() {
                                         var s = this.input.charCodeAt(this.pos), f;
@@ -2779,7 +2779,7 @@
                                             this.pos >= this.input.length && this.raise(this.start, "Unterminated string constant");
                                             var L = this.input.charCodeAt(this.pos);
                                             if (L === s) break;
-                                            L === 92 ? (f += this.input.slice(S, this.pos), f += this.readEscapedChar(!1), S = this.pos) : (z(L, this.options.ecmaVersion >= 10) && this.raise(this.start, "Unterminated string constant"), ++this.pos);
+                                            L === 92 ? (f += this.input.slice(S, this.pos), f += this.readEscapedChar(!1), S = this.pos) : (P(L, this.options.ecmaVersion >= 10) && this.raise(this.start, "Unterminated string constant"), ++this.pos);
                                         }
                                         return f += this.input.slice(S, this.pos++), this.finishToken(g.string, f);
                                     };
@@ -2802,7 +2802,7 @@
                                             var S = this.input.charCodeAt(this.pos);
                                             if (S === 96 || S === 36 && this.input.charCodeAt(this.pos + 1) === 123) return this.pos === this.start && (this.type === g.template || this.type === g.invalidTemplate) ? S === 36 ? (this.pos += 2, this.finishToken(g.dollarBraceL)) : (++this.pos, this.finishToken(g.backQuote)) : (s += this.input.slice(f, this.pos), this.finishToken(g.template, s));
                                             if (S === 92) s += this.input.slice(f, this.pos), s += this.readEscapedChar(!0), f = this.pos;
-                                            else if (z(S)) {
+                                            else if (P(S)) {
                                                 switch(s += this.input.slice(f, this.pos), ++this.pos, S){
                                                     case 13:
                                                         this.input.charCodeAt(this.pos) === 10 && ++this.pos;
@@ -2863,7 +2863,7 @@
                                                     var L = this.input.substr(this.pos - 1, 3).match(/^[0-7]+/)[0], D = parseInt(L, 8);
                                                     return D > 255 && (L = L.slice(0, -1), D = parseInt(L, 8)), this.pos += L.length - 1, f = this.input.charCodeAt(this.pos), (L !== "0" || f === 56 || f === 57) && (this.strict || s) && this.invalidStringToken(this.pos - 1 - L.length, s ? "Octal literal in template string" : "Octal literal in strict mode"), String.fromCharCode(D);
                                                 }
-                                                return z(f) ? "" : String.fromCharCode(f);
+                                                return P(f) ? "" : String.fromCharCode(f);
                                         }
                                     }, St.readHexChar = function(s) {
                                         var f = this.pos, S = this.readInt(16, s);
@@ -2877,8 +2877,8 @@
                                                 this.containsEsc = !0, s += this.input.slice(S, this.pos);
                                                 var F = this.pos;
                                                 this.input.charCodeAt(++this.pos) !== 117 && this.invalidStringToken(this.pos, "Expecting Unicode escape sequence \\uXXXX"), ++this.pos;
-                                                var N = this.readCodePoint();
-                                                (f ? v : y)(N, L) || this.invalidStringToken(F, "Invalid Unicode escape"), s += ki(N), S = this.pos;
+                                                var K = this.readCodePoint();
+                                                (f ? v : y)(K, L) || this.invalidStringToken(F, "Invalid Unicode escape"), s += ki(K), S = this.pos;
                                             } else break;
                                             f = !1;
                                         }
@@ -2888,14 +2888,14 @@
                                         return this.keywords.test(s) && (f = M[s]), this.finishToken(f, s);
                                     };
                                     var an = "7.1.0";
-                                    Ot.acorn = {
-                                        Parser: Ot,
+                                    Ct.acorn = {
+                                        Parser: Ct,
                                         version: an,
                                         defaultOptions: et,
                                         Position: rt,
-                                        SourceLocation: gt,
+                                        SourceLocation: mt,
                                         getLineInfo: tt,
-                                        Node: ti,
+                                        Node: Qe,
                                         TokenType: T,
                                         tokTypes: g,
                                         keywordTypes: M,
@@ -2903,22 +2903,22 @@
                                         tokContexts: Ft,
                                         isIdentifierChar: y,
                                         isIdentifierStart: v,
-                                        Token: ri,
-                                        isNewLine: z,
+                                        Token: ni,
+                                        isNewLine: P,
                                         lineBreak: I,
                                         lineBreakG: A,
-                                        nonASCIIwhitespace: C
+                                        nonASCIIwhitespace: O
                                     };
                                     function to(s, f) {
-                                        return Ot.parse(s, f);
+                                        return Ct.parse(s, f);
                                     }
                                     function eo(s, f, S) {
-                                        return Ot.parseExpressionAt(s, f, S);
+                                        return Ct.parseExpressionAt(s, f, S);
                                     }
                                     function io(s, f) {
-                                        return Ot.tokenizer(s, f);
+                                        return Ct.tokenizer(s, f);
                                     }
-                                    u.Node = ti, u.Parser = Ot, u.Position = rt, u.SourceLocation = gt, u.TokContext = Yt, u.Token = ri, u.TokenType = T, u.defaultOptions = et, u.getLineInfo = tt, u.isIdentifierChar = y, u.isIdentifierStart = v, u.isNewLine = z, u.keywordTypes = M, u.lineBreak = I, u.lineBreakG = A, u.nonASCIIwhitespace = C, u.parse = to, u.parseExpressionAt = eo, u.tokContexts = Ft, u.tokTypes = g, u.tokenizer = io, u.version = an, Object.defineProperty(u, "__esModule", {
+                                    u.Node = Qe, u.Parser = Ct, u.Position = rt, u.SourceLocation = mt, u.TokContext = Yt, u.Token = ni, u.TokenType = T, u.defaultOptions = et, u.getLineInfo = tt, u.isIdentifierChar = y, u.isIdentifierStart = v, u.isNewLine = P, u.keywordTypes = M, u.lineBreak = I, u.lineBreakG = A, u.nonASCIIwhitespace = O, u.parse = to, u.parseExpressionAt = eo, u.tokContexts = Ft, u.tokTypes = g, u.tokenizer = io, u.version = an, Object.defineProperty(u, "__esModule", {
                                         value: !0
                                     });
                                 });
@@ -2934,7 +2934,7 @@
                                 function u(o, n = {}) {
                                     const { contextName: r = "gl", throwGetError: m, useTrackablePrimitives: b, readPixelsFile: E, recording: w = [], variables: v = {}, onReadPixels: y, onUnrecognizedArgumentLookup: T } = n, _ = new Proxy(o, {
                                         get: I
-                                    }), k = [], O = {};
+                                    }), k = [], C = {};
                                     let M = 0, x = "", g;
                                     return _;
                                     function I(tt, et) {
@@ -2946,15 +2946,15 @@
                                             case "getReadPixelsVariableName":
                                                 return g;
                                             case "insertVariable":
-                                                return C;
+                                                return O;
                                             case "reset":
-                                                return z;
+                                                return P;
                                             case "setIndent":
-                                                return K;
+                                                return G;
                                             case "toString":
                                                 return A;
                                             case "getContextVariableName":
-                                                return gt;
+                                                return mt;
                                         }
                                         return typeof o[et] == "function" ? function() {
                                             switch(et){
@@ -2988,7 +2988,7 @@
                                                         _t ? (Pt = _t, w.push(`${x}${_t}`)) : (Pt = `${r}Variable${k.length}`, k.push(arguments[6]), w.push(`${x}const ${Pt} = new ${arguments[6].constructor.name}(${arguments[6].length});`));
                                                     } else Pt = `${r}Variable${yt}`;
                                                     g = Pt;
-                                                    const ct = [
+                                                    const pt = [
                                                         arguments[0],
                                                         arguments[1],
                                                         arguments[2],
@@ -2997,7 +2997,7 @@
                                                         R(arguments[5]),
                                                         Pt
                                                     ];
-                                                    return w.push(`${x}${r}.readPixels(${ct.join(", ")});`), E && it(arguments[2], arguments[3]), y && y(Pt, ct), o.readPixels.apply(o, arguments);
+                                                    return w.push(`${x}${r}.readPixels(${pt.join(", ")});`), E && it(arguments[2], arguments[3]), y && y(Pt, pt), o.readPixels.apply(o, arguments);
                                                 case "drawBuffers":
                                                     return w.push(`${x}${r}.drawBuffers([${d(arguments[0], {
                                                         contextName: r,
@@ -3008,47 +3008,47 @@
                                                         onUnrecognizedArgumentLookup: T
                                                     })}]);`), o.drawBuffers(arguments[0]);
                                             }
-                                            let Y = o[et].apply(o, arguments);
-                                            switch(typeof Y){
+                                            let J = o[et].apply(o, arguments);
+                                            switch(typeof J){
                                                 case "undefined":
                                                     w.push(`${x}${st(et, arguments)};`);
                                                     return;
                                                 case "number":
                                                 case "boolean":
-                                                    if (b && k.indexOf(a(Y)) === -1) {
-                                                        w.push(`${x}const ${r}Variable${k.length} = ${st(et, arguments)};`), k.push(Y = a(Y));
+                                                    if (b && k.indexOf(a(J)) === -1) {
+                                                        w.push(`${x}const ${r}Variable${k.length} = ${st(et, arguments)};`), k.push(J = a(J));
                                                         break;
                                                     }
                                                 default:
-                                                    Y === null ? w.push(`${st(et, arguments)};`) : w.push(`${x}const ${r}Variable${k.length} = ${st(et, arguments)};`), k.push(Y);
+                                                    J === null ? w.push(`${st(et, arguments)};`) : w.push(`${x}const ${r}Variable${k.length} = ${st(et, arguments)};`), k.push(J);
                                             }
-                                            return Y;
-                                        } : (O[o[et]] = et, o[et]);
+                                            return J;
+                                        } : (C[o[et]] = et, o[et]);
                                     }
                                     function A() {
                                         return w.join(`
 `);
                                     }
-                                    function z() {
+                                    function P() {
                                         for(; w.length > 0;)w.pop();
                                     }
-                                    function C(tt, et) {
+                                    function O(tt, et) {
                                         v[tt] = et;
                                     }
                                     function R(tt) {
-                                        const et = O[tt];
+                                        const et = C[tt];
                                         return et ? r + "." + et : tt;
                                     }
-                                    function K(tt) {
+                                    function G(tt) {
                                         x = " ".repeat(tt);
                                     }
                                     function U(tt, et) {
-                                        const Y = `${r}Variable${k.length}`;
-                                        return w.push(`${x}const ${Y} = ${et};`), k.push(tt), Y;
+                                        const J = `${r}Variable${k.length}`;
+                                        return w.push(`${x}const ${J} = ${et};`), k.push(tt), J;
                                     }
                                     function it(tt, et) {
-                                        const Y = `${r}Variable${k.length}`, yt = `imageDatum${M}`;
-                                        w.push(`${x}let ${yt} = ["P3\\n# ${E}.ppm\\n", ${tt}, ' ', ${et}, "\\n255\\n"].join("");`), w.push(`${x}for (let i = 0; i < ${yt}.length; i += 4) {`), w.push(`${x}  ${yt} += ${Y}[i] + ' ' + ${Y}[i + 1] + ' ' + ${Y}[i + 2] + ' ';`), w.push(`${x}}`), w.push(`${x}if (typeof require !== "undefined") {`), w.push(`${x}  require('fs').writeFileSync('./${E}.ppm', ${yt});`), w.push(`${x}}`), M++;
+                                        const J = `${r}Variable${k.length}`, yt = `imageDatum${M}`;
+                                        w.push(`${x}let ${yt} = ["P3\\n# ${E}.ppm\\n", ${tt}, ' ', ${et}, "\\n255\\n"].join("");`), w.push(`${x}for (let i = 0; i < ${yt}.length; i += 4) {`), w.push(`${x}  ${yt} += ${J}[i] + ' ' + ${J}[i + 1] + ' ' + ${J}[i + 2] + ' ';`), w.push(`${x}}`), w.push(`${x}if (typeof require !== "undefined") {`), w.push(`${x}  require('fs').writeFileSync('./${E}.ppm', ${yt});`), w.push(`${x}}`), M++;
                                     }
                                     function q(tt) {
                                         w.push(`${x}// ${tt}`);
@@ -3083,17 +3083,17 @@ ${x}})();`);
                                         }
                                         return null;
                                     }
-                                    function gt(tt) {
+                                    function mt(tt) {
                                         const et = k.indexOf(tt);
                                         return et !== -1 ? `${r}Variable${et}` : null;
                                     }
                                 }
                                 function p(o, n) {
                                     const r = new Proxy(o, {
-                                        get: O
+                                        get: C
                                     }), m = {}, { contextName: b, contextVariables: E, getEntity: w, useTrackablePrimitives: v, recording: y, variables: T, indent: _, onUnrecognizedArgumentLookup: k } = n;
                                     return r;
-                                    function O(I, A) {
+                                    function C(I, A) {
                                         return typeof I[A] == "function" ? function() {
                                             switch(A){
                                                 case "drawBuffersWEBGL":
@@ -3106,19 +3106,19 @@ ${x}})();`);
                                                         onUnrecognizedArgumentLookup: k
                                                     })}]);`), o.drawBuffersWEBGL(arguments[0]);
                                             }
-                                            let z = o[A].apply(o, arguments);
-                                            switch(typeof z){
+                                            let P = o[A].apply(o, arguments);
+                                            switch(typeof P){
                                                 case "undefined":
                                                     y.push(`${_}${x(A, arguments)};`);
                                                     return;
                                                 case "number":
                                                 case "boolean":
-                                                    v && E.indexOf(a(z)) === -1 ? (y.push(`${_}const ${b}Variable${E.length} = ${x(A, arguments)};`), E.push(z = a(z))) : (y.push(`${_}const ${b}Variable${E.length} = ${x(A, arguments)};`), E.push(z));
+                                                    v && E.indexOf(a(P)) === -1 ? (y.push(`${_}const ${b}Variable${E.length} = ${x(A, arguments)};`), E.push(P = a(P))) : (y.push(`${_}const ${b}Variable${E.length} = ${x(A, arguments)};`), E.push(P));
                                                     break;
                                                 default:
-                                                    z === null ? y.push(`${x(A, arguments)};`) : y.push(`${_}const ${b}Variable${E.length} = ${x(A, arguments)};`), E.push(z);
+                                                    P === null ? y.push(`${x(A, arguments)};`) : y.push(`${_}const ${b}Variable${E.length} = ${x(A, arguments)};`), E.push(P);
                                             }
-                                            return z;
+                                            return P;
                                         } : (m[o[A]] = A, o[A]);
                                     }
                                     function M(I) {
@@ -3135,8 +3135,8 @@ ${x}})();`);
                                         })})`;
                                     }
                                     function g(I, A) {
-                                        const z = `${b}Variable${E.length}`;
-                                        return E.push(I), y.push(`${_}const ${z} = ${A};`), z;
+                                        const P = `${b}Variable${E.length}`;
+                                        return E.push(I), y.push(`${_}const ${P} = ${A};`), P;
                                     }
                                 }
                                 function d(o, n) {
@@ -3250,7 +3250,7 @@ ${x}})();`);
                                         return y ? b(E._imageData.data, T, _) : E._imageData.data.slice(0);
                                     }, E.color = function(y, T, _, k) {
                                         typeof k > "u" && (k = 1), y = Math.floor(y * 255), T = Math.floor(T * 255), _ = Math.floor(_ * 255), k = Math.floor(k * 255);
-                                        const O = E.output.x, M = E.output.y, x = E.thread.x, g = M - E.thread.y - 1, I = x + g * O;
+                                        const C = E.output.x, M = E.output.y, x = E.thread.x, g = M - E.thread.y - 1, I = x + g * C;
                                         E._colorData[I * 4 + 0] = y, E._colorData[I * 4 + 1] = T, E._colorData[I * 4 + 2] = _, E._colorData[I * 4 + 3] = k;
                                     };
                                     const w = ()=>E, v = [
@@ -3328,8 +3328,8 @@ ${x}})();`);
                                 }
                                 function b(E, w, v) {
                                     const y = v / 2 | 0, T = w * 4, _ = new Uint8ClampedArray(w * 4), k = E.slice(0);
-                                    for(let O = 0; O < y; ++O){
-                                        const M = O * T, x = (v - O - 1) * T;
+                                    for(let C = 0; C < y; ++C){
+                                        const M = C * T, x = (v - C - 1) * T;
                                         _.set(k.subarray(M, M + T)), k.copyWithin(M, x, x + T), k.set(_, x);
                                     }
                                     return k;
@@ -3981,9 +3981,9 @@ ${l._kernelString}
                                         let T = 0;
                                         for(let _ = E - 1; _ >= 0; _--){
                                             const k = y[_] = new Array(b);
-                                            for(let O = 0; O < b; O++){
+                                            for(let C = 0; C < b; C++){
                                                 const M = new Float32Array(4);
-                                                M[0] = v[T++] / 255, M[1] = v[T++] / 255, M[2] = v[T++] / 255, M[3] = v[T++] / 255, k[O] = M;
+                                                M[0] = v[T++] / 255, M[1] = v[T++] / 255, M[2] = v[T++] / 255, M[3] = v[T++] / 255, k[C] = M;
                                             }
                                         }
                                         return y;
@@ -4263,19 +4263,19 @@ ${l._kernelString}
                             function(e, i, h) {
                                 class u {
                                     static fromKernel(d, l, a) {
-                                        const { kernelArguments: o, kernelConstants: n, argumentNames: r, argumentSizes: m, argumentBitRatios: b, constants: E, constantBitRatios: w, debug: v, loopMaxIterations: y, nativeFunctions: T, output: _, optimizeFloatMemory: k, precision: O, plugins: M, source: x, subKernels: g, functions: I, leadingReturnStatement: A, followingReturnStatement: z, dynamicArguments: C, dynamicOutput: R } = d, K = new Array(o.length), U = {};
-                                        for(let at = 0; at < o.length; at++)K[at] = o[at].type;
+                                        const { kernelArguments: o, kernelConstants: n, argumentNames: r, argumentSizes: m, argumentBitRatios: b, constants: E, constantBitRatios: w, debug: v, loopMaxIterations: y, nativeFunctions: T, output: _, optimizeFloatMemory: k, precision: C, plugins: M, source: x, subKernels: g, functions: I, leadingReturnStatement: A, followingReturnStatement: P, dynamicArguments: O, dynamicOutput: R } = d, G = new Array(o.length), U = {};
+                                        for(let at = 0; at < o.length; at++)G[at] = o[at].type;
                                         for(let at = 0; at < n.length; at++){
                                             const Lt = n[at];
                                             U[Lt.name] = Lt.type;
                                         }
                                         const it = (at, Lt)=>Gt.needsArgumentType(at, Lt), q = (at, Lt, Nt)=>{
                                             Gt.assignArgumentType(at, Lt, Nt);
-                                        }, B = (at, Lt, Nt)=>Gt.lookupReturnType(at, Lt, Nt), st = (at)=>Gt.lookupFunctionArgumentTypes(at), rt = (at, Lt)=>Gt.lookupFunctionArgumentName(at, Lt), gt = (at, Lt)=>Gt.lookupFunctionArgumentBitRatio(at, Lt), tt = (at, Lt, Nt, Ht)=>{
+                                        }, B = (at, Lt, Nt)=>Gt.lookupReturnType(at, Lt, Nt), st = (at)=>Gt.lookupFunctionArgumentTypes(at), rt = (at, Lt)=>Gt.lookupFunctionArgumentName(at, Lt), mt = (at, Lt)=>Gt.lookupFunctionArgumentBitRatio(at, Lt), tt = (at, Lt, Nt, Ht)=>{
                                             Gt.assignArgumentType(at, Lt, Nt, Ht);
                                         }, et = (at, Lt, Nt, Ht)=>{
                                             Gt.assignArgumentBitRatio(at, Lt, Nt, Ht);
-                                        }, Y = (at, Lt, Nt)=>{
+                                        }, J = (at, Lt, Nt)=>{
                                             Gt.trackFunctionCall(at, Lt, Nt);
                                         }, yt = (at, Lt)=>{
                                             const Nt = [];
@@ -4288,12 +4288,12 @@ ${l._kernelString}
                                                 lookupReturnType: B,
                                                 lookupFunctionArgumentTypes: st,
                                                 lookupFunctionArgumentName: rt,
-                                                lookupFunctionArgumentBitRatio: gt,
+                                                lookupFunctionArgumentBitRatio: mt,
                                                 needsArgumentType: it,
                                                 assignArgumentType: q,
                                                 triggerImplyArgumentType: tt,
                                                 triggerImplyArgumentBitRatio: et,
-                                                onFunctionCall: Y
+                                                onFunctionCall: J
                                             }));
                                             Ht.traceFunctionAST(at), Gt.addFunctionNode(Ht);
                                         }, Pt = Object.assign({
@@ -4302,14 +4302,14 @@ ${l._kernelString}
                                             lookupReturnType: B,
                                             lookupFunctionArgumentTypes: st,
                                             lookupFunctionArgumentName: rt,
-                                            lookupFunctionArgumentBitRatio: gt,
+                                            lookupFunctionArgumentBitRatio: mt,
                                             needsArgumentType: it,
                                             assignArgumentType: q,
                                             triggerImplyArgumentType: tt,
                                             triggerImplyArgumentBitRatio: et,
-                                            onFunctionCall: Y,
+                                            onFunctionCall: J,
                                             optimizeFloatMemory: k,
-                                            precision: O,
+                                            precision: C,
                                             constants: E,
                                             constantTypes: U,
                                             constantBitRatios: w,
@@ -4317,20 +4317,20 @@ ${l._kernelString}
                                             loopMaxIterations: y,
                                             output: _,
                                             plugins: M,
-                                            dynamicArguments: C,
+                                            dynamicArguments: O,
                                             dynamicOutput: R
-                                        }, a || {}), ct = Object.assign({}, Pt, {
+                                        }, a || {}), pt = Object.assign({}, Pt, {
                                             isRootKernel: !0,
                                             name: "kernel",
                                             argumentNames: r,
-                                            argumentTypes: K,
+                                            argumentTypes: G,
                                             argumentSizes: m,
                                             argumentBitRatios: b,
                                             leadingReturnStatement: A,
-                                            followingReturnStatement: z
+                                            followingReturnStatement: P
                                         });
                                         if (typeof x == "object" && x.functionNodes) return new u().fromJSON(x.functionNodes, l);
-                                        const _t = new l(x, ct);
+                                        const _t = new l(x, pt);
                                         let Dt = null;
                                         I && (Dt = I.map((at)=>new l(at.source, {
                                                 returnType: at.returnType,
@@ -4341,16 +4341,16 @@ ${l._kernelString}
                                                 constantTypes: U,
                                                 constantBitRatios: w,
                                                 optimizeFloatMemory: k,
-                                                precision: O,
+                                                precision: C,
                                                 lookupReturnType: B,
                                                 lookupFunctionArgumentTypes: st,
                                                 lookupFunctionArgumentName: rt,
-                                                lookupFunctionArgumentBitRatio: gt,
+                                                lookupFunctionArgumentBitRatio: mt,
                                                 needsArgumentType: it,
                                                 assignArgumentType: q,
                                                 triggerImplyArgumentType: tt,
                                                 triggerImplyArgumentBitRatio: et,
-                                                onFunctionCall: Y,
+                                                onFunctionCall: J,
                                                 onNestedFunction: yt
                                             })));
                                         let Ut = null;
@@ -4632,16 +4632,16 @@ ${l._kernelString}
                                         const { contexts: r, declarations: m, functions: b, identifiers: E, functionCalls: w } = new d(n);
                                         this.contexts = r, this.identifiers = E, this.functionCalls = w, this.functions = b;
                                         for(let v = 0; v < m.length; v++){
-                                            const y = m[v], { ast: T, inForLoopInit: _, inForLoopTest: k } = y, { init: O } = T, M = this.getDependencies(O);
+                                            const y = m[v], { ast: T, inForLoopInit: _, inForLoopTest: k } = y, { init: C } = T, M = this.getDependencies(C);
                                             let x = null;
                                             if (_ && k) x = "Integer";
-                                            else if (O) {
-                                                const g = this.getType(O);
+                                            else if (C) {
+                                                const g = this.getType(C);
                                                 switch(g){
                                                     case "Integer":
                                                     case "Float":
                                                     case "Number":
-                                                        O.type === "MemberExpression" ? x = g : x = "Number";
+                                                        C.type === "MemberExpression" ? x = g : x = "Number";
                                                         break;
                                                     case "LiteralInteger":
                                                         x = "Number";
@@ -5668,39 +5668,39 @@ ${l._kernelString}
                                     return m.toString().replace("=>", "").replace(/^function /, "").replace(/utils[.]/g, "/*utils.*/");
                                 }
                                 function l(m, b, E, w, v) {
-                                    E.built || E.build.apply(E, b), b = b ? Array.from(b).map((ct)=>{
-                                        switch(typeof ct){
+                                    E.built || E.build.apply(E, b), b = b ? Array.from(b).map((pt)=>{
+                                        switch(typeof pt){
                                             case "boolean":
-                                                return new Boolean(ct);
+                                                return new Boolean(pt);
                                             case "number":
-                                                return new Number(ct);
+                                                return new Number(pt);
                                             default:
-                                                return ct;
+                                                return pt;
                                         }
                                     }) : null;
                                     const y = [], T = u(E.context, {
                                         useTrackablePrimitives: !0,
-                                        onReadPixels: (ct)=>{
-                                            if (Y.subKernels) {
-                                                if (!_) y.push(`    const result = { result: ${a(ct, Y)} };`), _ = !0;
+                                        onReadPixels: (pt)=>{
+                                            if (J.subKernels) {
+                                                if (!_) y.push(`    const result = { result: ${a(pt, J)} };`), _ = !0;
                                                 else {
-                                                    const _t = Y.subKernels[k++].property;
-                                                    y.push(`    result${isNaN(_t) ? "." + _t : `[${_t}]`} = ${a(ct, Y)};`);
+                                                    const _t = J.subKernels[k++].property;
+                                                    y.push(`    result${isNaN(_t) ? "." + _t : `[${_t}]`} = ${a(pt, J)};`);
                                                 }
-                                                k === Y.subKernels.length && y.push("    return result;");
+                                                k === J.subKernels.length && y.push("    return result;");
                                                 return;
                                             }
-                                            ct ? y.push(`    return ${a(ct, Y)};`) : y.push("    return null;");
+                                            pt ? y.push(`    return ${a(pt, J)};`) : y.push("    return null;");
                                         },
-                                        onUnrecognizedArgumentLookup: (ct)=>{
-                                            const _t = r(ct, Y.kernelArguments, [], T);
+                                        onUnrecognizedArgumentLookup: (pt)=>{
+                                            const _t = r(pt, J.kernelArguments, [], T);
                                             if (_t) return _t;
-                                            const Dt = r(ct, Y.kernelConstants, z ? Object.keys(z).map((Ut)=>z[Ut]) : [], T);
+                                            const Dt = r(pt, J.kernelConstants, P ? Object.keys(P).map((Ut)=>P[Ut]) : [], T);
                                             return Dt || null;
                                         }
                                     });
                                     let _ = !1, k = 0;
-                                    const { source: O, canvas: M, output: x, pipeline: g, graphical: I, loopMaxIterations: A, constants: z, optimizeFloatMemory: C, precision: R, fixIntegerDivisionAccuracy: K, functions: U, nativeFunctions: it, subKernels: q, immutable: B, argumentTypes: st, constantTypes: rt, kernelArguments: gt, kernelConstants: tt, tactic: et } = E, Y = new m(O, {
+                                    const { source: C, canvas: M, output: x, pipeline: g, graphical: I, loopMaxIterations: A, constants: P, optimizeFloatMemory: O, precision: R, fixIntegerDivisionAccuracy: G, functions: U, nativeFunctions: it, subKernels: q, immutable: B, argumentTypes: st, constantTypes: rt, kernelArguments: mt, kernelConstants: tt, tactic: et } = E, J = new m(C, {
                                         canvas: M,
                                         context: T,
                                         checkContext: !1,
@@ -5708,10 +5708,10 @@ ${l._kernelString}
                                         pipeline: g,
                                         graphical: I,
                                         loopMaxIterations: A,
-                                        constants: z,
-                                        optimizeFloatMemory: C,
+                                        constants: P,
+                                        optimizeFloatMemory: O,
                                         precision: R,
-                                        fixIntegerDivisionAccuracy: K,
+                                        fixIntegerDivisionAccuracy: G,
                                         functions: U,
                                         nativeFunctions: it,
                                         subKernels: q,
@@ -5721,8 +5721,8 @@ ${l._kernelString}
                                         tactic: et
                                     });
                                     let yt = [];
-                                    if (T.setIndent(2), Y.build.apply(Y, b), yt.push(T.toString()), T.reset(), Y.kernelArguments.forEach((ct, _t)=>{
-                                        switch(ct.type){
+                                    if (T.setIndent(2), J.build.apply(J, b), yt.push(T.toString()), T.reset(), J.kernelArguments.forEach((pt, _t)=>{
+                                        switch(pt.type){
                                             case "Integer":
                                             case "Boolean":
                                             case "Number":
@@ -5734,16 +5734,16 @@ ${l._kernelString}
                                             case "HTMLCanvas":
                                             case "HTMLImage":
                                             case "HTMLVideo":
-                                                T.insertVariable(`uploadValue_${ct.name}`, ct.uploadValue);
+                                                T.insertVariable(`uploadValue_${pt.name}`, pt.uploadValue);
                                                 break;
                                             case "HTMLImageArray":
                                                 for(let Dt = 0; Dt < b[_t].length; Dt++){
                                                     const Ut = b[_t];
-                                                    T.insertVariable(`uploadValue_${ct.name}[${Dt}]`, Ut[Dt]);
+                                                    T.insertVariable(`uploadValue_${pt.name}[${Dt}]`, Ut[Dt]);
                                                 }
                                                 break;
                                             case "Input":
-                                                T.insertVariable(`uploadValue_${ct.name}`, ct.uploadValue);
+                                                T.insertVariable(`uploadValue_${pt.name}`, pt.uploadValue);
                                                 break;
                                             case "MemoryOptimizedNumberTexture":
                                             case "NumberTexture":
@@ -5760,52 +5760,52 @@ ${l._kernelString}
                                             case "ArrayTexture(2)":
                                             case "ArrayTexture(3)":
                                             case "ArrayTexture(4)":
-                                                T.insertVariable(`uploadValue_${ct.name}`, b[_t].texture);
+                                                T.insertVariable(`uploadValue_${pt.name}`, b[_t].texture);
                                                 break;
                                             default:
-                                                throw new Error(`unhandled kernelArgumentType insertion for glWiretap of type ${ct.type}`);
+                                                throw new Error(`unhandled kernelArgumentType insertion for glWiretap of type ${pt.type}`);
                                         }
-                                    }), yt.push("/** start of injected functions **/"), yt.push(`function ${d(p.flattenTo)}`), yt.push(`function ${d(p.flatten2dArrayTo)}`), yt.push(`function ${d(p.flatten3dArrayTo)}`), yt.push(`function ${d(p.flatten4dArrayTo)}`), yt.push(`function ${d(p.isArray)}`), Y.renderOutput !== Y.renderTexture && Y.formatValues && yt.push(`  const renderOutput = function ${d(Y.formatValues)};`), yt.push("/** end of injected functions **/"), yt.push(`  const innerKernel = function (${Y.kernelArguments.map((ct)=>ct.varName).join(", ")}) {`), T.setIndent(4), Y.run.apply(Y, b), Y.renderKernels ? Y.renderKernels() : Y.renderOutput && Y.renderOutput(), yt.push("    /** start setup uploads for kernel values **/"), Y.kernelArguments.forEach((ct)=>{
-                                        yt.push("    " + ct.getStringValueHandler().split(`
+                                    }), yt.push("/** start of injected functions **/"), yt.push(`function ${d(p.flattenTo)}`), yt.push(`function ${d(p.flatten2dArrayTo)}`), yt.push(`function ${d(p.flatten3dArrayTo)}`), yt.push(`function ${d(p.flatten4dArrayTo)}`), yt.push(`function ${d(p.isArray)}`), J.renderOutput !== J.renderTexture && J.formatValues && yt.push(`  const renderOutput = function ${d(J.formatValues)};`), yt.push("/** end of injected functions **/"), yt.push(`  const innerKernel = function (${J.kernelArguments.map((pt)=>pt.varName).join(", ")}) {`), T.setIndent(4), J.run.apply(J, b), J.renderKernels ? J.renderKernels() : J.renderOutput && J.renderOutput(), yt.push("    /** start setup uploads for kernel values **/"), J.kernelArguments.forEach((pt)=>{
+                                        yt.push("    " + pt.getStringValueHandler().split(`
 `).join(`
     `));
-                                    }), yt.push("    /** end setup uploads for kernel values **/"), yt.push(T.toString()), Y.renderOutput === Y.renderTexture) {
+                                    }), yt.push("    /** end setup uploads for kernel values **/"), yt.push(T.toString()), J.renderOutput === J.renderTexture) {
                                         T.reset();
-                                        const ct = T.getContextVariableName(Y.framebuffer);
-                                        if (Y.renderKernels) {
-                                            const _t = Y.renderKernels(), Dt = T.getContextVariableName(Y.texture.texture);
+                                        const pt = T.getContextVariableName(J.framebuffer);
+                                        if (J.renderKernels) {
+                                            const _t = J.renderKernels(), Dt = T.getContextVariableName(J.texture.texture);
                                             yt.push(`    return {
       result: {
         texture: ${Dt},
         type: '${_t.result.type}',
-        toArray: ${n(_t.result, Dt, ct)}
+        toArray: ${n(_t.result, Dt, pt)}
       },`);
-                                            const { subKernels: Ut, mappedTextures: Gt } = Y;
+                                            const { subKernels: Ut, mappedTextures: Gt } = J;
                                             for(let at = 0; at < Ut.length; at++){
                                                 const Lt = Gt[at], Nt = Ut[at], Ht = _t[Nt.property], ie = T.getContextVariableName(Lt.texture);
                                                 yt.push(`
       ${Nt.property}: {
         texture: ${ie},
         type: '${Ht.type}',
-        toArray: ${n(Ht, ie, ct)}
+        toArray: ${n(Ht, ie, pt)}
       },`);
                                             }
                                             yt.push("    };");
                                         } else {
-                                            const _t = Y.renderOutput(), Dt = T.getContextVariableName(Y.texture.texture);
+                                            const _t = J.renderOutput(), Dt = T.getContextVariableName(J.texture.texture);
                                             yt.push(`    return {
         texture: ${Dt},
         type: '${_t.type}',
-        toArray: ${n(_t, Dt, ct)}
+        toArray: ${n(_t, Dt, pt)}
       };`);
                                         }
                                     }
                                     yt.push(`    ${v ? `
 ` + v + "    " : ""}`), yt.push(y.join(`
-`)), yt.push("  };"), Y.graphical && (yt.push(o(Y)), yt.push("  innerKernel.getPixels = getPixels;")), yt.push("  return innerKernel;");
+`)), yt.push("  };"), J.graphical && (yt.push(o(J)), yt.push("  innerKernel.getPixels = getPixels;")), yt.push("  return innerKernel;");
                                     let Pt = [];
-                                    return tt.forEach((ct)=>{
-                                        Pt.push(`${ct.getStringValueHandler()}`);
+                                    return tt.forEach((pt)=>{
+                                        Pt.push(`${pt.getStringValueHandler()}`);
                                     }), `function kernel(settings) {
   const { context, constants } = settings;
   ${Pt.join("")}
@@ -5883,15 +5883,15 @@ ${yt.join(`
                         ],
                         13: [
                             function(e, i, h) {
-                                const { Kernel: u } = e("../kernel"), { utils: p } = e("../../utils"), { GLTextureArray2Float: d } = e("./texture/array-2-float"), { GLTextureArray2Float2D: l } = e("./texture/array-2-float-2d"), { GLTextureArray2Float3D: a } = e("./texture/array-2-float-3d"), { GLTextureArray3Float: o } = e("./texture/array-3-float"), { GLTextureArray3Float2D: n } = e("./texture/array-3-float-2d"), { GLTextureArray3Float3D: r } = e("./texture/array-3-float-3d"), { GLTextureArray4Float: m } = e("./texture/array-4-float"), { GLTextureArray4Float2D: b } = e("./texture/array-4-float-2d"), { GLTextureArray4Float3D: E } = e("./texture/array-4-float-3d"), { GLTextureFloat: w } = e("./texture/float"), { GLTextureFloat2D: v } = e("./texture/float-2d"), { GLTextureFloat3D: y } = e("./texture/float-3d"), { GLTextureMemoryOptimized: T } = e("./texture/memory-optimized"), { GLTextureMemoryOptimized2D: _ } = e("./texture/memory-optimized-2d"), { GLTextureMemoryOptimized3D: k } = e("./texture/memory-optimized-3d"), { GLTextureUnsigned: O } = e("./texture/unsigned"), { GLTextureUnsigned2D: M } = e("./texture/unsigned-2d"), { GLTextureUnsigned3D: x } = e("./texture/unsigned-3d"), { GLTextureGraphical: g } = e("./texture/graphical");
+                                const { Kernel: u } = e("../kernel"), { utils: p } = e("../../utils"), { GLTextureArray2Float: d } = e("./texture/array-2-float"), { GLTextureArray2Float2D: l } = e("./texture/array-2-float-2d"), { GLTextureArray2Float3D: a } = e("./texture/array-2-float-3d"), { GLTextureArray3Float: o } = e("./texture/array-3-float"), { GLTextureArray3Float2D: n } = e("./texture/array-3-float-2d"), { GLTextureArray3Float3D: r } = e("./texture/array-3-float-3d"), { GLTextureArray4Float: m } = e("./texture/array-4-float"), { GLTextureArray4Float2D: b } = e("./texture/array-4-float-2d"), { GLTextureArray4Float3D: E } = e("./texture/array-4-float-3d"), { GLTextureFloat: w } = e("./texture/float"), { GLTextureFloat2D: v } = e("./texture/float-2d"), { GLTextureFloat3D: y } = e("./texture/float-3d"), { GLTextureMemoryOptimized: T } = e("./texture/memory-optimized"), { GLTextureMemoryOptimized2D: _ } = e("./texture/memory-optimized-2d"), { GLTextureMemoryOptimized3D: k } = e("./texture/memory-optimized-3d"), { GLTextureUnsigned: C } = e("./texture/unsigned"), { GLTextureUnsigned2D: M } = e("./texture/unsigned-2d"), { GLTextureUnsigned3D: x } = e("./texture/unsigned-3d"), { GLTextureGraphical: g } = e("./texture/graphical");
                                 class I extends u {
                                     static get mode() {
                                         return "gpu";
                                     }
                                     static getIsFloatRead() {
-                                        const C = `function kernelFunction() {
+                                        const O = `function kernelFunction() {
       return 1;
-    }`, R = new this(C, {
+    }`, R = new this(O, {
                                             context: this.testContext,
                                             canvas: this.testCanvas,
                                             validate: !1,
@@ -5903,14 +5903,14 @@ ${yt.join(`
                                             tactic: "speed"
                                         });
                                         R.build(), R.run();
-                                        const K = R.renderOutput();
-                                        return R.destroy(!0), K[0] === 1;
+                                        const G = R.renderOutput();
+                                        return R.destroy(!0), G[0] === 1;
                                     }
                                     static getIsIntegerDivisionAccurate() {
-                                        function C(it, q) {
+                                        function O(it, q) {
                                             return it[this.thread.x] / q[this.thread.x];
                                         }
-                                        const R = new this(C.toString(), {
+                                        const R = new this(O.toString(), {
                                             context: this.testContext,
                                             canvas: this.testCanvas,
                                             validate: !1,
@@ -5920,7 +5920,7 @@ ${yt.join(`
                                             returnType: "Number",
                                             precision: "unsigned",
                                             tactic: "speed"
-                                        }), K = [
+                                        }), G = [
                                             [
                                                 6,
                                                 6030401
@@ -5930,15 +5930,15 @@ ${yt.join(`
                                                 3991
                                             ]
                                         ];
-                                        R.build.apply(R, K), R.run.apply(R, K);
+                                        R.build.apply(R, G), R.run.apply(R, G);
                                         const U = R.renderOutput();
                                         return R.destroy(!0), U[0] === 2 && U[1] === 1511;
                                     }
                                     static getIsSpeedTacticSupported() {
-                                        function C(it) {
+                                        function O(it) {
                                             return it[this.thread.x];
                                         }
-                                        const R = new this(C.toString(), {
+                                        const R = new this(O.toString(), {
                                             context: this.testContext,
                                             canvas: this.testCanvas,
                                             validate: !1,
@@ -5948,7 +5948,7 @@ ${yt.join(`
                                             returnType: "Number",
                                             precision: "unsigned",
                                             tactic: "speed"
-                                        }), K = [
+                                        }), G = [
                                             [
                                                 0,
                                                 1,
@@ -5956,7 +5956,7 @@ ${yt.join(`
                                                 3
                                             ]
                                         ];
-                                        R.build.apply(R, K), R.run.apply(R, K);
+                                        R.build.apply(R, G), R.run.apply(R, G);
                                         const U = R.renderOutput();
                                         return R.destroy(!0), Math.round(U[0]) === 0 && Math.round(U[1]) === 1 && Math.round(U[2]) === 2 && Math.round(U[3]) === 3;
                                     }
@@ -5967,7 +5967,7 @@ ${yt.join(`
                                         throw new Error(`"testContext" not defined on ${this.name}`);
                                     }
                                     static getFeatures() {
-                                        const C = this.testContext, R = this.getIsDrawBuffers();
+                                        const O = this.testContext, R = this.getIsDrawBuffers();
                                         return Object.freeze({
                                             isFloatRead: this.getIsFloatRead(),
                                             isIntegerDivisionAccurate: this.getIsIntegerDivisionAccurate(),
@@ -5977,102 +5977,102 @@ ${yt.join(`
                                             kernelMap: R,
                                             channelCount: this.getChannelCount(),
                                             maxTextureSize: this.getMaxTextureSize(),
-                                            lowIntPrecision: C.getShaderPrecisionFormat(C.FRAGMENT_SHADER, C.LOW_INT),
-                                            lowFloatPrecision: C.getShaderPrecisionFormat(C.FRAGMENT_SHADER, C.LOW_FLOAT),
-                                            mediumIntPrecision: C.getShaderPrecisionFormat(C.FRAGMENT_SHADER, C.MEDIUM_INT),
-                                            mediumFloatPrecision: C.getShaderPrecisionFormat(C.FRAGMENT_SHADER, C.MEDIUM_FLOAT),
-                                            highIntPrecision: C.getShaderPrecisionFormat(C.FRAGMENT_SHADER, C.HIGH_INT),
-                                            highFloatPrecision: C.getShaderPrecisionFormat(C.FRAGMENT_SHADER, C.HIGH_FLOAT)
+                                            lowIntPrecision: O.getShaderPrecisionFormat(O.FRAGMENT_SHADER, O.LOW_INT),
+                                            lowFloatPrecision: O.getShaderPrecisionFormat(O.FRAGMENT_SHADER, O.LOW_FLOAT),
+                                            mediumIntPrecision: O.getShaderPrecisionFormat(O.FRAGMENT_SHADER, O.MEDIUM_INT),
+                                            mediumFloatPrecision: O.getShaderPrecisionFormat(O.FRAGMENT_SHADER, O.MEDIUM_FLOAT),
+                                            highIntPrecision: O.getShaderPrecisionFormat(O.FRAGMENT_SHADER, O.HIGH_INT),
+                                            highFloatPrecision: O.getShaderPrecisionFormat(O.FRAGMENT_SHADER, O.HIGH_FLOAT)
                                         });
                                     }
                                     static setupFeatureChecks() {
                                         throw new Error(`"setupFeatureChecks" not defined on ${this.name}`);
                                     }
-                                    static getSignature(C, R) {
-                                        return C.getVariablePrecisionString() + (R.length > 0 ? ":" + R.join(",") : "");
+                                    static getSignature(O, R) {
+                                        return O.getVariablePrecisionString() + (R.length > 0 ? ":" + R.join(",") : "");
                                     }
-                                    setFixIntegerDivisionAccuracy(C) {
-                                        return this.fixIntegerDivisionAccuracy = C, this;
+                                    setFixIntegerDivisionAccuracy(O) {
+                                        return this.fixIntegerDivisionAccuracy = O, this;
                                     }
-                                    setPrecision(C) {
-                                        return this.precision = C, this;
+                                    setPrecision(O) {
+                                        return this.precision = O, this;
                                     }
-                                    setFloatTextures(C) {
-                                        return p.warnDeprecated("method", "setFloatTextures", "setOptimizeFloatMemory"), this.floatTextures = C, this;
+                                    setFloatTextures(O) {
+                                        return p.warnDeprecated("method", "setFloatTextures", "setOptimizeFloatMemory"), this.floatTextures = O, this;
                                     }
-                                    static nativeFunctionArguments(C) {
-                                        const R = [], K = [], U = [], it = /^[a-zA-Z_]/, q = /[a-zA-Z_0-9]/;
+                                    static nativeFunctionArguments(O) {
+                                        const R = [], G = [], U = [], it = /^[a-zA-Z_]/, q = /[a-zA-Z_0-9]/;
                                         let B = 0, st = null, rt = null;
-                                        for(; B < C.length;){
-                                            const gt = C[B], tt = C[B + 1], et = U.length > 0 ? U[U.length - 1] : null;
-                                            if (et === "FUNCTION_ARGUMENTS" && gt === "/" && tt === "*") {
+                                        for(; B < O.length;){
+                                            const mt = O[B], tt = O[B + 1], et = U.length > 0 ? U[U.length - 1] : null;
+                                            if (et === "FUNCTION_ARGUMENTS" && mt === "/" && tt === "*") {
                                                 U.push("MULTI_LINE_COMMENT"), B += 2;
                                                 continue;
-                                            } else if (et === "MULTI_LINE_COMMENT" && gt === "*" && tt === "/") {
+                                            } else if (et === "MULTI_LINE_COMMENT" && mt === "*" && tt === "/") {
                                                 U.pop(), B += 2;
                                                 continue;
-                                            } else if (et === "FUNCTION_ARGUMENTS" && gt === "/" && tt === "/") {
+                                            } else if (et === "FUNCTION_ARGUMENTS" && mt === "/" && tt === "/") {
                                                 U.push("COMMENT"), B += 2;
                                                 continue;
-                                            } else if (et === "COMMENT" && gt === `
+                                            } else if (et === "COMMENT" && mt === `
 `) {
                                                 U.pop(), B++;
                                                 continue;
-                                            } else if (et === null && gt === "(") {
+                                            } else if (et === null && mt === "(") {
                                                 U.push("FUNCTION_ARGUMENTS"), B++;
                                                 continue;
                                             } else if (et === "FUNCTION_ARGUMENTS") {
-                                                if (gt === ")") {
+                                                if (mt === ")") {
                                                     U.pop();
                                                     break;
                                                 }
-                                                if (gt === "f" && tt === "l" && C[B + 2] === "o" && C[B + 3] === "a" && C[B + 4] === "t" && C[B + 5] === " ") {
+                                                if (mt === "f" && tt === "l" && O[B + 2] === "o" && O[B + 3] === "a" && O[B + 4] === "t" && O[B + 5] === " ") {
                                                     U.push("DECLARE_VARIABLE"), rt = "float", st = "", B += 6;
                                                     continue;
-                                                } else if (gt === "i" && tt === "n" && C[B + 2] === "t" && C[B + 3] === " ") {
+                                                } else if (mt === "i" && tt === "n" && O[B + 2] === "t" && O[B + 3] === " ") {
                                                     U.push("DECLARE_VARIABLE"), rt = "int", st = "", B += 4;
                                                     continue;
-                                                } else if (gt === "v" && tt === "e" && C[B + 2] === "c" && C[B + 3] === "2" && C[B + 4] === " ") {
+                                                } else if (mt === "v" && tt === "e" && O[B + 2] === "c" && O[B + 3] === "2" && O[B + 4] === " ") {
                                                     U.push("DECLARE_VARIABLE"), rt = "vec2", st = "", B += 5;
                                                     continue;
-                                                } else if (gt === "v" && tt === "e" && C[B + 2] === "c" && C[B + 3] === "3" && C[B + 4] === " ") {
+                                                } else if (mt === "v" && tt === "e" && O[B + 2] === "c" && O[B + 3] === "3" && O[B + 4] === " ") {
                                                     U.push("DECLARE_VARIABLE"), rt = "vec3", st = "", B += 5;
                                                     continue;
-                                                } else if (gt === "v" && tt === "e" && C[B + 2] === "c" && C[B + 3] === "4" && C[B + 4] === " ") {
+                                                } else if (mt === "v" && tt === "e" && O[B + 2] === "c" && O[B + 3] === "4" && O[B + 4] === " ") {
                                                     U.push("DECLARE_VARIABLE"), rt = "vec4", st = "", B += 5;
                                                     continue;
                                                 }
                                             } else if (et === "DECLARE_VARIABLE") {
                                                 if (st === "") {
-                                                    if (gt === " ") {
+                                                    if (mt === " ") {
                                                         B++;
                                                         continue;
                                                     }
-                                                    if (!it.test(gt)) throw new Error("variable name is not expected string");
+                                                    if (!it.test(mt)) throw new Error("variable name is not expected string");
                                                 }
-                                                st += gt, q.test(tt) || (U.pop(), K.push(st), R.push(A[rt]));
+                                                st += mt, q.test(tt) || (U.pop(), G.push(st), R.push(A[rt]));
                                             }
                                             B++;
                                         }
                                         if (U.length > 0) throw new Error("GLSL function was not parsable");
                                         return {
-                                            argumentNames: K,
+                                            argumentNames: G,
                                             argumentTypes: R
                                         };
                                     }
-                                    static nativeFunctionReturnType(C) {
-                                        return A[C.match(/int|float|vec[2-4]/)[0]];
+                                    static nativeFunctionReturnType(O) {
+                                        return A[O.match(/int|float|vec[2-4]/)[0]];
                                     }
-                                    static combineKernels(C, R) {
-                                        C.apply(null, arguments);
-                                        const { texSize: K, context: U, threadDim: it } = R.texSize;
+                                    static combineKernels(O, R) {
+                                        O.apply(null, arguments);
+                                        const { texSize: G, context: U, threadDim: it } = R.texSize;
                                         let q;
                                         if (R.precision === "single") {
-                                            const B = K[0], st = Math.ceil(K[1] / 4);
+                                            const B = G[0], st = Math.ceil(G[1] / 4);
                                             q = new Float32Array(B * st * 4 * 4), U.readPixels(0, 0, B, st * 4, U.RGBA, U.FLOAT, q);
                                         } else {
-                                            const B = new Uint8Array(K[0] * K[1] * 4);
-                                            U.readPixels(0, 0, K[0], K[1], U.RGBA, U.UNSIGNED_BYTE, B), q = new Float32Array(B.buffer);
+                                            const B = new Uint8Array(G[0] * G[1] * 4);
+                                            U.readPixels(0, 0, G[0], G[1], U.RGBA, U.UNSIGNED_BYTE, B), q = new Float32Array(B.buffer);
                                         }
                                         if (q = q.subarray(0, it[0] * it[1] * it[2]), R.output.length === 1) return q;
                                         if (R.output.length === 2) return p.splitArray(q, R.output[0]);
@@ -6080,39 +6080,39 @@ ${yt.join(`
                                             return p.splitArray(st, R.output[0]);
                                         });
                                     }
-                                    constructor(C, R){
-                                        super(C, R), this.transferValues = null, this.formatValues = null, this.TextureConstructor = null, this.renderOutput = null, this.renderRawOutput = null, this.texSize = null, this.translatedSource = null, this.compiledFragmentShader = null, this.compiledVertexShader = null, this.switchingKernels = null, this._textureSwitched = null, this._mappedTextureSwitched = null;
+                                    constructor(O, R){
+                                        super(O, R), this.transferValues = null, this.formatValues = null, this.TextureConstructor = null, this.renderOutput = null, this.renderRawOutput = null, this.texSize = null, this.translatedSource = null, this.compiledFragmentShader = null, this.compiledVertexShader = null, this.switchingKernels = null, this._textureSwitched = null, this._mappedTextureSwitched = null;
                                     }
                                     checkTextureSize() {
-                                        const { features: C } = this.constructor;
-                                        if (this.texSize[0] > C.maxTextureSize || this.texSize[1] > C.maxTextureSize) throw new Error(`Texture size [${this.texSize[0]},${this.texSize[1]}] generated by kernel is larger than supported size [${C.maxTextureSize},${C.maxTextureSize}]`);
+                                        const { features: O } = this.constructor;
+                                        if (this.texSize[0] > O.maxTextureSize || this.texSize[1] > O.maxTextureSize) throw new Error(`Texture size [${this.texSize[0]},${this.texSize[1]}] generated by kernel is larger than supported size [${O.maxTextureSize},${O.maxTextureSize}]`);
                                     }
                                     translateSource() {
                                         throw new Error(`"translateSource" not defined on ${this.constructor.name}`);
                                     }
-                                    pickRenderStrategy(C) {
+                                    pickRenderStrategy(O) {
                                         if (this.graphical) return this.renderRawOutput = this.readPackedPixelsToUint8Array, this.transferValues = (R)=>R, this.TextureConstructor = g, null;
                                         if (this.precision === "unsigned") if (this.renderRawOutput = this.readPackedPixelsToUint8Array, this.transferValues = this.readPackedPixelsToFloat32Array, this.pipeline) switch(this.renderOutput = this.renderTexture, this.subKernels !== null && (this.renderKernels = this.renderKernelsToTextures), this.returnType){
                                             case "LiteralInteger":
                                             case "Float":
                                             case "Number":
                                             case "Integer":
-                                                return this.output[2] > 0 ? (this.TextureConstructor = x, null) : this.output[1] > 0 ? (this.TextureConstructor = M, null) : (this.TextureConstructor = O, null);
+                                                return this.output[2] > 0 ? (this.TextureConstructor = x, null) : this.output[1] > 0 ? (this.TextureConstructor = M, null) : (this.TextureConstructor = C, null);
                                             case "Array(2)":
                                             case "Array(3)":
                                             case "Array(4)":
-                                                return this.requestFallback(C);
+                                                return this.requestFallback(O);
                                         }
                                         else switch(this.subKernels !== null && (this.renderKernels = this.renderKernelsToArrays), this.returnType){
                                             case "LiteralInteger":
                                             case "Float":
                                             case "Number":
                                             case "Integer":
-                                                return this.renderOutput = this.renderValues, this.output[2] > 0 ? (this.TextureConstructor = x, this.formatValues = p.erect3DPackedFloat, null) : this.output[1] > 0 ? (this.TextureConstructor = M, this.formatValues = p.erect2DPackedFloat, null) : (this.TextureConstructor = O, this.formatValues = p.erectPackedFloat, null);
+                                                return this.renderOutput = this.renderValues, this.output[2] > 0 ? (this.TextureConstructor = x, this.formatValues = p.erect3DPackedFloat, null) : this.output[1] > 0 ? (this.TextureConstructor = M, this.formatValues = p.erect2DPackedFloat, null) : (this.TextureConstructor = C, this.formatValues = p.erectPackedFloat, null);
                                             case "Array(2)":
                                             case "Array(3)":
                                             case "Array(4)":
-                                                return this.requestFallback(C);
+                                                return this.requestFallback(O);
                                         }
                                         else if (this.precision === "single") {
                                             if (this.renderRawOutput = this.readFloatPixelsToFloat32Array, this.transferValues = this.readFloatPixelsToFloat32Array, this.pipeline) switch(this.renderOutput = this.renderTexture, this.subKernels !== null && (this.renderKernels = this.renderKernelsToTextures), this.returnType){
@@ -6246,64 +6246,64 @@ ${yt.join(`
                                     }
                                     readPackedPixelsToUint8Array() {
                                         if (this.precision !== "unsigned") throw new Error('Requires this.precision to be "unsigned"');
-                                        const { texSize: C, context: R } = this, K = new Uint8Array(C[0] * C[1] * 4);
-                                        return R.readPixels(0, 0, C[0], C[1], R.RGBA, R.UNSIGNED_BYTE, K), K;
+                                        const { texSize: O, context: R } = this, G = new Uint8Array(O[0] * O[1] * 4);
+                                        return R.readPixels(0, 0, O[0], O[1], R.RGBA, R.UNSIGNED_BYTE, G), G;
                                     }
                                     readPackedPixelsToFloat32Array() {
                                         return new Float32Array(this.readPackedPixelsToUint8Array().buffer);
                                     }
                                     readFloatPixelsToFloat32Array() {
                                         if (this.precision !== "single") throw new Error('Requires this.precision to be "single"');
-                                        const { texSize: C, context: R } = this, K = C[0], U = C[1], it = new Float32Array(K * U * 4);
-                                        return R.readPixels(0, 0, K, U, R.RGBA, R.FLOAT, it), it;
+                                        const { texSize: O, context: R } = this, G = O[0], U = O[1], it = new Float32Array(G * U * 4);
+                                        return R.readPixels(0, 0, G, U, R.RGBA, R.FLOAT, it), it;
                                     }
-                                    getPixels(C) {
-                                        const { context: R, output: K } = this, [U, it] = K, q = new Uint8Array(U * it * 4);
-                                        return R.readPixels(0, 0, U, it, R.RGBA, R.UNSIGNED_BYTE, q), new Uint8ClampedArray((C ? q : p.flipPixels(q, U, it)).buffer);
+                                    getPixels(O) {
+                                        const { context: R, output: G } = this, [U, it] = G, q = new Uint8Array(U * it * 4);
+                                        return R.readPixels(0, 0, U, it, R.RGBA, R.UNSIGNED_BYTE, q), new Uint8ClampedArray((O ? q : p.flipPixels(q, U, it)).buffer);
                                     }
                                     renderKernelsToArrays() {
-                                        const C = {
+                                        const O = {
                                             result: this.renderOutput()
                                         };
-                                        for(let R = 0; R < this.subKernels.length; R++)C[this.subKernels[R].property] = this.mappedTextures[R].toArray();
-                                        return C;
+                                        for(let R = 0; R < this.subKernels.length; R++)O[this.subKernels[R].property] = this.mappedTextures[R].toArray();
+                                        return O;
                                     }
                                     renderKernelsToTextures() {
-                                        const C = {
+                                        const O = {
                                             result: this.renderOutput()
                                         };
-                                        if (this.immutable) for(let R = 0; R < this.subKernels.length; R++)C[this.subKernels[R].property] = this.mappedTextures[R].clone();
-                                        else for(let R = 0; R < this.subKernels.length; R++)C[this.subKernels[R].property] = this.mappedTextures[R];
-                                        return C;
+                                        if (this.immutable) for(let R = 0; R < this.subKernels.length; R++)O[this.subKernels[R].property] = this.mappedTextures[R].clone();
+                                        else for(let R = 0; R < this.subKernels.length; R++)O[this.subKernels[R].property] = this.mappedTextures[R];
+                                        return O;
                                     }
                                     resetSwitchingKernels() {
-                                        const C = this.switchingKernels;
-                                        return this.switchingKernels = null, C;
+                                        const O = this.switchingKernels;
+                                        return this.switchingKernels = null, O;
                                     }
-                                    setOutput(C) {
-                                        const R = this.toKernelOutput(C);
+                                    setOutput(O) {
+                                        const R = this.toKernelOutput(O);
                                         if (this.program) {
                                             if (!this.dynamicOutput) throw new Error("Resizing a kernel with dynamicOutput: false is not possible");
-                                            const K = [
+                                            const G = [
                                                 R[0],
                                                 R[1] || 1,
                                                 R[2] || 1
                                             ], U = p.getKernelTextureSize({
                                                 optimizeFloatMemory: this.optimizeFloatMemory,
                                                 precision: this.precision
-                                            }, K), it = this.texSize;
+                                            }, G), it = this.texSize;
                                             if (it) {
                                                 const B = this.getVariablePrecisionString(it, this.tactic), st = this.getVariablePrecisionString(U, this.tactic);
                                                 if (B !== st) {
                                                     this.debug && console.warn("Precision requirement changed, asking GPU instance to recompile"), this.switchKernels({
                                                         type: "outputPrecisionMismatch",
                                                         precision: st,
-                                                        needed: C
+                                                        needed: O
                                                     });
                                                     return;
                                                 }
                                             }
-                                            this.output = R, this.threadDim = K, this.texSize = U;
+                                            this.output = R, this.threadDim = G, this.texSize = U;
                                             const { context: q } = this;
                                             if (q.bindFramebuffer(q.FRAMEBUFFER, this.framebuffer), this.updateMaxTexSize(), this.framebuffer.width = this.texSize[0], this.framebuffer.height = this.texSize[1], q.viewport(0, 0, this.maxTexSize[0], this.maxTexSize[1]), this.canvas.width = this.maxTexSize[0], this.canvas.height = this.maxTexSize[1], this.texture && this.texture.delete(), this.texture = null, this._setupOutputTexture(), this.mappedTextures && this.mappedTextures.length > 0) {
                                                 for(let B = 0; B < this.mappedTextures.length; B++)this.mappedTextures[B].delete();
@@ -6315,15 +6315,15 @@ ${yt.join(`
                                     renderValues() {
                                         return this.formatValues(this.transferValues(), this.output[0], this.output[1], this.output[2]);
                                     }
-                                    switchKernels(C) {
-                                        this.switchingKernels ? this.switchingKernels.push(C) : this.switchingKernels = [
-                                            C
+                                    switchKernels(O) {
+                                        this.switchingKernels ? this.switchingKernels.push(O) : this.switchingKernels = [
+                                            O
                                         ];
                                     }
-                                    getVariablePrecisionString(C = this.texSize, R = this.tactic, K = !1) {
+                                    getVariablePrecisionString(O = this.texSize, R = this.tactic, G = !1) {
                                         if (!R) {
                                             if (!this.constructor.features.isSpeedTacticSupported) return "highp";
-                                            const U = this.constructor.features[K ? "lowIntPrecision" : "lowFloatPrecision"], it = this.constructor.features[K ? "mediumIntPrecision" : "mediumFloatPrecision"], q = this.constructor.features[K ? "highIntPrecision" : "highFloatPrecision"], B = Math.log2(C[0] * C[1]);
+                                            const U = this.constructor.features[G ? "lowIntPrecision" : "lowFloatPrecision"], it = this.constructor.features[G ? "mediumIntPrecision" : "mediumFloatPrecision"], q = this.constructor.features[G ? "highIntPrecision" : "highFloatPrecision"], B = Math.log2(O[0] * O[1]);
                                             if (B <= U.rangeMax) return "lowp";
                                             if (B <= it.rangeMax) return "mediump";
                                             if (B <= q.rangeMax) return "highp";
@@ -6340,28 +6340,28 @@ ${yt.join(`
                                                 throw new Error(`Unknown tactic "${R}" use "speed", "balanced", "precision", or empty for auto`);
                                         }
                                     }
-                                    updateTextureArgumentRefs(C, R) {
+                                    updateTextureArgumentRefs(O, R) {
                                         if (this.immutable) {
                                             if (this.texture.texture === R.texture) {
-                                                const { prevArg: K } = C;
-                                                K && (K.texture._refs === 1 && (this.texture.delete(), this.texture = K.clone(), this._textureSwitched = !0), K.delete()), C.prevArg = R.clone();
+                                                const { prevArg: G } = O;
+                                                G && (G.texture._refs === 1 && (this.texture.delete(), this.texture = G.clone(), this._textureSwitched = !0), G.delete()), O.prevArg = R.clone();
                                             } else if (this.mappedTextures && this.mappedTextures.length > 0) {
-                                                const { mappedTextures: K } = this;
-                                                for(let U = 0; U < K.length; U++){
-                                                    const it = K[U];
+                                                const { mappedTextures: G } = this;
+                                                for(let U = 0; U < G.length; U++){
+                                                    const it = G[U];
                                                     if (it.texture === R.texture) {
-                                                        const { prevArg: q } = C;
-                                                        q && (q.texture._refs === 1 && (it.delete(), K[U] = q.clone(), this._mappedTextureSwitched[U] = !0), q.delete()), C.prevArg = R.clone();
+                                                        const { prevArg: q } = O;
+                                                        q && (q.texture._refs === 1 && (it.delete(), G[U] = q.clone(), this._mappedTextureSwitched[U] = !0), q.delete()), O.prevArg = R.clone();
                                                         return;
                                                     }
                                                 }
                                             }
                                         }
                                     }
-                                    onActivate(C) {
-                                        if (this._textureSwitched = !0, this.texture = C.texture, this.mappedTextures) {
+                                    onActivate(O) {
+                                        if (this._textureSwitched = !0, this.texture = O.texture, this.mappedTextures) {
                                             for(let R = 0; R < this.mappedTextures.length; R++)this._mappedTextureSwitched[R] = !0;
-                                            this.mappedTextures = C.mappedTextures;
+                                            this.mappedTextures = O.mappedTextures;
                                         }
                                     }
                                     initCanvas() {}
@@ -8192,17 +8192,17 @@ ${E.join("")};`), r.push(`}
                                         const w = [];
                                         let v = [];
                                         for(let y = 0; y < m.length; y++){
-                                            const T = m[y], _ = T.init, k = this.getDeclaration(T.id), O = this.getType(T.init);
-                                            let M = O;
+                                            const T = m[y], _ = T.init, k = this.getDeclaration(T.id), C = this.getType(T.init);
+                                            let M = C;
                                             M === "LiteralInteger" && (k.suggestedType === "Integer" ? M = "Integer" : M = "Number");
                                             const x = l[M];
                                             if (!x) throw this.astErrorOutput(`Markup type ${M} not handled`, n);
                                             const g = [];
-                                            if (O === "Integer" && M === "Integer") {
+                                            if (C === "Integer" && M === "Integer") {
                                                 if (k.valueType = "Number", y === 0 || E === null) g.push("float ");
                                                 else if (M !== E) throw new Error("Unhandled declaration");
                                                 E = M, g.push(`user_${u.sanitizeName(T.id.name)}=`), g.push("float("), this.astGeneric(_, g), g.push(")");
-                                            } else k.valueType = M, y === 0 || E === null ? g.push(`${x} `) : M !== E && (w.push(v.join(",")), v = [], g.push(`${x} `)), E = M, g.push(`user_${u.sanitizeName(T.id.name)}=`), O === "Number" && M === "Integer" ? _.left && _.left.type === "Literal" ? this.astGeneric(_, g) : (g.push("int("), this.astGeneric(_, g), g.push(")")) : O === "LiteralInteger" && M === "Integer" ? this.castLiteralToInteger(_, g) : this.astGeneric(_, g);
+                                            } else k.valueType = M, y === 0 || E === null ? g.push(`${x} `) : M !== E && (w.push(v.join(",")), v = [], g.push(`${x} `)), E = M, g.push(`user_${u.sanitizeName(T.id.name)}=`), C === "Number" && M === "Integer" ? _.left && _.left.type === "Literal" ? this.astGeneric(_, g) : (g.push("int("), this.astGeneric(_, g), g.push(")")) : C === "LiteralInteger" && M === "Integer" ? this.castLiteralToInteger(_, g) : this.astGeneric(_, g);
                                             v.push(g.join(""));
                                         }
                                         return v.length > 0 && w.push(v.join(",")), b.push(w.join(";")), r.push(b.join("")), r.push(";"), r;
@@ -8314,16 +8314,16 @@ ${E.join("")};`), r.push(`}
                                             case "value[][][][]":
                                             case "value.value":
                                                 if (w === "Math") return r.push(Math[b]), r;
-                                                const O = u.sanitizeName(b);
+                                                const C = u.sanitizeName(b);
                                                 switch(m){
                                                     case "r":
-                                                        return r.push(`user_${O}.r`), r;
+                                                        return r.push(`user_${C}.r`), r;
                                                     case "g":
-                                                        return r.push(`user_${O}.g`), r;
+                                                        return r.push(`user_${C}.g`), r;
                                                     case "b":
-                                                        return r.push(`user_${O}.b`), r;
+                                                        return r.push(`user_${C}.b`), r;
                                                     case "a":
-                                                        return r.push(`user_${O}.a`), r;
+                                                        return r.push(`user_${C}.a`), r;
                                                 }
                                                 break;
                                             case "this.constants.value":
@@ -8408,8 +8408,8 @@ ${E.join("")};`), r.push(`}
                                             case "Integer":
                                                 if (this.precision === "single") r.push(`getMemoryOptimized32(${k}, ${k}Size, ${k}Dim, `), this.memberExpressionXYZ(y, T, _, r), r.push(")");
                                                 else {
-                                                    const O = w === "user" ? this.lookupFunctionArgumentBitRatio(this.name, b) : this.constantBitRatios[b];
-                                                    switch(O){
+                                                    const C = w === "user" ? this.lookupFunctionArgumentBitRatio(this.name, b) : this.constantBitRatios[b];
+                                                    switch(C){
                                                         case 1:
                                                             r.push(`get8(${k}, ${k}Size, ${k}Dim, `);
                                                             break;
@@ -8421,7 +8421,7 @@ ${E.join("")};`), r.push(`}
                                                             r.push(`get32(${k}, ${k}Size, ${k}Dim, `);
                                                             break;
                                                         default:
-                                                            throw new Error(`unhandled bit ratio of ${O}`);
+                                                            throw new Error(`unhandled bit ratio of ${C}`);
                                                     }
                                                     this.memberExpressionXYZ(y, T, _, r), r.push(")");
                                                 }
@@ -8631,15 +8631,15 @@ ${E.join("")};`), r.push(`}
                         ],
                         39: [
                             function(e, i, h) {
-                                const { WebGLKernelValueBoolean: u } = e("./kernel-value/boolean"), { WebGLKernelValueFloat: p } = e("./kernel-value/float"), { WebGLKernelValueInteger: d } = e("./kernel-value/integer"), { WebGLKernelValueHTMLImage: l } = e("./kernel-value/html-image"), { WebGLKernelValueDynamicHTMLImage: a } = e("./kernel-value/dynamic-html-image"), { WebGLKernelValueHTMLVideo: o } = e("./kernel-value/html-video"), { WebGLKernelValueDynamicHTMLVideo: n } = e("./kernel-value/dynamic-html-video"), { WebGLKernelValueSingleInput: r } = e("./kernel-value/single-input"), { WebGLKernelValueDynamicSingleInput: m } = e("./kernel-value/dynamic-single-input"), { WebGLKernelValueUnsignedInput: b } = e("./kernel-value/unsigned-input"), { WebGLKernelValueDynamicUnsignedInput: E } = e("./kernel-value/dynamic-unsigned-input"), { WebGLKernelValueMemoryOptimizedNumberTexture: w } = e("./kernel-value/memory-optimized-number-texture"), { WebGLKernelValueDynamicMemoryOptimizedNumberTexture: v } = e("./kernel-value/dynamic-memory-optimized-number-texture"), { WebGLKernelValueNumberTexture: y } = e("./kernel-value/number-texture"), { WebGLKernelValueDynamicNumberTexture: T } = e("./kernel-value/dynamic-number-texture"), { WebGLKernelValueSingleArray: _ } = e("./kernel-value/single-array"), { WebGLKernelValueDynamicSingleArray: k } = e("./kernel-value/dynamic-single-array"), { WebGLKernelValueSingleArray1DI: O } = e("./kernel-value/single-array1d-i"), { WebGLKernelValueDynamicSingleArray1DI: M } = e("./kernel-value/dynamic-single-array1d-i"), { WebGLKernelValueSingleArray2DI: x } = e("./kernel-value/single-array2d-i"), { WebGLKernelValueDynamicSingleArray2DI: g } = e("./kernel-value/dynamic-single-array2d-i"), { WebGLKernelValueSingleArray3DI: I } = e("./kernel-value/single-array3d-i"), { WebGLKernelValueDynamicSingleArray3DI: A } = e("./kernel-value/dynamic-single-array3d-i"), { WebGLKernelValueArray2: z } = e("./kernel-value/array2"), { WebGLKernelValueArray3: C } = e("./kernel-value/array3"), { WebGLKernelValueArray4: R } = e("./kernel-value/array4"), { WebGLKernelValueUnsignedArray: K } = e("./kernel-value/unsigned-array"), { WebGLKernelValueDynamicUnsignedArray: U } = e("./kernel-value/dynamic-unsigned-array"), it = {
+                                const { WebGLKernelValueBoolean: u } = e("./kernel-value/boolean"), { WebGLKernelValueFloat: p } = e("./kernel-value/float"), { WebGLKernelValueInteger: d } = e("./kernel-value/integer"), { WebGLKernelValueHTMLImage: l } = e("./kernel-value/html-image"), { WebGLKernelValueDynamicHTMLImage: a } = e("./kernel-value/dynamic-html-image"), { WebGLKernelValueHTMLVideo: o } = e("./kernel-value/html-video"), { WebGLKernelValueDynamicHTMLVideo: n } = e("./kernel-value/dynamic-html-video"), { WebGLKernelValueSingleInput: r } = e("./kernel-value/single-input"), { WebGLKernelValueDynamicSingleInput: m } = e("./kernel-value/dynamic-single-input"), { WebGLKernelValueUnsignedInput: b } = e("./kernel-value/unsigned-input"), { WebGLKernelValueDynamicUnsignedInput: E } = e("./kernel-value/dynamic-unsigned-input"), { WebGLKernelValueMemoryOptimizedNumberTexture: w } = e("./kernel-value/memory-optimized-number-texture"), { WebGLKernelValueDynamicMemoryOptimizedNumberTexture: v } = e("./kernel-value/dynamic-memory-optimized-number-texture"), { WebGLKernelValueNumberTexture: y } = e("./kernel-value/number-texture"), { WebGLKernelValueDynamicNumberTexture: T } = e("./kernel-value/dynamic-number-texture"), { WebGLKernelValueSingleArray: _ } = e("./kernel-value/single-array"), { WebGLKernelValueDynamicSingleArray: k } = e("./kernel-value/dynamic-single-array"), { WebGLKernelValueSingleArray1DI: C } = e("./kernel-value/single-array1d-i"), { WebGLKernelValueDynamicSingleArray1DI: M } = e("./kernel-value/dynamic-single-array1d-i"), { WebGLKernelValueSingleArray2DI: x } = e("./kernel-value/single-array2d-i"), { WebGLKernelValueDynamicSingleArray2DI: g } = e("./kernel-value/dynamic-single-array2d-i"), { WebGLKernelValueSingleArray3DI: I } = e("./kernel-value/single-array3d-i"), { WebGLKernelValueDynamicSingleArray3DI: A } = e("./kernel-value/dynamic-single-array3d-i"), { WebGLKernelValueArray2: P } = e("./kernel-value/array2"), { WebGLKernelValueArray3: O } = e("./kernel-value/array3"), { WebGLKernelValueArray4: R } = e("./kernel-value/array4"), { WebGLKernelValueUnsignedArray: G } = e("./kernel-value/unsigned-array"), { WebGLKernelValueDynamicUnsignedArray: U } = e("./kernel-value/dynamic-unsigned-array"), it = {
                                     unsigned: {
                                         dynamic: {
                                             Boolean: u,
                                             Integer: d,
                                             Float: p,
                                             Array: U,
-                                            "Array(2)": z,
-                                            "Array(3)": C,
+                                            "Array(2)": P,
+                                            "Array(3)": O,
                                             "Array(4)": R,
                                             "Array1D(2)": !1,
                                             "Array1D(3)": !1,
@@ -8669,9 +8669,9 @@ ${E.join("")};`), r.push(`}
                                             Boolean: u,
                                             Float: p,
                                             Integer: d,
-                                            Array: K,
-                                            "Array(2)": z,
-                                            "Array(3)": C,
+                                            Array: G,
+                                            "Array(2)": P,
+                                            "Array(3)": O,
                                             "Array(4)": R,
                                             "Array1D(2)": !1,
                                             "Array1D(3)": !1,
@@ -8704,8 +8704,8 @@ ${E.join("")};`), r.push(`}
                                             Integer: d,
                                             Float: p,
                                             Array: k,
-                                            "Array(2)": z,
-                                            "Array(3)": C,
+                                            "Array(2)": P,
+                                            "Array(3)": O,
                                             "Array(4)": R,
                                             "Array1D(2)": M,
                                             "Array1D(3)": M,
@@ -8736,12 +8736,12 @@ ${E.join("")};`), r.push(`}
                                             Float: p,
                                             Integer: d,
                                             Array: _,
-                                            "Array(2)": z,
-                                            "Array(3)": C,
+                                            "Array(2)": P,
+                                            "Array(3)": O,
                                             "Array(4)": R,
-                                            "Array1D(2)": O,
-                                            "Array1D(3)": O,
-                                            "Array1D(4)": O,
+                                            "Array1D(2)": C,
+                                            "Array1D(3)": C,
+                                            "Array1D(4)": C,
                                             "Array2D(2)": x,
                                             "Array2D(3)": x,
                                             "Array2D(4)": x,
@@ -8765,11 +8765,11 @@ ${E.join("")};`), r.push(`}
                                         }
                                     }
                                 };
-                                function q(B, st, rt, gt) {
+                                function q(B, st, rt, mt) {
                                     if (!B) throw new Error("type missing");
                                     if (!st) throw new Error("dynamic missing");
                                     if (!rt) throw new Error("precision missing");
-                                    gt.type && (B = gt.type);
+                                    mt.type && (B = mt.type);
                                     const tt = it[rt][st];
                                     if (tt[B] === !1) return null;
                                     if (tt[B] === void 0) throw new Error(`Could not find a KernelValue for ${B}`);
@@ -9832,7 +9832,7 @@ ${E.join("")};`), r.push(`}
                                 const T = [
                                     a
                                 ], _ = [], k = {};
-                                class O extends u {
+                                class C extends u {
                                     static get isSupported() {
                                         return b !== null || (this.setupFeatureChecks(), b = this.isContextMatch(w)), b;
                                     }
@@ -9897,12 +9897,12 @@ ${E.join("")};`), r.push(`}
                                     initPlugins(x) {
                                         const g = [], { source: I } = this;
                                         if (typeof I == "string") for(let A = 0; A < T.length; A++){
-                                            const z = T[A];
-                                            I.match(z.functionMatch) && g.push(z);
+                                            const P = T[A];
+                                            I.match(P.functionMatch) && g.push(P);
                                         }
                                         else if (typeof I == "object" && x.pluginNames) for(let A = 0; A < T.length; A++){
-                                            const z = T[A];
-                                            x.pluginNames.some((R)=>R === z.name) && g.push(z);
+                                            const P = T[A];
+                                            x.pluginNames.some((R)=>R === P.name) && g.push(P);
                                         }
                                         return g;
                                     }
@@ -9974,12 +9974,12 @@ ${E.join("")};`), r.push(`}
                                         if (x.length > this.argumentNames.length) throw new Error("too many arguments for kernel");
                                         const { context: I } = this;
                                         let A = 0;
-                                        const z = ()=>this.createTexture(), C = ()=>this.constantTextureCount + A++, R = (U)=>{
+                                        const P = ()=>this.createTexture(), O = ()=>this.constantTextureCount + A++, R = (U)=>{
                                             this.switchKernels({
                                                 type: "argumentMismatch",
                                                 needed: U
                                             });
-                                        }, K = ()=>I.TEXTURE0 + this.constantTextureCount + this.argumentTextureCount++;
+                                        }, G = ()=>I.TEXTURE0 + this.constantTextureCount + this.argumentTextureCount++;
                                         for(let U = 0; U < x.length; U++){
                                             const it = x[U], q = this.argumentNames[U];
                                             let B;
@@ -9995,10 +9995,10 @@ ${E.join("")};`), r.push(`}
                                                 checkContext: this.checkContext,
                                                 kernel: this,
                                                 strictIntegers: this.strictIntegers,
-                                                onRequestTexture: z,
-                                                onRequestIndex: C,
+                                                onRequestTexture: P,
+                                                onRequestIndex: O,
                                                 onUpdateValueMismatch: R,
-                                                onRequestContextHandle: K
+                                                onRequestContextHandle: G
                                             });
                                             this.kernelArguments.push(rt), rt.setup(), this.argumentSizes.push(rt.textureSize), this.argumentBitRatios[U] = rt.bitRatio;
                                         }
@@ -10013,14 +10013,14 @@ ${E.join("")};`), r.push(`}
                                         let I = this.constantTypes === null;
                                         I && (this.constantTypes = {}), this.constantBitRatios = {};
                                         let A = 0;
-                                        for(const z in this.constants){
-                                            const C = this.constants[z];
+                                        for(const P in this.constants){
+                                            const O = this.constants[P];
                                             let R;
-                                            I ? (R = l.getVariableType(C, this.strictIntegers), this.constantTypes[z] = R) : R = this.constantTypes[z];
-                                            const K = this.constructor.lookupKernelValueType(R, "static", this.precision, C);
-                                            if (K === null) return this.requestFallback(x);
-                                            const U = new K(C, {
-                                                name: z,
+                                            I ? (R = l.getVariableType(O, this.strictIntegers), this.constantTypes[P] = R) : R = this.constantTypes[P];
+                                            const G = this.constructor.lookupKernelValueType(R, "static", this.precision, O);
+                                            if (G === null) return this.requestFallback(x);
+                                            const U = new G(O, {
+                                                name: P,
                                                 type: R,
                                                 tactic: this.tactic,
                                                 origin: "constants",
@@ -10032,7 +10032,7 @@ ${E.join("")};`), r.push(`}
                                                 onRequestIndex: ()=>A++,
                                                 onRequestContextHandle: ()=>g.TEXTURE0 + this.constantTextureCount++
                                             });
-                                            this.constantBitRatios[z] = U.bitRatio, this.kernelConstants.push(U), U.setup(), U.forceUploadEachRun && this.forceUploadKernelConstants.push(U);
+                                            this.constantBitRatios[P] = U.bitRatio, this.kernelConstants.push(U), U.setup(), U.forceUploadEachRun && this.forceUploadKernelConstants.push(U);
                                         }
                                     }
                                     build() {
@@ -10042,12 +10042,12 @@ ${E.join("")};`), r.push(`}
                                         if (x) return x;
                                         const { texSize: g, context: I, canvas: A } = this;
                                         I.enable(I.SCISSOR_TEST), this.pipeline && this.precision === "single" ? (I.viewport(0, 0, this.maxTexSize[0], this.maxTexSize[1]), A.width = this.maxTexSize[0], A.height = this.maxTexSize[1]) : (I.viewport(0, 0, this.maxTexSize[0], this.maxTexSize[1]), A.width = this.maxTexSize[0], A.height = this.maxTexSize[1]);
-                                        const z = this.threadDim = Array.from(this.output);
-                                        for(; z.length < 3;)z.push(1);
-                                        const C = this.getVertexShader(arguments), R = I.createShader(I.VERTEX_SHADER);
-                                        I.shaderSource(R, C), I.compileShader(R), this.vertShader = R;
-                                        const K = this.getFragmentShader(arguments), U = I.createShader(I.FRAGMENT_SHADER);
-                                        if (I.shaderSource(U, K), I.compileShader(U), this.fragShader = U, this.debug && (console.log("GLSL Shader Output:"), console.log(K)), !I.getShaderParameter(R, I.COMPILE_STATUS)) throw new Error("Error compiling vertex shader: " + I.getShaderInfoLog(R));
+                                        const P = this.threadDim = Array.from(this.output);
+                                        for(; P.length < 3;)P.push(1);
+                                        const O = this.getVertexShader(arguments), R = I.createShader(I.VERTEX_SHADER);
+                                        I.shaderSource(R, O), I.compileShader(R), this.vertShader = R;
+                                        const G = this.getFragmentShader(arguments), U = I.createShader(I.FRAGMENT_SHADER);
+                                        if (I.shaderSource(U, G), I.compileShader(U), this.fragShader = U, this.debug && (console.log("GLSL Shader Output:"), console.log(G)), !I.getShaderParameter(R, I.COMPILE_STATUS)) throw new Error("Error compiling vertex shader: " + I.getShaderInfoLog(R));
                                         if (!I.getShaderParameter(U, I.COMPILE_STATUS)) throw new Error("Error compiling fragment shader: " + I.getShaderInfoLog(U));
                                         const it = this.program = I.createProgram();
                                         I.attachShader(it, R), I.attachShader(it, U), I.linkProgram(it), this.framebuffer = I.createFramebuffer(), this.framebuffer.width = g[0], this.framebuffer.height = g[1], this.rawValueFramebuffers = {};
@@ -10072,13 +10072,13 @@ ${E.join("")};`), r.push(`}
                                         ]), st = q.byteLength;
                                         let rt = this.buffer;
                                         rt ? I.bindBuffer(I.ARRAY_BUFFER, rt) : (rt = this.buffer = I.createBuffer(), I.bindBuffer(I.ARRAY_BUFFER, rt), I.bufferData(I.ARRAY_BUFFER, q.byteLength + B.byteLength, I.STATIC_DRAW)), I.bufferSubData(I.ARRAY_BUFFER, 0, q), I.bufferSubData(I.ARRAY_BUFFER, st, B);
-                                        const gt = I.getAttribLocation(this.program, "aPos");
-                                        I.enableVertexAttribArray(gt), I.vertexAttribPointer(gt, 2, I.FLOAT, !1, 0, 0);
+                                        const mt = I.getAttribLocation(this.program, "aPos");
+                                        I.enableVertexAttribArray(mt), I.vertexAttribPointer(mt, 2, I.FLOAT, !1, 0, 0);
                                         const tt = I.getAttribLocation(this.program, "aTexCoord");
                                         I.enableVertexAttribArray(tt), I.vertexAttribPointer(tt, 2, I.FLOAT, !1, 0, st), I.bindFramebuffer(I.FRAMEBUFFER, this.framebuffer);
                                         let et = 0;
                                         I.useProgram(this.program);
-                                        for(let Y in this.constants)this.kernelConstants[et++].updateValue(this.constants[Y]);
+                                        for(let J in this.constants)this.kernelConstants[et++].updateValue(this.constants[J]);
                                         this._setupOutputTexture(), this.subKernels !== null && this.subKernels.length > 0 && (this._mappedTextureSwitched = {}, this._setupSubOutputTextures()), this.buildSignature(arguments), this.built = !0;
                                     }
                                     translateSource() {
@@ -10096,14 +10096,14 @@ ${E.join("")};`), r.push(`}
                                     run() {
                                         const { kernelArguments: x, texSize: g, forceUploadKernelConstants: I, context: A } = this;
                                         A.useProgram(this.program), A.scissor(0, 0, g[0], g[1]), this.dynamicOutput && (this.setUniform3iv("uOutputDim", new Int32Array(this.threadDim)), this.setUniform2iv("uTexSize", g)), this.setUniform2f("ratio", g[0] / this.maxTexSize[0], g[1] / this.maxTexSize[1]);
-                                        for(let z = 0; z < I.length; z++){
-                                            const C = I[z];
-                                            if (C.updateValue(this.constants[C.name]), this.switchingKernels) return;
+                                        for(let P = 0; P < I.length; P++){
+                                            const O = I[P];
+                                            if (O.updateValue(this.constants[O.name]), this.switchingKernels) return;
                                         }
-                                        for(let z = 0; z < x.length; z++)if (x[z].updateValue(arguments[z]), this.switchingKernels) return;
-                                        if (this.plugins) for(let z = 0; z < this.plugins.length; z++){
-                                            const C = this.plugins[z];
-                                            C.onBeforeRun && C.onBeforeRun(this);
+                                        for(let P = 0; P < x.length; P++)if (x[P].updateValue(arguments[P]), this.switchingKernels) return;
+                                        if (this.plugins) for(let P = 0; P < this.plugins.length; P++){
+                                            const O = this.plugins[P];
+                                            O.onBeforeRun && O.onBeforeRun(this);
                                         }
                                         if (this.graphical) {
                                             if (this.pipeline) return A.bindRenderbuffer(A.RENDERBUFFER, null), A.bindFramebuffer(A.FRAMEBUFFER, this.framebuffer), this.immutable && this._replaceOutputTexture(), A.drawArrays(A.TRIANGLE_STRIP, 0, 4), this.immutable ? this.texture.clone() : this.texture;
@@ -10204,8 +10204,8 @@ ${E.join("")};`), r.push(`}
                                     }
                                     setUniform2f(x, g, I) {
                                         if (this.uniform2fCache.hasOwnProperty(x)) {
-                                            const z = this.uniform2fCache[x];
-                                            if (g === z[0] && I === z[1]) return;
+                                            const P = this.uniform2fCache[x];
+                                            if (g === P[0] && I === P[1]) return;
                                         }
                                         this.uniform2fCache[x] = [
                                             g,
@@ -10588,8 +10588,8 @@ float integerCorrectionModulo(float number, float divisor) {
                                             for(let I = 0; I < this.mappedTextures.length; I++){
                                                 const A = this.mappedTextures[I];
                                                 A.delete();
-                                                const z = this.textureCache.indexOf(A.texture);
-                                                z > -1 && this.textureCache.splice(z, 1);
+                                                const P = this.textureCache.indexOf(A.texture);
+                                                P > -1 && this.textureCache.splice(P, 1);
                                             }
                                             this.mappedTextures = null;
                                         }
@@ -10620,7 +10620,7 @@ float integerCorrectionModulo(float number, float divisor) {
                                     }
                                 }
                                 i.exports = {
-                                    WebGLKernel: O
+                                    WebGLKernel: C
                                 };
                             },
                             {
@@ -11133,7 +11133,7 @@ void main(void) {
                         ],
                         74: [
                             function(e, i, h) {
-                                const { WebGL2KernelValueBoolean: u } = e("./kernel-value/boolean"), { WebGL2KernelValueFloat: p } = e("./kernel-value/float"), { WebGL2KernelValueInteger: d } = e("./kernel-value/integer"), { WebGL2KernelValueHTMLImage: l } = e("./kernel-value/html-image"), { WebGL2KernelValueDynamicHTMLImage: a } = e("./kernel-value/dynamic-html-image"), { WebGL2KernelValueHTMLImageArray: o } = e("./kernel-value/html-image-array"), { WebGL2KernelValueDynamicHTMLImageArray: n } = e("./kernel-value/dynamic-html-image-array"), { WebGL2KernelValueHTMLVideo: r } = e("./kernel-value/html-video"), { WebGL2KernelValueDynamicHTMLVideo: m } = e("./kernel-value/dynamic-html-video"), { WebGL2KernelValueSingleInput: b } = e("./kernel-value/single-input"), { WebGL2KernelValueDynamicSingleInput: E } = e("./kernel-value/dynamic-single-input"), { WebGL2KernelValueUnsignedInput: w } = e("./kernel-value/unsigned-input"), { WebGL2KernelValueDynamicUnsignedInput: v } = e("./kernel-value/dynamic-unsigned-input"), { WebGL2KernelValueMemoryOptimizedNumberTexture: y } = e("./kernel-value/memory-optimized-number-texture"), { WebGL2KernelValueDynamicMemoryOptimizedNumberTexture: T } = e("./kernel-value/dynamic-memory-optimized-number-texture"), { WebGL2KernelValueNumberTexture: _ } = e("./kernel-value/number-texture"), { WebGL2KernelValueDynamicNumberTexture: k } = e("./kernel-value/dynamic-number-texture"), { WebGL2KernelValueSingleArray: O } = e("./kernel-value/single-array"), { WebGL2KernelValueDynamicSingleArray: M } = e("./kernel-value/dynamic-single-array"), { WebGL2KernelValueSingleArray1DI: x } = e("./kernel-value/single-array1d-i"), { WebGL2KernelValueDynamicSingleArray1DI: g } = e("./kernel-value/dynamic-single-array1d-i"), { WebGL2KernelValueSingleArray2DI: I } = e("./kernel-value/single-array2d-i"), { WebGL2KernelValueDynamicSingleArray2DI: A } = e("./kernel-value/dynamic-single-array2d-i"), { WebGL2KernelValueSingleArray3DI: z } = e("./kernel-value/single-array3d-i"), { WebGL2KernelValueDynamicSingleArray3DI: C } = e("./kernel-value/dynamic-single-array3d-i"), { WebGL2KernelValueArray2: R } = e("./kernel-value/array2"), { WebGL2KernelValueArray3: K } = e("./kernel-value/array3"), { WebGL2KernelValueArray4: U } = e("./kernel-value/array4"), { WebGL2KernelValueUnsignedArray: it } = e("./kernel-value/unsigned-array"), { WebGL2KernelValueDynamicUnsignedArray: q } = e("./kernel-value/dynamic-unsigned-array"), B = {
+                                const { WebGL2KernelValueBoolean: u } = e("./kernel-value/boolean"), { WebGL2KernelValueFloat: p } = e("./kernel-value/float"), { WebGL2KernelValueInteger: d } = e("./kernel-value/integer"), { WebGL2KernelValueHTMLImage: l } = e("./kernel-value/html-image"), { WebGL2KernelValueDynamicHTMLImage: a } = e("./kernel-value/dynamic-html-image"), { WebGL2KernelValueHTMLImageArray: o } = e("./kernel-value/html-image-array"), { WebGL2KernelValueDynamicHTMLImageArray: n } = e("./kernel-value/dynamic-html-image-array"), { WebGL2KernelValueHTMLVideo: r } = e("./kernel-value/html-video"), { WebGL2KernelValueDynamicHTMLVideo: m } = e("./kernel-value/dynamic-html-video"), { WebGL2KernelValueSingleInput: b } = e("./kernel-value/single-input"), { WebGL2KernelValueDynamicSingleInput: E } = e("./kernel-value/dynamic-single-input"), { WebGL2KernelValueUnsignedInput: w } = e("./kernel-value/unsigned-input"), { WebGL2KernelValueDynamicUnsignedInput: v } = e("./kernel-value/dynamic-unsigned-input"), { WebGL2KernelValueMemoryOptimizedNumberTexture: y } = e("./kernel-value/memory-optimized-number-texture"), { WebGL2KernelValueDynamicMemoryOptimizedNumberTexture: T } = e("./kernel-value/dynamic-memory-optimized-number-texture"), { WebGL2KernelValueNumberTexture: _ } = e("./kernel-value/number-texture"), { WebGL2KernelValueDynamicNumberTexture: k } = e("./kernel-value/dynamic-number-texture"), { WebGL2KernelValueSingleArray: C } = e("./kernel-value/single-array"), { WebGL2KernelValueDynamicSingleArray: M } = e("./kernel-value/dynamic-single-array"), { WebGL2KernelValueSingleArray1DI: x } = e("./kernel-value/single-array1d-i"), { WebGL2KernelValueDynamicSingleArray1DI: g } = e("./kernel-value/dynamic-single-array1d-i"), { WebGL2KernelValueSingleArray2DI: I } = e("./kernel-value/single-array2d-i"), { WebGL2KernelValueDynamicSingleArray2DI: A } = e("./kernel-value/dynamic-single-array2d-i"), { WebGL2KernelValueSingleArray3DI: P } = e("./kernel-value/single-array3d-i"), { WebGL2KernelValueDynamicSingleArray3DI: O } = e("./kernel-value/dynamic-single-array3d-i"), { WebGL2KernelValueArray2: R } = e("./kernel-value/array2"), { WebGL2KernelValueArray3: G } = e("./kernel-value/array3"), { WebGL2KernelValueArray4: U } = e("./kernel-value/array4"), { WebGL2KernelValueUnsignedArray: it } = e("./kernel-value/unsigned-array"), { WebGL2KernelValueDynamicUnsignedArray: q } = e("./kernel-value/dynamic-unsigned-array"), B = {
                                     unsigned: {
                                         dynamic: {
                                             Boolean: u,
@@ -11141,7 +11141,7 @@ void main(void) {
                                             Float: p,
                                             Array: q,
                                             "Array(2)": R,
-                                            "Array(3)": K,
+                                            "Array(3)": G,
                                             "Array(4)": U,
                                             "Array1D(2)": !1,
                                             "Array1D(3)": !1,
@@ -11173,7 +11173,7 @@ void main(void) {
                                             Integer: d,
                                             Array: it,
                                             "Array(2)": R,
-                                            "Array(3)": K,
+                                            "Array(3)": G,
                                             "Array(4)": U,
                                             "Array1D(2)": !1,
                                             "Array1D(3)": !1,
@@ -11207,7 +11207,7 @@ void main(void) {
                                             Float: p,
                                             Array: M,
                                             "Array(2)": R,
-                                            "Array(3)": K,
+                                            "Array(3)": G,
                                             "Array(4)": U,
                                             "Array1D(2)": g,
                                             "Array1D(3)": g,
@@ -11215,9 +11215,9 @@ void main(void) {
                                             "Array2D(2)": A,
                                             "Array2D(3)": A,
                                             "Array2D(4)": A,
-                                            "Array3D(2)": C,
-                                            "Array3D(3)": C,
-                                            "Array3D(4)": C,
+                                            "Array3D(2)": O,
+                                            "Array3D(3)": O,
+                                            "Array3D(4)": O,
                                             Input: E,
                                             NumberTexture: k,
                                             "ArrayTexture(1)": k,
@@ -11237,9 +11237,9 @@ void main(void) {
                                             Boolean: u,
                                             Float: p,
                                             Integer: d,
-                                            Array: O,
+                                            Array: C,
                                             "Array(2)": R,
-                                            "Array(3)": K,
+                                            "Array(3)": G,
                                             "Array(4)": U,
                                             "Array1D(2)": x,
                                             "Array1D(3)": x,
@@ -11247,9 +11247,9 @@ void main(void) {
                                             "Array2D(2)": I,
                                             "Array2D(3)": I,
                                             "Array2D(4)": I,
-                                            "Array3D(2)": z,
-                                            "Array3D(3)": z,
-                                            "Array3D(4)": z,
+                                            "Array3D(2)": P,
+                                            "Array3D(3)": P,
+                                            "Array3D(4)": P,
                                             Input: b,
                                             NumberTexture: _,
                                             "ArrayTexture(1)": _,
@@ -11267,15 +11267,15 @@ void main(void) {
                                         }
                                     }
                                 };
-                                function st(rt, gt, tt, et) {
+                                function st(rt, mt, tt, et) {
                                     if (!rt) throw new Error("type missing");
-                                    if (!gt) throw new Error("dynamic missing");
+                                    if (!mt) throw new Error("dynamic missing");
                                     if (!tt) throw new Error("precision missing");
                                     et.type && (rt = et.type);
-                                    const Y = B[tt][gt];
-                                    if (Y[rt] === !1) return null;
-                                    if (Y[rt] === void 0) throw new Error(`Could not find a KernelValue for ${rt}`);
-                                    return Y[rt];
+                                    const J = B[tt][mt];
+                                    if (J[rt] === !1) return null;
+                                    if (J[rt] === void 0) throw new Error(`Could not find a KernelValue for ${rt}`);
+                                    return J[rt];
                                 }
                                 i.exports = {
                                     kernelValueMaps: B,
@@ -12175,8 +12175,8 @@ void main(void) {
                                         for(let _ = 0; _ < this.subKernels.length; _++){
                                             const k = this.createTexture();
                                             this.drawBuffersMap.push(y.COLOR_ATTACHMENT0 + _ + 1), y.activeTexture(y.TEXTURE0 + this.constantTextureCount + this.argumentTextureCount + _), y.bindTexture(y.TEXTURE_2D, k), y.texParameteri(y.TEXTURE_2D, y.TEXTURE_WRAP_S, y.CLAMP_TO_EDGE), y.texParameteri(y.TEXTURE_2D, y.TEXTURE_WRAP_T, y.CLAMP_TO_EDGE), y.texParameteri(y.TEXTURE_2D, y.TEXTURE_MIN_FILTER, y.NEAREST), y.texParameteri(y.TEXTURE_2D, y.TEXTURE_MAG_FILTER, y.NEAREST);
-                                            const O = this.getInternalFormat();
-                                            this.precision === "single" ? y.texStorage2D(y.TEXTURE_2D, 1, O, T[0], T[1]) : y.texImage2D(y.TEXTURE_2D, 0, y.RGBA, T[0], T[1], 0, y.RGBA, y.UNSIGNED_BYTE, null), y.framebufferTexture2D(y.FRAMEBUFFER, y.COLOR_ATTACHMENT0 + _ + 1, y.TEXTURE_2D, k, 0), this.mappedTextures.push(new this.TextureConstructor({
+                                            const C = this.getInternalFormat();
+                                            this.precision === "single" ? y.texStorage2D(y.TEXTURE_2D, 1, C, T[0], T[1]) : y.texImage2D(y.TEXTURE_2D, 0, y.RGBA, T[0], T[1], 0, y.RGBA, y.UNSIGNED_BYTE, null), y.framebufferTexture2D(y.FRAMEBUFFER, y.COLOR_ATTACHMENT0 + _ + 1, y.TEXTURE_2D, k, 0), this.mappedTextures.push(new this.TextureConstructor({
                                                 texture: k,
                                                 size: T,
                                                 dimensions: this.threadDim,
@@ -12452,8 +12452,8 @@ void main(void) {
                                             if (this.chooseKernel(), T.functions) for(let _ = 0; _ < T.functions.length; _++)this.addFunction(T.functions[_]);
                                             if (T.nativeFunctions) for(const _ in T.nativeFunctions){
                                                 if (!T.nativeFunctions.hasOwnProperty(_)) continue;
-                                                const k = T.nativeFunctions[_], { name: O, source: M } = k;
-                                                this.addNativeFunction(O, M, k);
+                                                const k = T.nativeFunctions[_], { name: C, source: M } = k;
+                                                this.addNativeFunction(C, M, k);
                                             }
                                         }
                                     }
@@ -12493,81 +12493,81 @@ void main(void) {
                                         if (typeof T != "object" && !p.isFunction(T) && typeof T != "string") throw new Error("source parameter not a function");
                                         const k = this.kernels;
                                         if (this.mode === "dev") {
-                                            const C = u(T, v(_));
-                                            return k.push(C), C;
+                                            const O = u(T, v(_));
+                                            return k.push(O), O;
                                         }
                                         T = typeof T == "function" ? T.toString() : T;
-                                        const O = {}, M = v(_) || {};
-                                        _ && typeof _.argumentTypes == "object" && (M.argumentTypes = Object.keys(_.argumentTypes).map((C)=>_.argumentTypes[C]));
-                                        function x(C) {
+                                        const C = {}, M = v(_) || {};
+                                        _ && typeof _.argumentTypes == "object" && (M.argumentTypes = Object.keys(_.argumentTypes).map((O)=>_.argumentTypes[O]));
+                                        function x(O) {
                                             console.warn("Falling back to CPU");
                                             const R = new d(T, {
-                                                argumentTypes: z.argumentTypes,
-                                                constantTypes: z.constantTypes,
-                                                graphical: z.graphical,
-                                                loopMaxIterations: z.loopMaxIterations,
-                                                constants: z.constants,
-                                                dynamicOutput: z.dynamicOutput,
-                                                dynamicArgument: z.dynamicArguments,
-                                                output: z.output,
-                                                precision: z.precision,
-                                                pipeline: z.pipeline,
-                                                immutable: z.immutable,
-                                                optimizeFloatMemory: z.optimizeFloatMemory,
-                                                fixIntegerDivisionAccuracy: z.fixIntegerDivisionAccuracy,
-                                                functions: z.functions,
-                                                nativeFunctions: z.nativeFunctions,
-                                                injectedNative: z.injectedNative,
-                                                subKernels: z.subKernels,
-                                                strictIntegers: z.strictIntegers,
-                                                debug: z.debug
+                                                argumentTypes: P.argumentTypes,
+                                                constantTypes: P.constantTypes,
+                                                graphical: P.graphical,
+                                                loopMaxIterations: P.loopMaxIterations,
+                                                constants: P.constants,
+                                                dynamicOutput: P.dynamicOutput,
+                                                dynamicArgument: P.dynamicArguments,
+                                                output: P.output,
+                                                precision: P.precision,
+                                                pipeline: P.pipeline,
+                                                immutable: P.immutable,
+                                                optimizeFloatMemory: P.optimizeFloatMemory,
+                                                fixIntegerDivisionAccuracy: P.fixIntegerDivisionAccuracy,
+                                                functions: P.functions,
+                                                nativeFunctions: P.nativeFunctions,
+                                                injectedNative: P.injectedNative,
+                                                subKernels: P.subKernels,
+                                                strictIntegers: P.strictIntegers,
+                                                debug: P.debug
                                             });
-                                            R.build.apply(R, C);
-                                            const K = R.run.apply(R, C);
-                                            return z.replaceKernel(R), K;
+                                            R.build.apply(R, O);
+                                            const G = R.run.apply(R, O);
+                                            return P.replaceKernel(R), G;
                                         }
-                                        function g(C, R, K) {
-                                            K.debug && console.warn("Switching kernels");
+                                        function g(O, R, G) {
+                                            G.debug && console.warn("Switching kernels");
                                             let U = null;
-                                            if (K.signature && !O[K.signature] && (O[K.signature] = K), K.dynamicOutput) for(let gt = C.length - 1; gt >= 0; gt--){
-                                                const tt = C[gt];
+                                            if (G.signature && !C[G.signature] && (C[G.signature] = G), G.dynamicOutput) for(let mt = O.length - 1; mt >= 0; mt--){
+                                                const tt = O[mt];
                                                 tt.type === "outputPrecisionMismatch" && (U = tt.needed);
                                             }
-                                            const it = K.constructor, q = it.getArgumentTypes(K, R), B = it.getSignature(K, q), st = O[B];
-                                            if (st) return st.onActivate(K), st;
-                                            const rt = O[B] = new it(T, {
+                                            const it = G.constructor, q = it.getArgumentTypes(G, R), B = it.getSignature(G, q), st = C[B];
+                                            if (st) return st.onActivate(G), st;
+                                            const rt = C[B] = new it(T, {
                                                 argumentTypes: q,
-                                                constantTypes: K.constantTypes,
-                                                graphical: K.graphical,
-                                                loopMaxIterations: K.loopMaxIterations,
-                                                constants: K.constants,
-                                                dynamicOutput: K.dynamicOutput,
-                                                dynamicArgument: K.dynamicArguments,
-                                                context: K.context,
-                                                canvas: K.canvas,
-                                                output: U || K.output,
-                                                precision: K.precision,
-                                                pipeline: K.pipeline,
-                                                immutable: K.immutable,
-                                                optimizeFloatMemory: K.optimizeFloatMemory,
-                                                fixIntegerDivisionAccuracy: K.fixIntegerDivisionAccuracy,
-                                                functions: K.functions,
-                                                nativeFunctions: K.nativeFunctions,
-                                                injectedNative: K.injectedNative,
-                                                subKernels: K.subKernels,
-                                                strictIntegers: K.strictIntegers,
-                                                debug: K.debug,
-                                                gpu: K.gpu,
+                                                constantTypes: G.constantTypes,
+                                                graphical: G.graphical,
+                                                loopMaxIterations: G.loopMaxIterations,
+                                                constants: G.constants,
+                                                dynamicOutput: G.dynamicOutput,
+                                                dynamicArgument: G.dynamicArguments,
+                                                context: G.context,
+                                                canvas: G.canvas,
+                                                output: U || G.output,
+                                                precision: G.precision,
+                                                pipeline: G.pipeline,
+                                                immutable: G.immutable,
+                                                optimizeFloatMemory: G.optimizeFloatMemory,
+                                                fixIntegerDivisionAccuracy: G.fixIntegerDivisionAccuracy,
+                                                functions: G.functions,
+                                                nativeFunctions: G.nativeFunctions,
+                                                injectedNative: G.injectedNative,
+                                                subKernels: G.subKernels,
+                                                strictIntegers: G.strictIntegers,
+                                                debug: G.debug,
+                                                gpu: G.gpu,
                                                 validate: E,
-                                                returnType: K.returnType,
-                                                tactic: K.tactic,
+                                                returnType: G.returnType,
+                                                tactic: G.tactic,
                                                 onRequestFallback: x,
                                                 onRequestSwitchKernel: g,
-                                                texture: K.texture,
-                                                mappedTextures: K.mappedTextures,
-                                                drawBuffersMap: K.drawBuffersMap
+                                                texture: G.texture,
+                                                mappedTextures: G.mappedTextures,
+                                                drawBuffersMap: G.drawBuffersMap
                                             });
-                                            return rt.build.apply(rt, R), z.replaceKernel(rt), k.push(rt), rt;
+                                            return rt.build.apply(rt, R), P.replaceKernel(rt), k.push(rt), rt;
                                         }
                                         const I = Object.assign({
                                             context: this.context,
@@ -12579,45 +12579,45 @@ void main(void) {
                                             validate: E,
                                             onRequestFallback: x,
                                             onRequestSwitchKernel: g
-                                        }, M), A = new this.Kernel(T, I), z = n(A);
-                                        return this.canvas || (this.canvas = A.canvas), this.context || (this.context = A.context), k.push(A), z;
+                                        }, M), A = new this.Kernel(T, I), P = n(A);
+                                        return this.canvas || (this.canvas = A.canvas), this.context || (this.context = A.context), k.push(A), P;
                                     }
                                     createKernelMap() {
                                         let T, _;
                                         const k = typeof arguments[arguments.length - 2];
                                         if (k === "function" || k === "string" ? (T = arguments[arguments.length - 2], _ = arguments[arguments.length - 1]) : T = arguments[arguments.length - 1], this.mode !== "dev" && (!this.Kernel.isSupported || !this.Kernel.features.kernelMap) && this.mode && m.indexOf(this.mode) < 0) throw new Error(`kernelMap not supported on ${this.Kernel.name}`);
-                                        const O = v(_);
-                                        if (_ && typeof _.argumentTypes == "object" && (O.argumentTypes = Object.keys(_.argumentTypes).map((M)=>_.argumentTypes[M])), Array.isArray(arguments[0])) {
-                                            O.subKernels = [];
+                                        const C = v(_);
+                                        if (_ && typeof _.argumentTypes == "object" && (C.argumentTypes = Object.keys(_.argumentTypes).map((M)=>_.argumentTypes[M])), Array.isArray(arguments[0])) {
+                                            C.subKernels = [];
                                             const M = arguments[0];
                                             for(let x = 0; x < M.length; x++){
                                                 const g = M[x].toString(), I = p.getFunctionNameFromString(g);
-                                                O.subKernels.push({
+                                                C.subKernels.push({
                                                     name: I,
                                                     source: g,
                                                     property: x
                                                 });
                                             }
                                         } else {
-                                            O.subKernels = [];
+                                            C.subKernels = [];
                                             const M = arguments[0];
                                             for(let x in M){
                                                 if (!M.hasOwnProperty(x)) continue;
                                                 const g = M[x].toString(), I = p.getFunctionNameFromString(g);
-                                                O.subKernels.push({
+                                                C.subKernels.push({
                                                     name: I || x,
                                                     source: g,
                                                     property: x
                                                 });
                                             }
                                         }
-                                        return this.createKernel(T, O);
+                                        return this.createKernel(T, C);
                                     }
                                     combineKernels() {
                                         const T = arguments[0], _ = arguments[arguments.length - 1];
                                         if (T.kernel.constructor.mode === "cpu") return _;
-                                        const k = arguments[0].canvas, O = arguments[0].context, M = arguments.length - 1;
-                                        for(let x = 0; x < M; x++)arguments[x].setCanvas(k).setContext(O).setPipeline(!0);
+                                        const k = arguments[0].canvas, C = arguments[0].context, M = arguments.length - 1;
+                                        for(let x = 0; x < M; x++)arguments[x].setCanvas(k).setContext(C).setPipeline(!0);
                                         return function() {
                                             const x = _.apply(this, arguments);
                                             return x.toArray ? x.toArray() : x;
@@ -12649,7 +12649,7 @@ void main(void) {
                                         return new Promise((T, _)=>{
                                             this.kernels || T(), setTimeout(()=>{
                                                 try {
-                                                    for(let O = 0; O < this.kernels.length; O++)this.kernels[O].destroy(!0);
+                                                    for(let C = 0; C < this.kernels.length; C++)this.kernels[C].destroy(!0);
                                                     let k = this.kernels[0];
                                                     k && (k.kernel && (k = k.kernel), k.constructor.destroyContext && k.constructor.destroyContext(this.context));
                                                 } catch (k) {
@@ -12684,7 +12684,7 @@ void main(void) {
                         ],
                         109: [
                             function(e, i, h) {
-                                const { GPU: u } = e("./gpu"), { alias: p } = e("./alias"), { utils: d } = e("./utils"), { Input: l, input: a } = e("./input"), { Texture: o } = e("./texture"), { FunctionBuilder: n } = e("./backend/function-builder"), { FunctionNode: r } = e("./backend/function-node"), { CPUFunctionNode: m } = e("./backend/cpu/function-node"), { CPUKernel: b } = e("./backend/cpu/kernel"), { HeadlessGLKernel: E } = e("./backend/headless-gl/kernel"), { WebGLFunctionNode: w } = e("./backend/web-gl/function-node"), { WebGLKernel: v } = e("./backend/web-gl/kernel"), { kernelValueMaps: y } = e("./backend/web-gl/kernel-value-maps"), { WebGL2FunctionNode: T } = e("./backend/web-gl2/function-node"), { WebGL2Kernel: _ } = e("./backend/web-gl2/kernel"), { kernelValueMaps: k } = e("./backend/web-gl2/kernel-value-maps"), { GLKernel: O } = e("./backend/gl/kernel"), { Kernel: M } = e("./backend/kernel"), { FunctionTracer: x } = e("./backend/function-tracer"), g = e("./plugins/math-random-uniformly-distributed");
+                                const { GPU: u } = e("./gpu"), { alias: p } = e("./alias"), { utils: d } = e("./utils"), { Input: l, input: a } = e("./input"), { Texture: o } = e("./texture"), { FunctionBuilder: n } = e("./backend/function-builder"), { FunctionNode: r } = e("./backend/function-node"), { CPUFunctionNode: m } = e("./backend/cpu/function-node"), { CPUKernel: b } = e("./backend/cpu/kernel"), { HeadlessGLKernel: E } = e("./backend/headless-gl/kernel"), { WebGLFunctionNode: w } = e("./backend/web-gl/function-node"), { WebGLKernel: v } = e("./backend/web-gl/kernel"), { kernelValueMaps: y } = e("./backend/web-gl/kernel-value-maps"), { WebGL2FunctionNode: T } = e("./backend/web-gl2/function-node"), { WebGL2Kernel: _ } = e("./backend/web-gl2/kernel"), { kernelValueMaps: k } = e("./backend/web-gl2/kernel-value-maps"), { GLKernel: C } = e("./backend/gl/kernel"), { Kernel: M } = e("./backend/kernel"), { FunctionTracer: x } = e("./backend/function-tracer"), g = e("./plugins/math-random-uniformly-distributed");
                                 i.exports = {
                                     alias: p,
                                     CPUFunctionNode: m,
@@ -12703,7 +12703,7 @@ void main(void) {
                                     WebGLFunctionNode: w,
                                     WebGLKernel: v,
                                     webGLKernelValueMaps: y,
-                                    GLKernel: O,
+                                    GLKernel: C,
                                     Kernel: M,
                                     FunctionTracer: x,
                                     plugins: {
@@ -12977,8 +12977,8 @@ highp float nrand(highp vec2 n) {
                                         return n.closestSquareDimensions(T);
                                     },
                                     getMemoryOptimizedPackedTextureSize (w, v) {
-                                        const [y, T, _] = w, O = n.roundTo((y || 1) * (T || 1) * (_ || 1), 4) / (4 / v);
-                                        return n.closestSquareDimensions(O);
+                                        const [y, T, _] = w, C = n.roundTo((y || 1) * (T || 1) * (_ || 1), 4) / (4 / v);
+                                        return n.closestSquareDimensions(C);
                                     },
                                     roundTo (w, v) {
                                         return Math.floor((w + v - 1) / v) * v;
@@ -13021,7 +13021,7 @@ highp float nrand(highp vec2 n) {
                                         if (T.line === _.line) k.push(y[T.line - 1].substring(T.column, _.column));
                                         else {
                                             k.push(y[T.line - 1].slice(T.column));
-                                            for(let O = T.line; O < _.line; O++)k.push(y[O]);
+                                            for(let C = T.line; C < _.line; C++)k.push(y[C]);
                                             k.push(y[_.line - 1].slice(0, _.column));
                                         }
                                         return k.join(`
@@ -13043,31 +13043,31 @@ highp float nrand(highp vec2 n) {
                                         console.warn(y ? `You are using a deprecated ${w} "${v}". It has been replaced with "${y}". Fixing, but please upgrade as it will soon be removed.` : `You are using a deprecated ${w} "${v}". It has been removed. Fixing, but please upgrade as it will soon be removed.`);
                                     },
                                     flipPixels: (w, v, y)=>{
-                                        const T = y / 2 | 0, _ = v * 4, k = new Uint8ClampedArray(v * 4), O = w.slice(0);
+                                        const T = y / 2 | 0, _ = v * 4, k = new Uint8ClampedArray(v * 4), C = w.slice(0);
                                         for(let M = 0; M < T; ++M){
                                             const x = M * _, g = (y - M - 1) * _;
-                                            k.set(O.subarray(x, x + _)), O.copyWithin(x, g, g + _), O.set(k, g);
+                                            k.set(C.subarray(x, x + _)), C.copyWithin(x, g, g + _), C.set(k, g);
                                         }
-                                        return O;
+                                        return C;
                                     },
                                     erectPackedFloat: (w, v)=>w.subarray(0, v),
                                     erect2DPackedFloat: (w, v, y)=>{
                                         const T = new Array(y);
                                         for(let _ = 0; _ < y; _++){
-                                            const k = _ * v, O = k + v;
-                                            T[_] = w.subarray(k, O);
+                                            const k = _ * v, C = k + v;
+                                            T[_] = w.subarray(k, C);
                                         }
                                         return T;
                                     },
                                     erect3DPackedFloat: (w, v, y, T)=>{
                                         const _ = new Array(T);
                                         for(let k = 0; k < T; k++){
-                                            const O = new Array(y);
+                                            const C = new Array(y);
                                             for(let M = 0; M < y; M++){
                                                 const x = k * y * v + M * v, g = x + v;
-                                                O[M] = w.subarray(x, g);
+                                                C[M] = w.subarray(x, g);
                                             }
-                                            _[k] = O;
+                                            _[k] = C;
                                         }
                                         return _;
                                     },
@@ -13083,12 +13083,12 @@ highp float nrand(highp vec2 n) {
                                     erectMemoryOptimized3DFloat: (w, v, y, T)=>{
                                         const _ = new Array(T);
                                         for(let k = 0; k < T; k++){
-                                            const O = new Array(y);
+                                            const C = new Array(y);
                                             for(let M = 0; M < y; M++){
                                                 const x = k * y * v + M * v;
-                                                O[M] = w.subarray(x, x + v);
+                                                C[M] = w.subarray(x, x + v);
                                             }
-                                            _[k] = O;
+                                            _[k] = C;
                                         }
                                         return _;
                                     },
@@ -13102,23 +13102,23 @@ highp float nrand(highp vec2 n) {
                                         const T = new Array(y);
                                         let _ = 0;
                                         for(let k = 0; k < y; k++){
-                                            const O = new Float32Array(v);
-                                            for(let M = 0; M < v; M++)O[M] = w[_], _ += 4;
-                                            T[k] = O;
+                                            const C = new Float32Array(v);
+                                            for(let M = 0; M < v; M++)C[M] = w[_], _ += 4;
+                                            T[k] = C;
                                         }
                                         return T;
                                     },
                                     erect3DFloat: (w, v, y, T)=>{
                                         const _ = new Array(T);
                                         let k = 0;
-                                        for(let O = 0; O < T; O++){
+                                        for(let C = 0; C < T; C++){
                                             const M = new Array(y);
                                             for(let x = 0; x < y; x++){
                                                 const g = new Float32Array(v);
                                                 for(let I = 0; I < v; I++)g[I] = w[k], k += 4;
                                                 M[x] = g;
                                             }
-                                            _[O] = M;
+                                            _[C] = M;
                                         }
                                         return _;
                                     },
@@ -13131,24 +13131,24 @@ highp float nrand(highp vec2 n) {
                                     erect2DArray2: (w, v, y)=>{
                                         const T = new Array(y), _ = v * 4;
                                         for(let k = 0; k < y; k++){
-                                            const O = new Array(v), M = k * _;
+                                            const C = new Array(v), M = k * _;
                                             let x = 0;
-                                            for(let g = 0; g < _; g += 4)O[x++] = w.subarray(g + M, g + M + 2);
-                                            T[k] = O;
+                                            for(let g = 0; g < _; g += 4)C[x++] = w.subarray(g + M, g + M + 2);
+                                            T[k] = C;
                                         }
                                         return T;
                                     },
                                     erect3DArray2: (w, v, y, T)=>{
                                         const _ = v * 4, k = new Array(T);
-                                        for(let O = 0; O < T; O++){
+                                        for(let C = 0; C < T; C++){
                                             const M = new Array(y);
                                             for(let x = 0; x < y; x++){
-                                                const g = new Array(v), I = O * _ * y + x * _;
+                                                const g = new Array(v), I = C * _ * y + x * _;
                                                 let A = 0;
-                                                for(let z = 0; z < _; z += 4)g[A++] = w.subarray(z + I, z + I + 2);
+                                                for(let P = 0; P < _; P += 4)g[A++] = w.subarray(P + I, P + I + 2);
                                                 M[x] = g;
                                             }
-                                            k[O] = M;
+                                            k[C] = M;
                                         }
                                         return k;
                                     },
@@ -13161,24 +13161,24 @@ highp float nrand(highp vec2 n) {
                                     erect2DArray3: (w, v, y)=>{
                                         const T = v * 4, _ = new Array(y);
                                         for(let k = 0; k < y; k++){
-                                            const O = new Array(v), M = k * T;
+                                            const C = new Array(v), M = k * T;
                                             let x = 0;
-                                            for(let g = 0; g < T; g += 4)O[x++] = w.subarray(g + M, g + M + 3);
-                                            _[k] = O;
+                                            for(let g = 0; g < T; g += 4)C[x++] = w.subarray(g + M, g + M + 3);
+                                            _[k] = C;
                                         }
                                         return _;
                                     },
                                     erect3DArray3: (w, v, y, T)=>{
                                         const _ = v * 4, k = new Array(T);
-                                        for(let O = 0; O < T; O++){
+                                        for(let C = 0; C < T; C++){
                                             const M = new Array(y);
                                             for(let x = 0; x < y; x++){
-                                                const g = new Array(v), I = O * _ * y + x * _;
+                                                const g = new Array(v), I = C * _ * y + x * _;
                                                 let A = 0;
-                                                for(let z = 0; z < _; z += 4)g[A++] = w.subarray(z + I, z + I + 3);
+                                                for(let P = 0; P < _; P += 4)g[A++] = w.subarray(P + I, P + I + 3);
                                                 M[x] = g;
                                             }
-                                            k[O] = M;
+                                            k[C] = M;
                                         }
                                         return k;
                                     },
@@ -13191,24 +13191,24 @@ highp float nrand(highp vec2 n) {
                                     erect2DArray4: (w, v, y)=>{
                                         const T = v * 4, _ = new Array(y);
                                         for(let k = 0; k < y; k++){
-                                            const O = new Array(v), M = k * T;
+                                            const C = new Array(v), M = k * T;
                                             let x = 0;
-                                            for(let g = 0; g < T; g += 4)O[x++] = w.subarray(g + M, g + M + 4);
-                                            _[k] = O;
+                                            for(let g = 0; g < T; g += 4)C[x++] = w.subarray(g + M, g + M + 4);
+                                            _[k] = C;
                                         }
                                         return _;
                                     },
                                     erect3DArray4: (w, v, y, T)=>{
                                         const _ = v * 4, k = new Array(T);
-                                        for(let O = 0; O < T; O++){
+                                        for(let C = 0; C < T; C++){
                                             const M = new Array(y);
                                             for(let x = 0; x < y; x++){
-                                                const g = new Array(v), I = O * _ * y + x * _;
+                                                const g = new Array(v), I = C * _ * y + x * _;
                                                 let A = 0;
-                                                for(let z = 0; z < _; z += 4)g[A++] = w.subarray(z + I, z + I + 4);
+                                                for(let P = 0; P < _; P += 4)g[A++] = w.subarray(P + I, P + I + 4);
                                                 M[x] = g;
                                             }
-                                            k[O] = M;
+                                            k[C] = M;
                                         }
                                         return k;
                                     },
@@ -13216,13 +13216,13 @@ highp float nrand(highp vec2 n) {
                                         const { findDependency: y, thisLookup: T, doNotDefine: _ } = v;
                                         let k = v.flattened;
                                         k || (k = v.flattened = {});
-                                        const O = u.parse(w), M = [];
+                                        const C = u.parse(w), M = [];
                                         let x = 0;
                                         function g(A) {
                                             if (Array.isArray(A)) {
-                                                const z = [];
-                                                for(let C = 0; C < A.length; C++)z.push(g(A[C]));
-                                                return z.join("");
+                                                const P = [];
+                                                for(let O = 0; O < A.length; O++)P.push(g(A[O]));
+                                                return P.join("");
                                             }
                                             switch(A.type){
                                                 case "Program":
@@ -13231,31 +13231,31 @@ highp float nrand(highp vec2 n) {
                                                     return `function ${A.id.name}(${A.params.map(g).join(", ")}) ${g(A.body)}`;
                                                 case "BlockStatement":
                                                     {
-                                                        const C = [];
+                                                        const O = [];
                                                         x += 2;
                                                         for(let R = 0; R < A.body.length; R++){
-                                                            const K = g(A.body[R]);
-                                                            K && C.push(" ".repeat(x) + K, `;
+                                                            const G = g(A.body[R]);
+                                                            G && O.push(" ".repeat(x) + G, `;
 `);
                                                         }
                                                         return x -= 2, `{
-${C.join("")}}`;
+${O.join("")}}`;
                                                     }
                                                 case "VariableDeclaration":
-                                                    const z = n.normalizeDeclarations(A).map(g).filter((C)=>C !== null);
-                                                    return z.length < 1 ? "" : `${A.kind} ${z.join(",")}`;
+                                                    const P = n.normalizeDeclarations(A).map(g).filter((O)=>O !== null);
+                                                    return P.length < 1 ? "" : `${A.kind} ${P.join(",")}`;
                                                 case "VariableDeclarator":
                                                     return A.init.object && A.init.object.type === "ThisExpression" ? T(A.init.property.name, !0) ? `${A.id.name} = ${g(A.init)}` : null : `${A.id.name} = ${g(A.init)}`;
                                                 case "CallExpression":
                                                     {
-                                                        if (A.callee.property.name === "subarray") return `${g(A.callee.object)}.${g(A.callee.property)}(${A.arguments.map((C)=>g(C)).join(", ")})`;
-                                                        if (A.callee.object.name === "gl" || A.callee.object.name === "context") return `${g(A.callee.object)}.${g(A.callee.property)}(${A.arguments.map((C)=>g(C)).join(", ")})`;
-                                                        if (A.callee.object.type === "ThisExpression") return M.push(y("this", A.callee.property.name)), `${A.callee.property.name}(${A.arguments.map((C)=>g(C)).join(", ")})`;
+                                                        if (A.callee.property.name === "subarray") return `${g(A.callee.object)}.${g(A.callee.property)}(${A.arguments.map((O)=>g(O)).join(", ")})`;
+                                                        if (A.callee.object.name === "gl" || A.callee.object.name === "context") return `${g(A.callee.object)}.${g(A.callee.property)}(${A.arguments.map((O)=>g(O)).join(", ")})`;
+                                                        if (A.callee.object.type === "ThisExpression") return M.push(y("this", A.callee.property.name)), `${A.callee.property.name}(${A.arguments.map((O)=>g(O)).join(", ")})`;
                                                         if (A.callee.object.name) {
-                                                            const C = y(A.callee.object.name, A.callee.property.name);
-                                                            return C === null ? `${A.callee.object.name}.${A.callee.property.name}(${A.arguments.map((R)=>g(R)).join(", ")})` : (M.push(C), `${A.callee.property.name}(${A.arguments.map((R)=>g(R)).join(", ")})`);
+                                                            const O = y(A.callee.object.name, A.callee.property.name);
+                                                            return O === null ? `${A.callee.object.name}.${A.callee.property.name}(${A.arguments.map((R)=>g(R)).join(", ")})` : (M.push(O), `${A.callee.property.name}(${A.arguments.map((R)=>g(R)).join(", ")})`);
                                                         } else {
-                                                            if (A.callee.object.type === "MemberExpression") return `${g(A.callee.object)}.${A.callee.property.name}(${A.arguments.map((C)=>g(C)).join(", ")})`;
+                                                            if (A.callee.object.type === "MemberExpression") return `${g(A.callee.object)}.${A.callee.property.name}(${A.arguments.map((O)=>g(O)).join(", ")})`;
                                                             throw new Error("unknown ast.callee");
                                                         }
                                                     }
@@ -13280,7 +13280,7 @@ ${C.join("")}}`;
                                                 case "ThisExpression":
                                                     return "this";
                                                 case "NewExpression":
-                                                    return `new ${g(A.callee)}(${A.arguments.map((C)=>g(C)).join(", ")})`;
+                                                    return `new ${g(A.callee)}(${A.arguments.map((O)=>g(O)).join(", ")})`;
                                                 case "ForStatement":
                                                     return `for (${g(A.init)};${g(A.test)};${g(A.update)}) ${g(A.body)}`;
                                                 case "AssignmentExpression":
@@ -13304,12 +13304,12 @@ ${C.join("")}}`;
                                             }
                                             throw new Error(`unhandled ast.type of ${A.type}`);
                                         }
-                                        const I = g(O);
+                                        const I = g(C);
                                         if (M.length > 0) {
                                             const A = [];
-                                            for(let z = 0; z < M.length; z++){
-                                                const C = M[z];
-                                                k[C] || (k[C] = !0), C && A.push(n.flattenFunctionToString(C, v) + `
+                                            for(let P = 0; P < M.length; P++){
+                                                const O = M[P];
+                                                k[O] || (k[O] = !0), O && A.push(n.flattenFunctionToString(O, v) + `
 `);
                                             }
                                             return A.join("") + I;
@@ -13324,9 +13324,9 @@ ${C.join("")}}`;
                                             if (T.id && T.id.type === "ObjectPattern" && T.id.properties) {
                                                 const { properties: _ } = T.id;
                                                 for(let k = 0; k < _.length; k++){
-                                                    const O = _[k];
-                                                    if (O.value.type === "ObjectPattern" && O.value.properties) for(let M = 0; M < O.value.properties.length; M++){
-                                                        const x = O.value.properties[M];
+                                                    const C = _[k];
+                                                    if (C.value.type === "ObjectPattern" && C.value.properties) for(let M = 0; M < C.value.properties.length; M++){
+                                                        const x = C.value.properties[M];
                                                         if (x.type === "Property") v.push({
                                                             type: "VariableDeclarator",
                                                             id: {
@@ -13340,7 +13340,7 @@ ${C.join("")}}`;
                                                                     object: T.init,
                                                                     property: {
                                                                         type: "Identifier",
-                                                                        name: O.key.name
+                                                                        name: C.key.name
                                                                     },
                                                                     computed: !1
                                                                 },
@@ -13353,18 +13353,18 @@ ${C.join("")}}`;
                                                         });
                                                         else throw new Error("unexpected state");
                                                     }
-                                                    else if (O.value.type === "Identifier") v.push({
+                                                    else if (C.value.type === "Identifier") v.push({
                                                         type: "VariableDeclarator",
                                                         id: {
                                                             type: "Identifier",
-                                                            name: O.value && O.value.name ? O.value.name : O.key.name
+                                                            name: C.value && C.value.name ? C.value.name : C.key.name
                                                         },
                                                         init: {
                                                             type: "MemberExpression",
                                                             object: T.init,
                                                             property: {
                                                                 type: "Identifier",
-                                                                name: O.key.name
+                                                                name: C.key.name
                                                             },
                                                             computed: !1
                                                         }
@@ -13374,12 +13374,12 @@ ${C.join("")}}`;
                                             } else if (T.id && T.id.type === "ArrayPattern" && T.id.elements) {
                                                 const { elements: _ } = T.id;
                                                 for(let k = 0; k < _.length; k++){
-                                                    const O = _[k];
-                                                    if (O.type === "Identifier") v.push({
+                                                    const C = _[k];
+                                                    if (C.type === "Identifier") v.push({
                                                         type: "VariableDeclarator",
                                                         id: {
                                                             type: "Identifier",
-                                                            name: O.name
+                                                            name: C.name
                                                         },
                                                         init: {
                                                             type: "MemberExpression",
@@ -13388,8 +13388,8 @@ ${C.join("")}}`;
                                                                 type: "Literal",
                                                                 value: k,
                                                                 raw: k.toString(),
-                                                                start: O.start,
-                                                                end: O.end
+                                                                start: C.start,
+                                                                end: C.end
                                                             },
                                                             computed: !0
                                                         }
@@ -13445,13 +13445,13 @@ ${C.join("")}}`;
                                             argumentTypes: {
                                                 a: "HTMLImage"
                                             }
-                                        }), O = [
+                                        }), C = [
                                             y(v),
                                             T(v),
                                             _(v),
                                             k(v)
                                         ];
-                                        return O.rKernel = y, O.gKernel = T, O.bKernel = _, O.aKernel = k, O.gpu = w, O;
+                                        return C.rKernel = y, C.gKernel = T, C.bKernel = _, C.aKernel = k, C.gpu = w, C;
                                     },
                                     splitRGBAToCanvases: (w, v, y, T)=>{
                                         const _ = w.createKernel(function(x) {
@@ -13482,7 +13482,7 @@ ${C.join("")}}`;
                                             }
                                         });
                                         k(v);
-                                        const O = w.createKernel(function(x) {
+                                        const C = w.createKernel(function(x) {
                                             const g = x[this.thread.y][this.thread.x];
                                             this.color(0, 0, g.b / 255, 255);
                                         }, {
@@ -13495,7 +13495,7 @@ ${C.join("")}}`;
                                                 v: "Array2D(4)"
                                             }
                                         });
-                                        O(v);
+                                        C(v);
                                         const M = w.createKernel(function(x) {
                                             const g = x[this.thread.y][this.thread.x];
                                             this.color(255, 255, 255, g.a / 255);
@@ -13512,7 +13512,7 @@ ${C.join("")}}`;
                                         return M(v), [
                                             _.canvas,
                                             k.canvas,
-                                            O.canvas,
+                                            C.canvas,
                                             M.canvas
                                         ];
                                     },
@@ -13543,10 +13543,10 @@ ${C.join("")}}`;
                     ])(107);
                 });
             });
-            const ft = {
+            const dt = {
                 toTable (c) {
                     const t = c.reduce((e, i)=>Object.assign(e, i), {});
-                    return ft.toHash(t);
+                    return dt.toHash(t);
                 },
                 toTable2D (c) {
                     const t = {};
@@ -13746,14 +13746,14 @@ ${C.join("")}}`;
                 for(let i = 0; i < t.length; i++)e.push(Float32Array.from(t[i]));
                 return e;
             }
-            function Ne(c) {
+            function Pe(c) {
                 const t = [];
                 for(let e = 0; e < c.length; e++)t.push(Float32Array.from([
                     c[e]
                 ]));
                 return t;
             }
-            function Ve(c, t) {
+            function Ne(c, t) {
                 const e = [];
                 for(let i = 0; i < c.length; i++)e.push(Float32Array.from([
                     c[i]
@@ -13763,7 +13763,7 @@ ${C.join("")}}`;
                 ]));
                 return e;
             }
-            function Ke(c) {
+            function Ve(c) {
                 return Float32Array.from(c);
             }
             function xe(c, t, e, i, h, u) {
@@ -13828,7 +13828,7 @@ ${C.join("")}}`;
             function oi(c) {
                 return Array.isArray(c) || c instanceof Float32Array ? Math.max(...c) : Math.max(...Object.values(c));
             }
-            function Ge(c) {
+            function Ke(c) {
                 let t = 0;
                 for(let e = 0; e < c.length; e++)t += c[e] ** 2;
                 return t / c.length;
@@ -13866,22 +13866,22 @@ ${C.join("")}}`;
                 else for(let i = 0; i < c; i++)e[i] = be(-t, t);
                 return e;
             }
-            function ke(c, t, e) {
+            function Ee(c, t, e) {
                 const i = new Array(t);
                 for(let h = 0; h < t; h++)i[h] = we(c, e);
                 return i;
             }
-            function Le(c, t, e, i) {
+            function ke(c, t, e, i) {
                 const h = new Array(e);
-                for(let u = 0; u < e; u++)h[u] = ke(c, t, i);
+                for(let u = 0; u < e; u++)h[u] = Ee(c, t, i);
                 return h;
             }
             function Vt(c) {
                 return new Float32Array(c);
             }
-            function Ci(c, t) {
+            function Oi(c, t) {
                 if (c.buffer instanceof ArrayBuffer) return null;
-                if (Array.isArray(c)) return Ke;
+                if (Array.isArray(c)) return Ve;
                 if (!t) throw new Error("table is not Object");
                 const { length: e } = Object.keys(t);
                 return (i)=>{
@@ -13890,7 +13890,7 @@ ${C.join("")}}`;
                     return h;
                 };
             }
-            function Oi() {
+            function Ci() {
                 return {
                     inputSize: 0,
                     outputSize: 0,
@@ -13916,7 +13916,7 @@ ${C.join("")}}`;
             }
             class ui {
                 constructor(t = {}){
-                    this.options = Oi(), this.trainOpts = fn(), this.sizes = [], this.outputLayer = -1, this.biases = [], this.weights = [], this.outputs = [], this.deltas = [], this.changes = [], this.errors = [], this.errorCheckInterval = 1, this.inputLookup = null, this.inputLookupLength = 0, this.outputLookup = null, this.outputLookupLength = 0, this._formatInput = null, this._formatOutput = null, this.runInput = (u)=>(this.setActivation(), this.runInput(u)), this.calculateDeltas = (u)=>(this.setActivation(), this.calculateDeltas(u)), this.biasChangesLow = [], this.biasChangesHigh = [], this.changesLow = [], this.changesHigh = [], this.iterations = 0, this.options = {
+                    this.options = Ci(), this.trainOpts = fn(), this.sizes = [], this.outputLayer = -1, this.biases = [], this.weights = [], this.outputs = [], this.deltas = [], this.changes = [], this.errors = [], this.errorCheckInterval = 1, this.inputLookup = null, this.inputLookupLength = 0, this.outputLookup = null, this.outputLookupLength = 0, this._formatInput = null, this._formatOutput = null, this.runInput = (u)=>(this.setActivation(), this.runInput(u)), this.calculateDeltas = (u)=>(this.setActivation(), this.calculateDeltas(u)), this.biasChangesLow = [], this.biasChangesHigh = [], this.changesLow = [], this.changesHigh = [], this.iterations = 0, this.options = {
                         ...this.options,
                         ...t
                     }, this.updateTrainingOptions(t);
@@ -13967,9 +13967,9 @@ ${C.join("")}}`;
                 run(t) {
                     if (!this.isRunnable) throw new Error("network not runnable");
                     let e;
-                    this.inputLookup ? e = ft.toArray(this.inputLookup, t, this.inputLookupLength) : e = t, this.validateInput(e);
+                    this.inputLookup ? e = dt.toArray(this.inputLookup, t, this.inputLookupLength) : e = t, this.validateInput(e);
                     const i = this.runInput(e).slice(0);
-                    return this.outputLookup ? ft.toObject(this.outputLookup, i) : i;
+                    return this.outputLookup ? dt.toObject(this.outputLookup, i) : i;
                 }
                 _runInputSigmoid(t) {
                     this.outputs[0] = t;
@@ -14191,7 +14191,7 @@ ${C.join("")}}`;
                     });
                 }
                 trainPattern(t, e) {
-                    return this.runInput(t.input), this.calculateDeltas(t.output), this.adjustWeights(), e ? Ge(this.errors[this.outputLayer]) : null;
+                    return this.runInput(t.input), this.calculateDeltas(t.output), this.adjustWeights(), e ? Ke(this.errors[this.outputLayer]) : null;
                 }
                 _calculateDeltasSigmoid(t) {
                     for(let e = this.outputLayer; e >= 0; e--){
@@ -14281,11 +14281,11 @@ ${C.join("")}}`;
                         for(let w = 0; w < l; w++){
                             const v = a[w];
                             for(let M = 0; M < d.length; M++){
-                                const x = v * d[M], g = o[w][M] * e + (1 - e) * x, I = n[w][M] * i + (1 - i) * x * x, A = g / (1 - Math.pow(e, t)), z = I / (1 - Math.pow(i, t));
-                                o[w][M] = g, n[w][M] = I, r[w][M] += u * A / (Math.sqrt(z) + h);
+                                const x = v * d[M], g = o[w][M] * e + (1 - e) * x, I = n[w][M] * i + (1 - i) * x * x, A = g / (1 - Math.pow(e, t)), P = I / (1 - Math.pow(i, t));
+                                o[w][M] = g, n[w][M] = I, r[w][M] += u * A / (Math.sqrt(P) + h);
                             }
-                            const y = a[w], T = b[w] * e + (1 - e) * y, _ = E[w] * i + (1 - i) * y * y, k = b[w] / (1 - Math.pow(e, t)), O = E[w] / (1 - Math.pow(i, t));
-                            b[w] = T, E[w] = _, m[w] += u * k / (Math.sqrt(O) + h);
+                            const y = a[w], T = b[w] * e + (1 - e) * y, _ = E[w] * i + (1 - i) * y * y, k = b[w] / (1 - Math.pow(e, t)), C = E[w] / (1 - Math.pow(i, t));
+                            b[w] = T, E[w] = _, m[w] += u * k / (Math.sqrt(C) + h);
                         }
                     }
                 }
@@ -14312,7 +14312,7 @@ ${C.join("")}}`;
                         const e = new te(t, "output");
                         this.outputLookup = e.table, this.outputLookupLength = e.length;
                     }
-                    if (this._formatInput || (this._formatInput = Ci(t[0].input, this.inputLookup)), this._formatOutput || (this._formatOutput = Ci(t[0].output, this.outputLookup)), this._formatInput && this._formatOutput) {
+                    if (this._formatInput || (this._formatInput = Oi(t[0].input, this.inputLookup)), this._formatOutput || (this._formatOutput = Oi(t[0].output, this.outputLookup)), this._formatInput && this._formatOutput) {
                         const e = [];
                         for(let i = 0; i < t.length; i++)e.push({
                             input: this._formatInput(t[i].input),
@@ -14340,7 +14340,7 @@ ${C.join("")}}`;
                 }
                 addFormat(t) {
                     var e, i;
-                    (!Array.isArray(t.input) || typeof t.input[0] != "number") && (this.inputLookup = ft.addKeys(t.input, (e = this.inputLookup) !== null && e !== void 0 ? e : {}), this.inputLookup && (this.inputLookupLength = Object.keys(this.inputLookup).length)), (!Array.isArray(t.output) || typeof t.output[0] != "number") && (this.outputLookup = ft.addKeys(t.output, (i = this.outputLookup) !== null && i !== void 0 ? i : {}), this.outputLookup && (this.outputLookupLength = Object.keys(this.outputLookup).length));
+                    (!Array.isArray(t.input) || typeof t.input[0] != "number") && (this.inputLookup = dt.addKeys(t.input, (e = this.inputLookup) !== null && e !== void 0 ? e : {}), this.inputLookup && (this.inputLookupLength = Object.keys(this.inputLookup).length)), (!Array.isArray(t.output) || typeof t.output[0] != "number") && (this.outputLookup = dt.addKeys(t.output, (i = this.outputLookup) !== null && i !== void 0 ? i : {}), this.outputLookup && (this.outputLookupLength = Object.keys(this.outputLookup).length));
                 }
                 test(t) {
                     const { preparedData: e } = this.prepTraining(t), i = e[0].output.length === 1, h = [];
@@ -14358,7 +14358,7 @@ ${C.join("")}}`;
                                     expected: b
                                 });
                             }
-                            m === 0 && b === 0 ? a++ : m === 1 && b === 1 ? l++ : m === 0 && b === 1 ? d++ : m === 1 && b === 0 && p++, u += Ge(n.map((E, w)=>r[w] - E));
+                            m === 0 && b === 0 ? a++ : m === 1 && b === 1 ? l++ : m === 0 && b === 1 ? d++ : m === 1 && b === 0 && p++, u += Ke(n.map((E, w)=>r[w] - E));
                         }
                         return {
                             error: u / e.length,
@@ -14384,7 +14384,7 @@ ${C.join("")}}`;
                                 expected: o
                             });
                         }
-                        u += Ge(d.map((n, r)=>l[r] - n));
+                        u += Ke(d.map((n, r)=>l[r] - n));
                     }
                     return {
                         error: u / e.length,
@@ -14422,7 +14422,7 @@ ${C.join("")}}`;
                 }
                 fromJSON(t) {
                     if (this.options = {
-                        ...Oi(),
+                        ...Ci(),
                         ...t.options
                     }, t.hasOwnProperty("trainOpts")) {
                         const u = {
@@ -14489,13 +14489,13 @@ ${C.join("")}}`;
             function Ri(c) {
                 hi = c;
             }
-            function J(c, t) {
+            function Z(c, t) {
                 let e = hi;
                 return e === null && (e = new wt.GPU({
                     mode: "gpu"
                 }), Ri(e)), e.createKernel(c, t).setPipeline(!0);
             }
-            function Ie(c, t, e) {
+            function Le(c, t, e) {
                 let i = hi;
                 return i === null && (i = new wt.GPU({
                     mode: "gpu"
@@ -14504,7 +14504,7 @@ ${C.join("")}}`;
             function dn(c, t) {
                 return new wt.Input(c, t);
             }
-            function j(c) {
+            function X(c) {
                 c instanceof wt.Texture && c.delete();
             }
             function gn(c) {
@@ -14605,7 +14605,7 @@ ${C.join("")}}`;
                 for(let e = 0; e < this.constants.size; e++)t += c[e] ** 2;
                 return t / this.constants.size;
             }
-            class Ue extends ui {
+            class Ge extends ui {
                 constructor(t = {}){
                     super(t), this.texturizeInputData = ()=>{
                         throw new Error("not yet setup");
@@ -14618,11 +14618,11 @@ ${C.join("")}}`;
                     }, this.outputs = [], this.deltas = [], this.errors = [], this.weights = [], this.changes = [], this.biases = [], this.runInput = (e)=>{
                         let i;
                         this.outputs[0] = e;
-                        for(let h = 1; h <= this.outputLayer; h++)j(this.outputs[h]), this.outputs[h] = this.forwardPropagate[h](this.weights[h], this.biases[h], e), i = e = this.outputs[h];
+                        for(let h = 1; h <= this.outputLayer; h++)X(this.outputs[h]), this.outputs[h] = this.forwardPropagate[h](this.weights[h], this.biases[h], e), i = e = this.outputs[h];
                         return i;
                     }, this.calculateDeltas = (e)=>{
                         for(let i = this.outputLayer; i > 0; i--){
-                            j(this.deltas[i]), j(this.errors[i]);
+                            X(this.deltas[i]), X(this.errors[i]);
                             let h;
                             i === this.outputLayer ? h = this.backwardPropagate[i](this.outputs[i], e) : h = this.backwardPropagate[i](this.weights[i + 1], this.outputs[i], this.deltas[i + 1]), this.deltas[i] = h.result, this.errors[i] = h.error;
                         }
@@ -14643,10 +14643,10 @@ ${C.join("")}}`;
                     ]);
                     for(let h = 0; h < t.length; ++h){
                         const u = e, p = this.trainPattern(t[h], !0);
-                        e = this._addMSE(e, p), j(p), j(u);
+                        e = this._addMSE(e, p), X(p), X(u);
                     }
                     const i = this._divideMSESum(t.length, e);
-                    return j(e), (i instanceof wt.Texture ? i.toArray() : i)[0];
+                    return X(e), (i instanceof wt.Texture ? i.toArray() : i)[0];
                 }
                 adjustWeights() {
                     this.getChanges(), this.changeBiases();
@@ -14759,7 +14759,7 @@ ${C.join("")}}`;
                 getChanges() {
                     for(let t = 1; t <= this.outputLayer; t++){
                         const e = this.weights[t], i = this.changes[t], h = this.changesPropagate[t](this.outputs[t - 1], this.deltas[t], e, i);
-                        j(e), j(i), this.weights[t] = h.weights, this.changes[t] = h.changes, j(h.result);
+                        X(e), X(i), this.weights[t] = h.weights, this.changes[t] = h.changes, X(h.result);
                     }
                 }
                 buildChangeBiases() {
@@ -14777,7 +14777,7 @@ ${C.join("")}}`;
                 changeBiases() {
                     for(let t = 1; t <= this.outputLayer; t++){
                         const e = this.biases[t];
-                        this.biases[t] = this.biasesPropagate[t](e, this.deltas[t]), j(e);
+                        this.biases[t] = this.biasesPropagate[t](e, this.deltas[t]), X(e);
                     }
                 }
                 buildGetMSE() {
@@ -14810,9 +14810,9 @@ ${C.join("")}}`;
                 run(t) {
                     if (!this.isRunnable) throw new Error("network not runnable");
                     let e;
-                    this.inputLookup ? e = ft.toArray(this.inputLookup, t, this.inputLookupLength) : e = t, this.validateInput(e);
+                    this.inputLookup ? e = dt.toArray(this.inputLookup, t, this.inputLookupLength) : e = t, this.validateInput(e);
                     const i = this.runInput(e), h = i instanceof wt.Texture ? i.toArray() : i;
-                    return this.outputLookup ? ft.toObject(this.outputLookup, h) : h;
+                    return this.outputLookup ? dt.toObject(this.outputLookup, h) : h;
                 }
                 prepTraining(t, e = {}) {
                     this.updateTrainingOptions(e);
@@ -14878,7 +14878,7 @@ ${C.join("")}}`;
             }
             class kn {
                 constructor(t){
-                    t ?? (t = {}), t.binaryThresh, t.hiddenLayers, t.decodedSize && t.decodedSize, this.denoiser = new Ue(t);
+                    t ?? (t = {}), t.binaryThresh, t.hiddenLayers, t.decodedSize && t.decodedSize, this.denoiser = new Ge(t);
                 }
                 denoise(t) {
                     return this.denoiser.run(t);
@@ -14911,7 +14911,7 @@ ${C.join("")}}`;
                 createDecoder() {
                     const t = this.denoiser.toJSON(), e = [], i = [];
                     for(let u = this.encodedLayerIndex; u < this.denoiser.sizes.length; u++)e.push(t.layers[u]), i.push(t.sizes[u]);
-                    return t.layers = e, t.sizes = i, t.options.inputSize = t.sizes[0], new Ue().fromJSON(t);
+                    return t.layers = e, t.sizes = i, t.options.inputSize = t.sizes[0], new Ge().fromJSON(t);
                 }
                 get encodedLayer() {
                     return this.denoiser.outputs[this.encodedLayerIndex];
@@ -15010,7 +15010,7 @@ ${C.join("")}}`;
             }
             class In {
                 constructor({ width: t, height: e }){
-                    this.calculate = J(Ln, {
+                    this.calculate = Z(Ln, {
                         output: [
                             1
                         ],
@@ -15020,21 +15020,21 @@ ${C.join("")}}`;
                             length: t * e
                         },
                         immutable: !0
-                    }), this.addAbsolute = J(function(i, h) {
+                    }), this.addAbsolute = Z(function(i, h) {
                         return i[0] + Math.abs(h[0][0]);
                     }, {
                         output: [
                             1
                         ],
                         immutable: !0
-                    }), this.add = J(function(i, h) {
+                    }), this.add = Z(function(i, h) {
                         return i[0] + h[0];
                     }, {
                         output: [
                             1
                         ],
                         immutable: !0
-                    }), this.divide = J(function(i, h) {
+                    }), this.divide = Z(function(i, h) {
                         const u = h[0];
                         return u > 0 ? u / i : 0;
                     }, {
@@ -15045,7 +15045,7 @@ ${C.join("")}}`;
                     });
                 }
             }
-            const Ae = {
+            const Ie = {
                 width: 1,
                 height: 1,
                 depth: null,
@@ -15058,10 +15058,10 @@ ${C.join("")}}`;
             class Wt {
                 constructor(t){
                     this.praxis = null, this.predictKernel = null, this.compareKernel = null, t ? this.settings = {
-                        ...Ae,
+                        ...Ie,
                         ...t
                     } : this.settings = {
-                        ...Ae
+                        ...Ie
                     }, this.setupPraxis();
                 }
                 get width() {
@@ -15212,7 +15212,7 @@ ${C.join("")}}`;
                     this.settings.filterDeltas = t;
                 }
             }
-            class De {
+            class Ae {
                 constructor(){
                     this.predictKernel = null, this.compareKernel = null, this.praxis = null;
                 }
@@ -15241,7 +15241,7 @@ ${C.join("")}}`;
                     return Wt.toJSON(this);
                 }
             }
-            class $e extends Wt {
+            class De extends Wt {
                 constructor(t, e){
                     super({
                         ...e,
@@ -15257,7 +15257,7 @@ ${C.join("")}}`;
                     if (this.depth !== ((t = this.inputLayer.depth) !== null && t !== void 0 ? t : 0)) throw new Error(`depth of ${this.depth} does not match inputLayer.depth of ${this.inputLayer.depth}`);
                 }
             }
-            class Ce extends Wt {
+            class $e extends Wt {
                 constructor(t, e, i){
                     super(i), this.inputLayer1 = t, this.inputLayer2 = e, this.validate(), this.weights = Mt(this.width, this.height), this.deltas = Mt(this.width, this.height), this.setupPraxis();
                 }
@@ -15274,13 +15274,13 @@ ${C.join("")}}`;
                     this.height ? (this.weights = Mt(this.width, this.height), this.deltas = Mt(this.width, this.height), this.errors = Mt(this.width, this.height)) : (this.weights = Vt(this.width), this.deltas = Vt(this.width), this.errors = Vt(this.width));
                 }
                 setupKernels() {
-                    this.width === 1 ? this.compareKernel = J(Dn, {
+                    this.width === 1 ? this.compareKernel = Z(Dn, {
                         output: [
                             this.width,
                             this.height
                         ],
                         immutable: !0
-                    }) : this.compareKernel = J($n, {
+                    }) : this.compareKernel = Z($n, {
                         output: [
                             this.width,
                             this.height
@@ -15289,10 +15289,10 @@ ${C.join("")}}`;
                     });
                 }
                 predict() {
-                    j(this.weights), this.weights = Xt(this.inputLayer.weights);
+                    X(this.weights), this.weights = Xt(this.inputLayer.weights);
                 }
                 compare(t) {
-                    j(this.deltas), j(this.errors), j(this.inputLayer.deltas), this.deltas = this.compareKernel(this.weights, t), this.inputLayer.deltas = Xt(this.deltas), this.errors = Xt(this.deltas);
+                    X(this.deltas), X(this.errors), X(this.inputLayer.deltas), this.deltas = this.compareKernel(this.weights, t), this.inputLayer.deltas = Xt(this.deltas), this.errors = Xt(this.deltas);
                 }
                 setupPraxis() {}
             }
@@ -15307,7 +15307,7 @@ ${C.join("")}}`;
                 learn(t) {
                     const { weights: e } = this;
                     if (!this.praxis) throw new Error("this.praxis not defined");
-                    this.weights = this.praxis.run(this, t), j(e);
+                    this.weights = this.praxis.run(this, t), X(e);
                 }
             }
             class pi {
@@ -15337,16 +15337,16 @@ ${C.join("")}}`;
                     };
                 }
             }
-            function Cn(c, t) {
+            function On(c, t) {
                 return c[this.thread.y][this.thread.x] + this.constants.learningRate * t[this.thread.y][this.thread.x];
             }
-            const On = {
+            const Cn = {
                 learningRate: .3
             };
             class Ki extends pi {
                 constructor(t, e){
                     super(t), this.settings = {
-                        ...On,
+                        ...Cn,
                         ...e
                     }, this.kernel = null;
                 }
@@ -15355,7 +15355,7 @@ ${C.join("")}}`;
                 }
                 setupKernels() {
                     var t;
-                    this.kernel = J(Cn, {
+                    this.kernel = Z(On, {
                         output: [
                             this.width,
                             this.height
@@ -15419,7 +15419,7 @@ ${C.join("")}}`;
                     return this.changes = t.changes, t.result;
                 }
                 setupKernels() {
-                    this.kernelMap = Ie({
+                    this.kernelMap = Le({
                         changes: Rn
                     }, Fn, {
                         output: [
@@ -15477,10 +15477,10 @@ ${C.join("")}}`;
                 }
                 run(t) {
                     const { momenta: e, result: i } = this.kernelMap(t.weights, t.deltas, this.momenta);
-                    return j(this.momenta), this.momenta = e, i;
+                    return X(this.momenta), this.momenta = e, i;
                 }
                 setupKernels() {
-                    this.kernelMap = Ie({
+                    this.kernelMap = Le({
                         momenta: Wi
                     }, zn, {
                         output: [
@@ -15515,14 +15515,14 @@ ${C.join("")}}`;
                 MRmsProp: fi,
                 mRmsProp: di
             });
-            function Be(c, t) {
-                c.hasOwnProperty("inputLayer") ? Be(c.inputLayer, t) : (c.hasOwnProperty("inputLayer1") && Be(c.inputLayer1, t), c.hasOwnProperty("inputLayer2") && Be(c.inputLayer2, t)), t(c);
+            function Ue(c, t) {
+                c.hasOwnProperty("inputLayer") ? Ue(c.inputLayer, t) : (c.hasOwnProperty("inputLayer1") && Ue(c.inputLayer1, t), c.hasOwnProperty("inputLayer2") && Ue(c.inputLayer2, t)), t(c);
             }
             function Hi(c) {
                 const t = c.slice(0);
                 for(let e = 0; e < t.length; e++){
                     let i = 0;
-                    Be(t[e], (h)=>{
+                    Ue(t[e], (h)=>{
                         t.includes(h) || (t.splice(e + i, 0, h), i++);
                     });
                 }
@@ -15535,7 +15535,7 @@ ${C.join("")}}`;
             function Vn(c, t) {
                 return c[this.thread.y][this.thread.x] + t[this.thread.y][this.thread.x];
             }
-            class Yi extends Ce {
+            class Yi extends $e {
                 get width() {
                     return this.inputLayer1.width;
                 }
@@ -15549,7 +15549,7 @@ ${C.join("")}}`;
                     super.validate(), Xi(this.inputLayer1, this.inputLayer2);
                 }
                 setupKernels() {
-                    this.predictKernel = J(Vn, {
+                    this.predictKernel = Z(Vn, {
                         output: [
                             this.width,
                             this.height
@@ -15558,17 +15558,17 @@ ${C.join("")}}`;
                     });
                 }
                 predict() {
-                    j(this.weights), this.weights = this.predictKernel(this.inputLayer1.weights, this.inputLayer2.weights);
+                    X(this.weights), this.weights = this.predictKernel(this.inputLayer1.weights, this.inputLayer2.weights);
                 }
                 compare() {
-                    j(this.inputLayer1.deltas), j(this.inputLayer2.deltas), this.inputLayer1.deltas = Xt(this.deltas), this.inputLayer2.deltas = Xt(this.deltas);
+                    X(this.inputLayer1.deltas), X(this.inputLayer2.deltas), this.inputLayer1.deltas = Xt(this.deltas), this.inputLayer2.deltas = Xt(this.deltas);
                 }
             }
             function $t(c, t, e) {
                 return new Yi(c, t, e);
             }
             const Kn = {
-                ...Ae,
+                ...Ie,
                 std: null
             };
             class Ji extends he {
@@ -15576,12 +15576,12 @@ ${C.join("")}}`;
                     super(), this.settings = {
                         ...Kn,
                         ...t
-                    }, this.setupPraxis(), this.validate(), this.weights || (this.weights = ke(this.width, this.height, t.std)), this.deltas || (this.deltas = Mt(this.width, this.height));
+                    }, this.setupPraxis(), this.validate(), this.weights || (this.weights = Ee(this.width, this.height, t.std)), this.deltas || (this.deltas = Mt(this.width, this.height));
                 }
                 predict() {}
                 compare() {}
             }
-            function Ct(c) {
+            function Ot(c) {
                 return new Ji(c);
             }
             function Gn(c, t) {
@@ -15599,7 +15599,7 @@ ${C.join("")}}`;
                 for(let h = 0; h < this.constants.size; h++)i += c[h][this.thread.x] * e[h][this.thread.y];
                 return i;
             }
-            class Zi extends Ce {
+            class Zi extends $e {
                 constructor(){
                     super(...arguments), this.compareKernel1 = null, this.compareKernel2 = null;
                 }
@@ -15625,7 +15625,7 @@ ${C.join("")}}`;
                     if (super.validate(), this.inputLayer1.width !== this.inputLayer2.height) throw new Error(`Layer width mismatch of ${this.inputLayer1.width} and ${this.inputLayer2.height}`);
                 }
                 setupKernels() {
-                    this.predictKernel = J(Gn, {
+                    this.predictKernel = Z(Gn, {
                         output: [
                             this.width,
                             this.height
@@ -15634,7 +15634,7 @@ ${C.join("")}}`;
                             size: this.inputLayer2.height
                         },
                         immutable: !0
-                    }), this.compareKernel1 = J(Un, {
+                    }), this.compareKernel1 = Z(Un, {
                         output: [
                             this.inputLayer1.width,
                             this.inputLayer1.height
@@ -15643,7 +15643,7 @@ ${C.join("")}}`;
                             size: this.inputLayer2.width
                         },
                         immutable: !0
-                    }), this.compareKernel2 = J(Bn, {
+                    }), this.compareKernel2 = Z(Bn, {
                         output: [
                             this.inputLayer2.width,
                             this.inputLayer2.height
@@ -15658,14 +15658,14 @@ ${C.join("")}}`;
                     super.reuseKernels(t), this.compareKernel1 = t.compareKernel1, this.compareKernel2 = t.compareKernel2;
                 }
                 predict() {
-                    if (j(this.weights), !this.predictKernel) throw new Error("this.predictKernel is not set");
+                    if (X(this.weights), !this.predictKernel) throw new Error("this.predictKernel is not set");
                     this.weights = this.predictKernel(this.inputLayer1.weights, this.inputLayer2.weights);
                 }
                 compare() {
                     if (!this.compareKernel1) throw new Error("this.compareKernel1 not set");
                     if (!this.compareKernel2) throw new Error("this.compareKernel2 not set");
                     const t = this.inputLayer1.deltas, e = this.inputLayer2.deltas, i = this.compareKernel1(this.deltas, this.inputLayer1.deltas, this.inputLayer2.weights), h = this.compareKernel2(this.deltas, this.inputLayer2.deltas, this.inputLayer1.weights);
-                    this.inputLayer2.deltas = h, this.inputLayer1.deltas = i, j(t), j(e);
+                    this.inputLayer2.deltas = h, this.inputLayer1.deltas = i, X(t), X(e);
                 }
                 setupPraxis() {}
                 toJSON() {
@@ -15695,17 +15695,7 @@ ${C.join("")}}`;
             }
             class qi extends Te {
                 setupKernels() {
-                    this.depth > 0 ? (this.predictKernel = J(jn, {
-                        output: [
-                            this.width,
-                            this.height,
-                            this.depth
-                        ],
-                        functions: [
-                            Z
-                        ],
-                        immutable: !0
-                    }), this.compareKernel = J(Xn, {
+                    this.depth > 0 ? (this.predictKernel = Z(jn, {
                         output: [
                             this.width,
                             this.height,
@@ -15715,31 +15705,41 @@ ${C.join("")}}`;
                             H
                         ],
                         immutable: !0
-                    })) : (this.predictKernel = J(Wn, {
+                    }), this.compareKernel = Z(Xn, {
                         output: [
                             this.width,
-                            this.height
+                            this.height,
+                            this.depth
                         ],
                         functions: [
-                            Z
+                            Y
                         ],
                         immutable: !0
-                    }), this.compareKernel = J(Hn, {
+                    })) : (this.predictKernel = Z(Wn, {
                         output: [
                             this.width,
                             this.height
                         ],
                         functions: [
                             H
+                        ],
+                        immutable: !0
+                    }), this.compareKernel = Z(Hn, {
+                        output: [
+                            this.width,
+                            this.height
+                        ],
+                        functions: [
+                            Y
                         ],
                         immutable: !0
                     }));
                 }
                 predict() {
-                    j(this.weights), this.weights = this.predictKernel(this.inputLayer.weights);
+                    X(this.weights), this.weights = this.predictKernel(this.inputLayer.weights);
                 }
                 compare() {
-                    j(this.inputLayer.deltas), this.inputLayer.deltas = this.compareKernel(this.weights, this.deltas);
+                    X(this.inputLayer.deltas), this.inputLayer.deltas = this.compareKernel(this.weights, this.deltas);
                 }
                 learn(t) {}
             }
@@ -15756,12 +15756,12 @@ ${C.join("")}}`;
                     const m = Gi(n, r);
                     return m.setupKernels(), m;
                 }
-                const u = Ct({
+                const u = Ot({
                     id: "weights",
                     height: e,
                     width: t.height,
                     initPraxis: i
-                }), p = Ct({
+                }), p = Ot({
                     id: "biases",
                     height: e,
                     initPraxis: h
@@ -15839,7 +15839,7 @@ ${C.join("")}}`;
                         ...t,
                         ...ts(t, gi),
                         ...Qi(t, gi)
-                    }, this.weights = (i = t.weights) !== null && i !== void 0 ? i : Le(this.width, this.height, this.depth), this.deltas = de(this.width, this.height, this.depth), this.biases = es(this.depth, this.bias), this.biasDeltas = (h = t.biasDeltas) !== null && h !== void 0 ? h : we(this.depth), this.filters = (u = t.filters) !== null && u !== void 0 ? u : Le(this.filterWidth, this.filterHeight, this.filterCount), this.filterDeltas = de(this.filterWidth, this.filterHeight, this.filterCount), this.validate();
+                    }, this.weights = (i = t.weights) !== null && i !== void 0 ? i : ke(this.width, this.height, this.depth), this.deltas = de(this.width, this.height, this.depth), this.biases = es(this.depth, this.bias), this.biasDeltas = (h = t.biasDeltas) !== null && h !== void 0 ? h : we(this.depth), this.filters = (u = t.filters) !== null && u !== void 0 ? u : ke(this.filterWidth, this.filterHeight, this.filterCount), this.filterDeltas = de(this.filterWidth, this.filterHeight, this.filterCount), this.validate();
                 }
                 get strideX() {
                     return this.settings.strideX;
@@ -15890,7 +15890,7 @@ ${C.join("")}}`;
                     this.settings.filterDeltas = t;
                 }
                 setupKernels() {
-                    this.predictKernel = J(Jn, {
+                    this.predictKernel = Z(Jn, {
                         constants: {
                             inputWidth: this.inputLayer.width,
                             inputHeight: this.inputLayer.height,
@@ -15908,7 +15908,7 @@ ${C.join("")}}`;
                             this.depth
                         ],
                         immutable: !0
-                    }), this.compareFilterDeltasKernel = J(Zn, {
+                    }), this.compareFilterDeltasKernel = Z(Zn, {
                         constants: {
                             deltaWidth: this.width,
                             deltaHeight: this.height,
@@ -15929,7 +15929,7 @@ ${C.join("")}}`;
                             this.depth
                         ],
                         immutable: !0
-                    }), this.compareInputDeltasKernel = J(qn, {
+                    }), this.compareInputDeltasKernel = Z(qn, {
                         constants: {
                             deltaWidth: this.width,
                             deltaHeight: this.height,
@@ -15948,7 +15948,7 @@ ${C.join("")}}`;
                             this.inputLayer.depth
                         ],
                         immutable: !0
-                    }), this.compareBiasesKernel = J(Qn, {
+                    }), this.compareBiasesKernel = Z(Qn, {
                         output: [
                             1,
                             1,
@@ -15966,11 +15966,11 @@ ${C.join("")}}`;
                 }
                 compare() {
                     const { filterDeltas: t, biasDeltas: e } = this;
-                    this.filterDeltas = this.compareFilterDeltasKernel(t, this.inputLayer.weights, this.deltas), j(t), this.biasDeltas = this.compareBiasesKernel(e, this.deltas), j(e), j(this.deltas), this.deltas = this.compareInputDeltasKernel(this.filters, this.inputLayer.deltas), j(this.inputLayer.deltas), this.inputLayer.deltas = Xt(this.deltas);
+                    this.filterDeltas = this.compareFilterDeltasKernel(t, this.inputLayer.weights, this.deltas), X(t), this.biasDeltas = this.compareBiasesKernel(e, this.deltas), X(e), X(this.deltas), this.deltas = this.compareInputDeltasKernel(this.filters, this.inputLayer.deltas), X(this.inputLayer.deltas), this.inputLayer.deltas = Xt(this.deltas);
                 }
                 learn(t) {
                     const { weights: e } = this;
-                    this.weights = this.praxis.run(this, t), j(e);
+                    this.weights = this.praxis.run(this, t), X(e);
                 }
             }
             function tr(c, t) {
@@ -15989,7 +15989,7 @@ ${C.join("")}}`;
                 return c[this.thread.y][this.thread.x] === 0 ? 0 : t[this.thread.y][this.thread.x];
             }
             const rr = {
-                ...Ae,
+                ...Ie,
                 probability: .5
             };
             class ss extends Se {
@@ -16004,38 +16004,38 @@ ${C.join("")}}`;
                         this.width,
                         this.height
                     ];
-                    t ? (this.predictKernelMap = Ie({
+                    t ? (this.predictKernelMap = Le({
                         dropouts: er
                     }, ir, {
                         output: e,
                         immutable: !0
-                    }), this.compareKernel = J(nr, {
+                    }), this.compareKernel = Z(nr, {
                         output: e,
                         immutable: !0
-                    })) : this.predictKernelMap = Ie({}, sr, {
+                    })) : this.predictKernelMap = Le({}, sr, {
                         output: e,
                         immutable: !0
                     });
                 }
                 predict() {
-                    j(this.weights), this.dropouts && j(this.dropouts);
+                    X(this.weights), this.dropouts && X(this.dropouts);
                     const { result: t, dropouts: e } = this.predictKernelMap(this.inputLayer.weights);
                     this.weights = t, this.dropouts = e;
                 }
                 compare() {
-                    j(this.deltas), this.deltas = this.compareKernel(this.dropouts, this.inputLayer.deltas);
+                    X(this.deltas), this.deltas = this.compareKernel(this.dropouts, this.inputLayer.deltas);
                 }
             }
             function ar(c, t) {
                 return new ss(c, t);
             }
             function or(c, t) {
-                const { height: e, praxisOpts: i = null } = c, h = Ct({
+                const { height: e, praxisOpts: i = null } = c, h = Ot({
                     id: "weights",
                     height: e,
                     width: t.height,
                     praxisOpts: i
-                }), u = Ct({
+                }), u = Ot({
                     id: "biases",
                     height: e,
                     praxisOpts: i
@@ -16086,7 +16086,7 @@ ${C.join("")}}`;
                         ...t
                     }, this.validate();
                     const i = e.width * e.height * e.depth;
-                    this.biases = es(this.height, this.bias), this.biasDeltas = Vt(this.height), this.filters = ke(i, this.height), this.filterDeltas = Mt(i, this.height), this.depth > 0 ? (this.weights = Le(this.width, this.height, this.depth), this.deltas = de(this.width, this.height, this.depth)) : this.height > 0 && (this.weights = ke(this.width, this.height), this.deltas = Mt(this.width, this.height));
+                    this.biases = es(this.height, this.bias), this.biasDeltas = Vt(this.height), this.filters = Ee(i, this.height), this.filterDeltas = Mt(i, this.height), this.depth > 0 ? (this.weights = ke(this.width, this.height, this.depth), this.deltas = de(this.width, this.height, this.depth)) : this.height > 0 && (this.weights = Ee(this.width, this.height), this.deltas = Mt(this.width, this.height));
                 }
                 get bias() {
                     return this.settings.bias;
@@ -16108,7 +16108,7 @@ ${C.join("")}}`;
                 }
                 setupKernels() {
                     const { inputLayer: t } = this, e = t.width * t.height * t.depth;
-                    t.depth > 0 ? (this.predictKernel = J(hr, {
+                    t.depth > 0 ? (this.predictKernel = Z(hr, {
                         output: [
                             this.width,
                             this.height
@@ -16118,7 +16118,7 @@ ${C.join("")}}`;
                             inputWidth: t.width,
                             inputDepth: t.depth
                         }
-                    }), this.compareFilterDeltasKernel = J(dr, {
+                    }), this.compareFilterDeltasKernel = Z(dr, {
                         output: [
                             e,
                             this.height
@@ -16130,7 +16130,7 @@ ${C.join("")}}`;
                             inputHeight: t.height
                         },
                         immutable: !0
-                    }), this.compareInputDeltasKernel = J(cr, {
+                    }), this.compareInputDeltasKernel = Z(cr, {
                         output: [
                             t.width,
                             t.height,
@@ -16140,7 +16140,7 @@ ${C.join("")}}`;
                             filterCount: this.height
                         },
                         immutable: !0
-                    })) : (this.predictKernel = J(ur, {
+                    })) : (this.predictKernel = Z(ur, {
                         output: [
                             this.width,
                             this.height
@@ -16149,7 +16149,7 @@ ${C.join("")}}`;
                             inputHeight: t.height,
                             inputWidth: t.width
                         }
-                    }), this.compareFilterDeltasKernel = J(fr, {
+                    }), this.compareFilterDeltasKernel = Z(fr, {
                         output: [
                             e,
                             this.height
@@ -16160,7 +16160,7 @@ ${C.join("")}}`;
                             inputWidth: t.width,
                             inputHeight: t.height
                         }
-                    }), this.compareInputDeltasKernel = J(lr, {
+                    }), this.compareInputDeltasKernel = Z(lr, {
                         output: [
                             t.width,
                             t.height
@@ -16168,7 +16168,7 @@ ${C.join("")}}`;
                         constants: {
                             filterCount: this.height
                         }
-                    })), this.compareBiasesKernel = J(pr, {
+                    })), this.compareBiasesKernel = Z(pr, {
                         output: [
                             this.width,
                             this.height
@@ -16180,9 +16180,9 @@ ${C.join("")}}`;
                 }
                 compare() {
                     const t = this.inputLayer.deltas;
-                    this.inputLayer.deltas = this.compareInputDeltasKernel(t, this.deltas, this.filters), j(t);
+                    this.inputLayer.deltas = this.compareInputDeltasKernel(t, this.deltas, this.filters), X(t);
                     const { biasDeltas: e, filterDeltas: i } = this;
-                    this.biasDeltas = this.compareBiasesKernel(this.biases, this.deltas), this.filterDeltas = this.compareFilterDeltasKernel(i, this.inputLayer.weights, this.deltas), j(e), j(i);
+                    this.biasDeltas = this.compareBiasesKernel(this.biases, this.deltas), this.filterDeltas = this.compareFilterDeltasKernel(i, this.inputLayer.weights, this.deltas), X(e), X(i);
                 }
             }
             function gr(c, t) {
@@ -16191,12 +16191,12 @@ ${C.join("")}}`;
             function mr(c) {
                 return -c[this.thread.y][this.thread.x];
             }
-            class rs extends $e {
+            class rs extends De {
                 constructor(t, e){
                     super(t, e), this.validate();
                 }
                 setupKernels() {
-                    this.predictKernel = J(mr, {
+                    this.predictKernel = Z(mr, {
                         output: [
                             this.width,
                             this.height
@@ -16216,7 +16216,7 @@ ${C.join("")}}`;
             function xr(c, t) {
                 return c[this.thread.y][this.thread.x] * t[this.thread.y][this.thread.x];
             }
-            class os extends Ce {
+            class os extends $e {
                 get width() {
                     return this.inputLayer1.width;
                 }
@@ -16230,13 +16230,13 @@ ${C.join("")}}`;
                     super.validate(), Xi(this.inputLayer1, this.inputLayer2);
                 }
                 setupKernels() {
-                    this.predictKernel = J(yr, {
+                    this.predictKernel = Z(yr, {
                         output: [
                             this.width,
                             this.height
                         ],
                         immutable: !0
-                    }), this.compareKernel = J(xr, {
+                    }), this.compareKernel = Z(xr, {
                         output: [
                             this.width,
                             this.height
@@ -16245,10 +16245,10 @@ ${C.join("")}}`;
                     });
                 }
                 predict() {
-                    j(this.weights), this.weights = this.predictKernel(this.inputLayer1.weights, this.inputLayer2.weights);
+                    X(this.weights), this.weights = this.predictKernel(this.inputLayer1.weights, this.inputLayer2.weights);
                 }
                 compare() {
-                    j(this.inputLayer1.deltas), j(this.inputLayer2.deltas), this.inputLayer1.deltas = this.compareKernel(this.inputLayer2.weights, this.deltas), this.inputLayer2.deltas = this.compareKernel(this.inputLayer1.weights, this.deltas);
+                    X(this.inputLayer1.deltas), X(this.inputLayer2.deltas), this.inputLayer1.deltas = this.compareKernel(this.inputLayer2.weights, this.deltas), this.inputLayer2.deltas = this.compareKernel(this.inputLayer1.weights, this.deltas);
                 }
             }
             function ge(c, t, e) {
@@ -16271,10 +16271,10 @@ ${C.join("")}}`;
                 return new ls(c);
             }
             function br(c) {
-                return ht(c[this.thread.y][this.thread.x]);
+                return ot(c[this.thread.y][this.thread.x]);
             }
             function wr(c) {
-                return ht(c[this.thread.z][this.thread.y][this.thread.x]);
+                return ot(c[this.thread.z][this.thread.y][this.thread.x]);
             }
             function Tr(c, t) {
                 return Tt(c[this.thread.y][this.thread.x], t[this.thread.y][this.thread.x]);
@@ -16284,17 +16284,17 @@ ${C.join("")}}`;
             }
             class ps extends Te {
                 setupKernels() {
-                    this.depth > 0 ? (this.predictKernel = J(wr, {
+                    this.depth > 0 ? (this.predictKernel = Z(wr, {
                         output: [
                             this.width,
                             this.height,
                             this.depth
                         ],
                         functions: [
-                            ht
+                            ot
                         ],
                         immutable: !0
-                    }), this.compareKernel = J(Sr, {
+                    }), this.compareKernel = Z(Sr, {
                         output: [
                             this.width,
                             this.height,
@@ -16304,16 +16304,16 @@ ${C.join("")}}`;
                             Tt
                         ],
                         immutable: !0
-                    })) : (this.predictKernel = J(br, {
+                    })) : (this.predictKernel = Z(br, {
                         output: [
                             this.width,
                             this.height
                         ],
                         functions: [
-                            ht
+                            ot
                         ],
                         immutable: !0
-                    }), this.compareKernel = J(Tr, {
+                    }), this.compareKernel = Z(Tr, {
                         output: [
                             this.width,
                             this.height
@@ -16325,13 +16325,13 @@ ${C.join("")}}`;
                     }));
                 }
                 predict() {
-                    j(this.weights), this.weights = this.predictKernel(this.inputLayer.weights);
+                    X(this.weights), this.weights = this.predictKernel(this.inputLayer.weights);
                 }
                 compare() {
-                    j(this.inputLayer.deltas), this.inputLayer.deltas = this.compareKernel(this.weights, this.deltas);
+                    X(this.inputLayer.deltas), this.inputLayer.deltas = this.compareKernel(this.weights, this.deltas);
                 }
             }
-            function We(c, t) {
+            function Be(c, t) {
                 return new ps(c, t);
             }
             class fs extends he {
@@ -16345,31 +16345,31 @@ ${C.join("")}}`;
                 return new fs(c);
             }
             function vr(c, t, e) {
-                const { height: i } = c, h = Ct({
+                const { height: i } = c, h = Ot({
                     height: i,
                     width: e.height
-                }), u = Ct({
+                }), u = Ot({
                     width: i,
                     height: i
                 }), p = ee({
                     height: i
-                }), d = le($t($t(zt(h, e), zt(u, t)), p)), l = Ct({
+                }), d = le($t($t(zt(h, e), zt(u, t)), p)), l = Ot({
                     height: i,
                     width: e.height
-                }), a = Ct({
+                }), a = Ot({
                     width: i,
                     height: i
                 }), o = ee({
                     height: i
-                }), n = le($t($t(zt(l, e), zt(a, t)), o)), r = Ct({
+                }), n = le($t($t(zt(l, e), zt(a, t)), o)), r = Ot({
                     height: i,
                     width: e.height
-                }), m = Ct({
+                }), m = Ot({
                     width: i,
                     height: i
                 }), b = ee({
                     height: i
-                }), E = We($t($t(zt(r, e), zt(m, ge(n, t))), b));
+                }), E = Be($t($t(zt(r, e), zt(m, ge(n, t))), b));
                 return $t(ge($t(cs({
                     width: d.width,
                     height: d.height
@@ -16386,7 +16386,7 @@ ${C.join("")}}`;
                     }), this.reshapeInput = null, this.validate(), this.reshapeInput = null, this.deltas = Mt(this.width, this.height);
                 }
                 setupKernels() {
-                    this.width === 1 && (this.predict = this.predict1D, this.reshapeInput = J(function(t) {
+                    this.width === 1 && (this.predict = this.predict1D, this.reshapeInput = Z(function(t) {
                         return t[this.thread.y];
                     }, {
                         output: [
@@ -16400,7 +16400,7 @@ ${C.join("")}}`;
                     this.reshapeInput = t.reshapeInput;
                 }
                 predict(t) {
-                    if ((Array.isArray(t) || t instanceof Float32Array) && typeof t[0] == "number" && t.length === this.height * this.width) j(this.weights), this.weights = dn(t, [
+                    if ((Array.isArray(t) || t instanceof Float32Array) && typeof t[0] == "number" && t.length === this.height * this.width) X(this.weights), this.weights = dn(t, [
                         this.width,
                         this.height
                     ]);
@@ -16408,7 +16408,7 @@ ${C.join("")}}`;
                     else throw new Error("Inputs are not of sized correctly");
                 }
                 predict1D(t) {
-                    this.weights && j(this.weights), this.reshapeInput ? this.weights = this.reshapeInput(t) : this.weights = t;
+                    this.weights && X(this.weights), this.reshapeInput ? this.weights = this.reshapeInput(t) : this.weights = t;
                 }
                 compare() {}
                 learn() {}
@@ -16417,66 +16417,66 @@ ${C.join("")}}`;
                 return new ds(c);
             }
             function kr(c) {
-                return lt(c[this.thread.y][this.thread.x]);
+                return ct(c[this.thread.y][this.thread.x]);
             }
             function Lr(c) {
-                return lt(c[this.thread.z][this.thread.y][this.thread.x]);
+                return ct(c[this.thread.z][this.thread.y][this.thread.x]);
             }
             function Ir(c, t) {
-                return ut(c[this.thread.y][this.thread.x], t[this.thread.y][this.thread.x]);
+                return ht(c[this.thread.y][this.thread.x], t[this.thread.y][this.thread.x]);
             }
             function Ar(c, t) {
-                return ut(c[this.thread.z][this.thread.y][this.thread.x], t[this.thread.z][this.thread.y][this.thread.x]);
+                return ht(c[this.thread.z][this.thread.y][this.thread.x], t[this.thread.z][this.thread.y][this.thread.x]);
             }
             class gs extends Te {
                 setupKernels() {
                     const { width: t, height: e, depth: i } = this.inputLayer;
-                    this.depth > 0 ? (this.predictKernel = J(Lr, {
+                    this.depth > 0 ? (this.predictKernel = Z(Lr, {
                         output: [
                             t,
                             e,
                             i
                         ],
                         functions: [
-                            lt
+                            ct
                         ],
                         immutable: !0
-                    }), this.compareKernel = J(Ar, {
+                    }), this.compareKernel = Z(Ar, {
                         output: [
                             t,
                             e,
                             i
                         ],
                         functions: [
-                            ut
+                            ht
                         ],
                         immutable: !0
-                    })) : (this.predictKernel = J(kr, {
+                    })) : (this.predictKernel = Z(kr, {
                         output: [
                             t,
                             e
                         ],
                         functions: [
-                            lt
+                            ct
                         ],
                         immutable: !0
-                    }), this.compareKernel = J(Ir, {
+                    }), this.compareKernel = Z(Ir, {
                         output: [
                             t,
                             e
                         ],
                         functions: [
-                            ut
+                            ht
                         ],
                         immutable: !0
                     }));
                 }
                 predict() {
-                    j(this.weights), this.weights = this.predictKernel(this.inputLayer.weights);
+                    X(this.weights), this.weights = this.predictKernel(this.inputLayer.weights);
                 }
                 compare() {
                     const { deltas: t } = this;
-                    this.deltas = this.compareKernel(this.weights, t), j(t);
+                    this.deltas = this.compareKernel(this.weights, t), X(t);
                 }
             }
             function Dr(c, t) {
@@ -16486,12 +16486,12 @@ ${C.join("")}}`;
                 const { height: i } = c;
                 if (typeof i != "number") throw new Error("no settings.height given");
                 e.setDimensions && e.setDimensions(1, i);
-                const h = Ct({
+                const h = Ot({
                     width: t.height,
                     height: i,
                     std: .08,
                     id: "inputGateWeights"
-                }), u = Ct({
+                }), u = Ot({
                     width: i,
                     height: i,
                     std: .08,
@@ -16502,12 +16502,12 @@ ${C.join("")}}`;
                     id: "inputGateBias"
                 }), d = le($t($t(zt(h, t), zt(u, e)), p), {
                     id: "inputGate"
-                }), l = Ct({
+                }), l = Ot({
                     width: t.height,
                     height: i,
                     std: .08,
                     id: "forgetGateWeights"
-                }), a = Ct({
+                }), a = Ot({
                     width: i,
                     height: i,
                     std: .08,
@@ -16518,12 +16518,12 @@ ${C.join("")}}`;
                     id: "forgetGateBias"
                 }), n = le($t($t(zt(l, t), zt(a, e)), o), {
                     id: "forgetGate"
-                }), r = Ct({
+                }), r = Ot({
                     width: t.height,
                     height: i,
                     std: .08,
                     id: "outputGateWeights"
-                }), m = Ct({
+                }), m = Ot({
                     width: i,
                     height: i,
                     std: .08,
@@ -16534,12 +16534,12 @@ ${C.join("")}}`;
                     id: "outputGateBias"
                 }), E = le($t($t(zt(r, t), zt(m, e)), b), {
                     id: "outputGate"
-                }), w = Ct({
+                }), w = Ot({
                     width: t.height,
                     height: i,
                     std: .08,
                     id: "memoryWeights"
-                }), v = Ct({
+                }), v = Ot({
                     width: i,
                     height: i,
                     std: .08,
@@ -16548,26 +16548,26 @@ ${C.join("")}}`;
                     width: 1,
                     height: i,
                     id: "memoryBias"
-                }), T = We($t($t(zt(w, t), zt(v, e)), y), {
+                }), T = Be($t($t(zt(w, t), zt(v, e)), y), {
                     id: "memory"
                 }), _ = ge(n, e, {
                     id: "retainCell"
                 }), k = ge(d, T, {
                     id: "writeCell"
-                }), O = $t(_, k, {
+                }), C = $t(_, k, {
                     id: "cell"
                 });
-                return ge(E, We(O), {
+                return ge(E, Be(C), {
                     id: "activations"
                 });
             }
-            function Cr(c, t) {
-                const { height: e } = c, i = Ct({
+            function Or(c, t) {
+                const { height: e } = c, i = Ot({
                     height: e,
                     width: t.height,
                     id: "outputGate",
                     std: .08
-                }), h = Ct({
+                }), h = Ot({
                     height: e,
                     id: "output",
                     std: .08
@@ -16579,7 +16579,7 @@ ${C.join("")}}`;
                     ...c
                 }, $t(u, h));
             }
-            function Or(c) {
+            function Cr(c) {
                 return c;
             }
             function Rr(c) {
@@ -16613,7 +16613,7 @@ ${C.join("")}}`;
                         ...t,
                         ...Qi(t, ms),
                         ...ts(t, ms)
-                    }, this.weights = Le(this.width, this.height, this.depth), this.deltas = de(this.width, this.height, this.depth), this.validate();
+                    }, this.weights = ke(this.width, this.height, this.depth), this.deltas = de(this.width, this.height, this.depth), this.validate();
                 }
                 get strideX() {
                     return this.settings.strideX;
@@ -16652,9 +16652,9 @@ ${C.join("")}}`;
                     this.settings.switchY = t;
                 }
                 setupKernels() {
-                    this.predictKernelMap = Ie({
+                    this.predictKernelMap = Le({
                         switchX: Rr,
-                        switchY: Or
+                        switchY: Cr
                     }, Fr, {
                         output: [
                             this.width,
@@ -16671,7 +16671,7 @@ ${C.join("")}}`;
                             strideX: this.strideX,
                             strideY: this.strideY
                         }
-                    }), this.compareKernel = J(Mr, {
+                    }), this.compareKernel = Z(Mr, {
                         output: [
                             this.inputLayer.width,
                             this.inputLayer.height,
@@ -16697,13 +16697,13 @@ ${C.join("")}}`;
                 }
                 compare() {
                     const t = this.inputLayer.deltas;
-                    this.inputLayer.deltas = this.compareKernel(this.deltas, this.switchX, this.switchY), j(t);
+                    this.inputLayer.deltas = this.compareKernel(this.deltas, this.switchX, this.switchY), X(t);
                 }
             }
             function zr(c, t) {
                 return new ys(c, t);
             }
-            class je extends De {
+            class We extends Ae {
                 constructor(t){
                     super(), this.praxis = null, this.predictKernel = null, this.compareKernel = null, this.settings = {}, this.recurrentInput = t, this.validate();
                 }
@@ -16721,14 +16721,14 @@ ${C.join("")}}`;
                 }
                 set deltas(t) {
                     const e = this.recurrentInput.deltas;
-                    this.recurrentInput.deltas = t, j(e);
+                    this.recurrentInput.deltas = t, X(e);
                 }
                 get weights() {
                     return this.recurrentInput.weights;
                 }
                 set weights(t) {
                     const e = this.recurrentInput.weights;
-                    this.recurrentInput.weights = t, j(e);
+                    this.recurrentInput.weights = t, X(e);
                 }
                 validate() {
                     if (Wt.prototype.validate.call(this), this.width !== this.recurrentInput.width) throw new Error(`${this.constructor.name} layer width ${this.width} and ${this.recurrentInput.constructor.name} width (${this.recurrentInput.width}) are not same`);
@@ -16743,7 +16743,7 @@ ${C.join("")}}`;
                 setupKernels() {}
                 reuseKernels() {}
             }
-            class He extends De {
+            class je extends Ae {
                 constructor(t){
                     super(), this.praxis = null, this.settings = {}, this.predictKernel = null, this.compareKernel = null, t && (this.settings = {
                         ...t
@@ -16764,28 +16764,28 @@ ${C.join("")}}`;
                 compare() {}
                 learn(t) {
                     const { weights: e } = this;
-                    this.weights = this.praxis.run(this, t), j(e);
+                    this.weights = this.praxis.run(this, t), X(e);
                 }
             }
             function xs() {
-                return new He;
+                return new je;
             }
             function Pr(c) {
                 return V(c[this.thread.y][this.thread.x]);
             }
             function Nr(c, t) {
-                return G(c[this.thread.y][this.thread.x], t[this.thread.y][this.thread.x]);
+                return z(c[this.thread.y][this.thread.x], t[this.thread.y][this.thread.x]);
             }
             function Vr(c) {
                 return V(c[this.thread.z][this.thread.y][this.thread.x]);
             }
             function Kr(c, t) {
-                return G(c[this.thread.z][this.thread.y][this.thread.x], t[this.thread.z][this.thread.y][this.thread.x]);
+                return z(c[this.thread.z][this.thread.y][this.thread.x], t[this.thread.z][this.thread.y][this.thread.x]);
             }
             class bs extends Te {
                 setupKernels() {
                     const { width: t, height: e, depth: i } = this.inputLayer;
-                    i > 0 ? (this.predictKernel = J(Vr, {
+                    i > 0 ? (this.predictKernel = Z(Vr, {
                         output: [
                             t,
                             e,
@@ -16795,17 +16795,17 @@ ${C.join("")}}`;
                             V
                         ],
                         immutable: !0
-                    }), this.compareKernel = J(Kr, {
+                    }), this.compareKernel = Z(Kr, {
                         output: [
                             t,
                             e,
                             i
                         ],
                         functions: [
-                            G
+                            z
                         ],
                         immutable: !0
-                    })) : (this.predictKernel = J(Pr, {
+                    })) : (this.predictKernel = Z(Pr, {
                         output: [
                             t,
                             e
@@ -16814,22 +16814,22 @@ ${C.join("")}}`;
                             V
                         ],
                         immutable: !0
-                    }), this.compareKernel = J(Nr, {
+                    }), this.compareKernel = Z(Nr, {
                         output: [
                             t,
                             e
                         ],
                         functions: [
-                            G
+                            z
                         ],
                         immutable: !0
                     }));
                 }
                 predict() {
-                    j(this.weights), this.weights = this.predictKernel(this.inputLayer.weights);
+                    X(this.weights), this.weights = this.predictKernel(this.inputLayer.weights);
                 }
                 compare() {
-                    j(this.inputLayer.deltas), this.inputLayer.deltas = this.compareKernel(this.weights, this.deltas);
+                    X(this.inputLayer.deltas), this.inputLayer.deltas = this.compareKernel(this.weights, this.deltas);
                 }
             }
             function ws(c, t) {
@@ -16839,12 +16839,12 @@ ${C.join("")}}`;
                 const { height: i } = c;
                 if (typeof i != "number") throw new Error("height not set");
                 e.setDimensions && e.setDimensions(1, i);
-                const h = Ct({
+                const h = Ot({
                     id: "weight",
                     height: i,
                     width: t.height,
                     std: .08
-                }), u = Ct({
+                }), u = Ot({
                     id: "transition",
                     height: i,
                     width: i,
@@ -16860,7 +16860,7 @@ ${C.join("")}}`;
                     super(t), this.inputLayer = e, this.validate();
                 }
                 predict() {
-                    j(this.weights), this.weights = Xt(this.inputLayer.weights);
+                    X(this.weights), this.weights = Xt(this.inputLayer.weights);
                 }
                 learn() {}
             }
@@ -16913,19 +16913,19 @@ ${C.join("")}}`;
                 let e = 0;
                 return this.thread.x + this.thread.y * this.output.x + this.thread.z * this.output.x * this.output.y === c && (e = 1), -(e - t[this.thread.z][this.thread.y][this.thread.x]);
             }
-            class Ss extends $e {
+            class Ss extends De {
                 constructor(t, e){
-                    super(t, e), this.errors = null, this.getExponentialsKernel = null, this.getMaxValueKernel = null, this.getSumKernel = null, this.validate(), this.depth > 0 ? (this.weights = Le(this.width, this.height, this.depth), this.deltas = de(this.width, this.height, this.depth)) : this.height > 0 ? (this.weights = ke(this.width, this.height), this.deltas = Mt(this.width, this.height)) : (this.weights = we(this.width), this.deltas = Vt(this.width));
+                    super(t, e), this.errors = null, this.getExponentialsKernel = null, this.getMaxValueKernel = null, this.getSumKernel = null, this.validate(), this.depth > 0 ? (this.weights = ke(this.width, this.height, this.depth), this.deltas = de(this.width, this.height, this.depth)) : this.height > 0 ? (this.weights = Ee(this.width, this.height), this.deltas = Mt(this.width, this.height)) : (this.weights = we(this.width), this.deltas = Vt(this.width));
                 }
                 setupKernels() {
                     const { width: t, height: e, depth: i } = this;
-                    i > 0 ? (this.getExponentialsKernel = J(Yr, {
+                    i > 0 ? (this.getExponentialsKernel = Z(Yr, {
                         output: [
                             t,
                             e,
                             i
                         ]
-                    }), this.getMaxValueKernel = J(Wr, {
+                    }), this.getMaxValueKernel = Z(Wr, {
                         output: [
                             1,
                             1,
@@ -16936,7 +16936,7 @@ ${C.join("")}}`;
                             inputHeight: e,
                             inputDepth: i
                         }
-                    }), this.getSumKernel = J(Hr, {
+                    }), this.getSumKernel = Z(Hr, {
                         output: [
                             1,
                             1,
@@ -16947,25 +16947,25 @@ ${C.join("")}}`;
                             inputHeight: e,
                             inputDepth: i
                         }
-                    }), this.predictKernel = J(Zr, {
+                    }), this.predictKernel = Z(Zr, {
                         output: [
                             t,
                             e,
                             i
                         ]
-                    }), this.compareKernel = J(Qr, {
+                    }), this.compareKernel = Z(Qr, {
                         output: [
                             t,
                             e,
                             i
                         ],
                         immutable: !0
-                    })) : (this.getExponentialsKernel = J(Xr, {
+                    })) : (this.getExponentialsKernel = Z(Xr, {
                         output: [
                             t,
                             e
                         ]
-                    }), this.getMaxValueKernel = J(Br, {
+                    }), this.getMaxValueKernel = Z(Br, {
                         output: [
                             1,
                             1
@@ -16974,7 +16974,7 @@ ${C.join("")}}`;
                             inputWidth: t,
                             inputHeight: e
                         }
-                    }), this.getSumKernel = J(jr, {
+                    }), this.getSumKernel = Z(jr, {
                         output: [
                             1,
                             1
@@ -16983,12 +16983,12 @@ ${C.join("")}}`;
                             inputWidth: t,
                             inputHeight: e
                         }
-                    }), this.predictKernel = J(Jr, {
+                    }), this.predictKernel = Z(Jr, {
                         output: [
                             t,
                             e
                         ]
-                    }), this.compareKernel = J(qr, {
+                    }), this.compareKernel = Z(qr, {
                         output: [
                             t,
                             e
@@ -17002,9 +17002,9 @@ ${C.join("")}}`;
                 }
                 compare(t) {
                     const { deltas: e, errors: i } = this;
-                    this.errors = this.compareKernel(t[0], e), this.deltas = Xt(this.errors), j(e), j(i);
+                    this.errors = this.compareKernel(t[0], e), this.deltas = Xt(this.errors), X(e), X(i);
                     const h = this.inputLayer.deltas;
-                    this.inputLayer.deltas = Xt(this.deltas), j(h);
+                    this.inputLayer.deltas = Xt(this.deltas), X(h);
                 }
             }
             function ta(c, t) {
@@ -17015,7 +17015,7 @@ ${C.join("")}}`;
                     super(e), this.inputLayer = t;
                 }
                 predict() {
-                    j(this.weights), this.weights = Xt(this.inputLayer.weights), this.validate();
+                    X(this.weights), this.weights = Xt(this.inputLayer.weights), this.validate();
                 }
                 learn() {}
             }
@@ -17026,7 +17026,7 @@ ${C.join("")}}`;
                 return c[this.thread.x][this.thread.y];
             }
             const ia = _s;
-            class Es extends $e {
+            class Es extends De {
                 get width() {
                     return this.inputLayer.height;
                 }
@@ -17037,12 +17037,12 @@ ${C.join("")}}`;
                     super(t), this.validate();
                 }
                 setupKernels() {
-                    this.predictKernel = J(_s, {
+                    this.predictKernel = Z(_s, {
                         output: [
                             this.height,
                             this.width
                         ]
-                    }), this.compareKernel = J(ia, {
+                    }), this.compareKernel = Z(ia, {
                         output: [
                             this.width,
                             this.height
@@ -17061,13 +17061,13 @@ ${C.join("")}}`;
             }
             const qt = {
                 Activation: Te,
-                Internal: De,
+                Internal: Ae,
                 InternalModel: li,
                 EntryPoint: ci,
                 Filter: Se,
                 Model: he,
-                Modifier: $e,
-                Operator: Ce,
+                Modifier: De,
+                Operator: $e,
                 Target: Oe
             };
             var mi = Object.freeze({
@@ -17077,7 +17077,7 @@ ${C.join("")}}`;
                 add: $t,
                 arthurFeedForward: Yn,
                 BaseLayer: Wt,
-                baseLayerDefaultSettings: Ae,
+                baseLayerDefaultSettings: Ie,
                 Convolution: is,
                 convolution: tr,
                 Dropout: ss,
@@ -17099,13 +17099,13 @@ ${C.join("")}}`;
                 negative: as,
                 Ones: ls,
                 ones: cs,
-                output: Cr,
+                output: Or,
                 Pool: ys,
                 pool: zr,
                 Random: Ji,
-                random: Ct,
-                RecurrentInput: je,
-                RecurrentZeros: He,
+                random: Ot,
+                RecurrentInput: We,
+                RecurrentZeros: je,
                 rnnCell: Gr,
                 Regression: Ts,
                 regression: Ur,
@@ -17118,7 +17118,7 @@ ${C.join("")}}`;
                 SVM: vs,
                 svm: ea,
                 Tanh: ps,
-                tanh: We,
+                tanh: Be,
                 Target: Oe,
                 target: Vi,
                 Transpose: Es,
@@ -17169,7 +17169,7 @@ ${C.join("")}}`;
                 errorCheckInterval: 100,
                 timeout: 1 / 0
             };
-            class Re {
+            class Ce {
                 constructor(t = {}){
                     this.trainOpts = {}, this.layers = null, this._inputLayer = null, this._hiddenLayers = null, this._outputLayer = null, this._model = null, this.meanSquaredError = null, this.inputLookup = null, this.inputLookupLength = null, this.outputLookup = null, this.outputLookupLength = null, this.options = {
                         ...ra,
@@ -17206,7 +17206,7 @@ ${C.join("")}}`;
                         ...yi,
                         ...this.trainOpts,
                         ...t
-                    }, Re._validateTrainingOptions(this.trainOpts), this._setLogMethod((e = t.log) !== null && e !== void 0 ? e : this.trainOpts.log);
+                    }, Ce._validateTrainingOptions(this.trainOpts), this._setLogMethod((e = t.log) !== null && e !== void 0 ? e : this.trainOpts.log);
                     const { callback: i, callbackPeriod: h, errorCheckInterval: u } = this.trainOpts;
                     i && h !== u && console.warn(`options.callbackPeriod with value of ${(h ?? "undefined").toString()} does not match options.errorCheckInterval with value of ${(u ?? "undefined").toString()}, if logging error, it will repeat.  These values may need to match`);
                 }
@@ -17258,10 +17258,10 @@ ${C.join("")}}`;
                 run(t) {
                     let e;
                     if (Array.isArray(t) || t.buffer) e = t;
-                    else if (this.inputLookup) e = ft.toArray(this.inputLookup, t, this.inputLookupLength);
+                    else if (this.inputLookup) e = dt.toArray(this.inputLookup, t, this.inputLookupLength);
                     else throw new Error("input is incompatible with net");
                     let i = this.runInput(e);
-                    return i instanceof wt.Texture && (i = i.toArray()), this.outputLookup ? ft.toObject(this.outputLookup, i) : i;
+                    return i instanceof wt.Texture && (i = i.toArray()), this.outputLookup ? dt.toObject(this.outputLookup, i) : i;
                 }
                 runInput(t) {
                     if (!this.layers) throw new Error("not initialized");
@@ -17317,12 +17317,12 @@ ${C.join("")}}`;
                     const i = this.meanSquaredError;
                     for(let u = 0; u < t.length; ++u){
                         const p = e, d = this._trainPattern(t[u].input, t[u].output, !0);
-                        e = i.add(e, d), j(d), j(p);
+                        e = i.add(e, d), X(d), X(p);
                     }
                     const h = i.divide(t.length, e);
-                    if (j(e), h instanceof wt.Texture) {
+                    if (X(e), h instanceof wt.Texture) {
                         const u = h.toArray();
-                        return j(h), u[0];
+                        return X(h), u[0];
                     }
                     return h[0];
                 }
@@ -17358,7 +17358,7 @@ ${C.join("")}}`;
                             this.inputLookup = u.table, this.inputLookupLength = u.length;
                         }
                         i = t.map((u)=>({
-                                input: ft.toArray(this.inputLookup, u.input, this.inputLookupLength)
+                                input: dt.toArray(this.inputLookup, u.input, this.inputLookupLength)
                             }), this);
                     } else i = t;
                     const h = t[0].output;
@@ -17368,7 +17368,7 @@ ${C.join("")}}`;
                             this.outputLookup = u.table, this.outputLookupLength = u.length;
                         }
                         i = t.map((u, p)=>{
-                            const d = ft.toArray(this.outputLookup, u.output, this.inputLookupLength);
+                            const d = dt.toArray(this.outputLookup, u.output, this.inputLookupLength);
                             return {
                                 input: i[p].input,
                                 output: d
@@ -17378,14 +17378,14 @@ ${C.join("")}}`;
                     return i;
                 }
                 transferData(t) {
-                    const e = new Array(t.length), i = J(function(u) {
+                    const e = new Array(t.length), i = Z(function(u) {
                         return u[this.thread.x];
                     }, {
                         output: [
                             t[0].input.length
                         ],
                         immutable: !0
-                    }), h = J(function(u) {
+                    }), h = Z(function(u) {
                         return u[this.thread.x];
                     }, {
                         output: [
@@ -17470,7 +17470,7 @@ ${C.join("")}}`;
                     typeof p < "u" && typeof p == "number" && p > h && (i = u, h = p);
                 }), i;
             }
-            class ks extends De {
+            class ks extends Ae {
                 constructor(){
                     super(...arguments), this.settings = {}, this.layer = null;
                 }
@@ -17497,7 +17497,7 @@ ${C.join("")}}`;
                 }
                 set deltas(t) {
                     if (!this.layer) throw new Error("layer not set");
-                    j(this.layer.deltas), this.layer.deltas = t;
+                    X(this.layer.deltas), this.layer.deltas = t;
                 }
                 get weights() {
                     if (!this.layer) throw new Error("layer not set");
@@ -17505,7 +17505,7 @@ ${C.join("")}}`;
                 }
                 set weights(t) {
                     if (!this.layer) throw new Error("layer not set");
-                    j(this.layer.weights), this.layer.weights = t;
+                    X(this.layer.weights), this.layer.weights = t;
                 }
                 predict() {}
                 compare() {}
@@ -17515,7 +17515,7 @@ ${C.join("")}}`;
                 setupKernels() {}
                 reuseKernels() {}
             }
-            class Ls extends Re {
+            class Ls extends Ce {
                 constructor(t = {}){
                     super(t), this.trainOpts = {}, this._outputConnection = null, this._layerSets = [], this._hiddenLayerOutputIndices = [], this._model = null;
                 }
@@ -17551,15 +17551,15 @@ ${C.join("")}}`;
                         if (d instanceof Te) l = new d.constructor(h(d.inputLayer), u(d));
                         else if (d instanceof ci) l = new d.constructor(u(d));
                         else if (d instanceof Se) l = new d.constructor(u(d.inputLayer), h(d.inputLayer));
-                        else if (d instanceof De) {
+                        else if (d instanceof Ae) {
                             const a = e[this._hiddenLayerOutputIndices[i++]];
                             if (d instanceof ks) throw new Error("unfinished");
-                            if (d instanceof je) l = new je(a);
-                            else if (d instanceof He) l = new je(a);
+                            if (d instanceof We) l = new We(a);
+                            else if (d instanceof je) l = new We(a);
                             else throw new Error(`hidden layer ${d.constructor.name} extends unknown hidden layer`);
                         } else if (d instanceof li || d instanceof he) l = d;
-                        else if (d instanceof $e) l = new d.constructor(h(d.inputLayer), u(d.inputLayer));
-                        else if (d instanceof Ce) l = new d.constructor(h(d.inputLayer1), h(d.inputLayer2), u(d));
+                        else if (d instanceof De) l = new d.constructor(h(d.inputLayer), u(d.inputLayer));
+                        else if (d instanceof $e) l = new d.constructor(h(d.inputLayer1), h(d.inputLayer2), u(d));
                         else if (d instanceof Oe) l = new d.constructor(u(d), h(d.inputLayer));
                         else throw new Error(`hidden layer ${d.constructor.name} extends unknown hidden layer`);
                         t.push(l);
@@ -17570,7 +17570,7 @@ ${C.join("")}}`;
                     const e = [];
                     if (!this.options.hiddenLayers) throw new Error("hiddenLayers not defined");
                     for(let i = 0; i < this.options.hiddenLayers.length; i++){
-                        const h = new He, u = this.options.hiddenLayers[i](t, h, i);
+                        const h = new je, u = this.options.hiddenLayers[i](t, h, i);
                         t = u, e.push(u);
                     }
                     return e;
@@ -17654,10 +17654,10 @@ ${C.join("")}}`;
                     let e = new Float32Array(1);
                     for(let h = 0; h < t.length; ++h){
                         const u = e, p = this._trainPattern(t[h], !0);
-                        e = this.meanSquaredError.add(e, p), j(p), j(u);
+                        e = this.meanSquaredError.add(e, p), X(p), X(u);
                     }
                     const i = this.meanSquaredError.divide(t.length, e);
-                    return j(e), i instanceof wt.Texture ? i.toArray()[0] : i[0];
+                    return X(e), i instanceof wt.Texture ? i.toArray()[0] : i[0];
                 }
                 formatData(t) {
                     return t;
@@ -17685,14 +17685,14 @@ ${C.join("")}}`;
                         let i = new Float32Array(1);
                         for(let h = 0, u = t.length - 2; h <= u; h++){
                             const p = this._layerSets[h], d = p[p.length - 1], l = i;
-                            i = this.meanSquaredError.addAbsolute(l, d.errors), j(l);
+                            i = this.meanSquaredError.addAbsolute(l, d.errors), X(l);
                         }
                         return Xt(this.meanSquaredError.divide(t.length, i));
                     }
                     return null;
                 }
             }
-            class dt {
+            class gt {
                 constructor(t, e){
                     this.rows = 0, this.columns = 0, t && (this.rows = t), e && (this.columns = e), this.weights = Vt(this.rows * this.columns), this.deltas = Vt(this.rows * this.columns);
                 }
@@ -17724,12 +17724,12 @@ ${C.join("")}}`;
                     };
                 }
                 static fromJSON(t) {
-                    const e = new dt(t.rows, t.columns);
+                    const e = new gt(t.rows, t.columns);
                     for(let i = 0, h = t.rows * t.columns; i < h; i++)e.weights[i] = t.weights[i];
                     return e;
                 }
                 static fromArray(t) {
-                    const e = new dt(t.length, t[0].length);
+                    const e = new gt(t.length, t[0].length);
                     return e.fromArray(t), e;
                 }
                 deltasToArray() {
@@ -17769,7 +17769,7 @@ ${C.join("")}}`;
                     return this;
                 }
             }
-            class Rt extends dt {
+            class Rt extends gt {
                 constructor(t, e, i){
                     super(t, e), this.std = i;
                     for(let h = 0, u = this.weights.length; h < u; h++)this.weights[h] = be(-i, i);
@@ -17900,7 +17900,7 @@ ${C.join("")}}`;
                     const i = [];
                     for(let p = 0; p < t.length; p++){
                         const d = t[p];
-                        i.push(Fe(d.input), Fe(d.output));
+                        i.push(Re(d.input), Re(d.output));
                     }
                     const h = Array.isArray(i) ? i.flat() : i, u = new Jt(Array.from(new Set(h)), e);
                     return u.addInputOutput(), u.addUnrecognized(), u.isSetup = !0, u;
@@ -17951,16 +17951,16 @@ var dataFormatter = {
                     if (typeof t[0] == "string" || typeof t[0] == "number" || Array.isArray(t[0])) if (this.isSetup) for(let i = 0, h = t.length; i < h; i++)e.push(this.formatDataIn(t[i]));
                     else {
                         this.setup(t);
-                        for(let i = 0; i < t.length; i++)e.push(this.formatDataIn(Fe(t[i])));
+                        for(let i = 0; i < t.length; i++)e.push(this.formatDataIn(Re(t[i])));
                     }
                     else if (t[0].input && t[0].output) {
                         this.isSetup || this.setup(t);
-                        for(let i = 0, h = t.length; i < h; i++)e.push(this.formatDataIn(Fe(t[i].input), Fe(t[i].output)));
+                        for(let i = 0, h = t.length; i < h; i++)e.push(this.formatDataIn(Re(t[i].input), Re(t[i].output)));
                     } else throw new Error("unrecognized data");
                     return e;
                 }
             }
-            function Fe(c) {
+            function Re(c) {
                 if (typeof c == "string") return c;
                 if (typeof c == "number" || typeof c == "boolean") return c.toString();
                 if (Array.isArray(c) && typeof c[0] == "string") return c;
@@ -18038,8 +18038,8 @@ var dataFormatter = {
                     t.deltas[e] = i * (1 - i) * c.deltas[e];
                 }
             }
-            function Xe(c) {
-                const t = new dt(c.rows, c.columns);
+            function He(c) {
+                const t = new gt(c.rows, c.columns);
                 let e = -999999;
                 for(let h = 0; h < c.weights.length; h++)c.weights[h] > e && (e = c.weights[h]);
                 let i = 0;
@@ -18062,7 +18062,7 @@ var dataFormatter = {
                 }
                 add(t, e) {
                     if (t.weights.length !== e.weights.length) throw new Error("misaligned matrices");
-                    const i = new dt(t.rows, t.columns);
+                    const i = new gt(t.rows, t.columns);
                     return this.states.push({
                         name: "add",
                         product: i,
@@ -18073,7 +18073,7 @@ var dataFormatter = {
                     }), i;
                 }
                 allOnes(t, e) {
-                    const i = new dt(t, e);
+                    const i = new gt(t, e);
                     return this.states.push({
                         name: "allOnes",
                         product: i,
@@ -18083,7 +18083,7 @@ var dataFormatter = {
                     }), i;
                 }
                 cloneNegative(t) {
-                    const e = new dt(t.rows, t.columns);
+                    const e = new gt(t.rows, t.columns);
                     return this.states.push({
                         name: "cloneNegative",
                         product: e,
@@ -18098,7 +18098,7 @@ var dataFormatter = {
                 }
                 multiply(t, e) {
                     if (t.columns !== e.rows) throw new Error("misaligned matrices");
-                    const i = new dt(t.rows, e.columns);
+                    const i = new gt(t.rows, e.columns);
                     return this.states.push({
                         name: "multiply",
                         product: i,
@@ -18110,7 +18110,7 @@ var dataFormatter = {
                 }
                 multiplyElement(t, e) {
                     if (t.weights.length !== e.weights.length) throw new Error("misaligned matrices");
-                    const i = new dt(t.rows, t.columns);
+                    const i = new gt(t.rows, t.columns);
                     return this.states.push({
                         name: "multiplyElement",
                         product: i,
@@ -18121,7 +18121,7 @@ var dataFormatter = {
                     }), i;
                 }
                 relu(t) {
-                    const e = new dt(t.rows, t.columns);
+                    const e = new gt(t.rows, t.columns);
                     return this.states.push({
                         name: "relu",
                         product: e,
@@ -18144,7 +18144,7 @@ var dataFormatter = {
                     }), t;
                 }
                 inputMatrixToRow(t) {
-                    const e = this, i = new dt(t.columns, 1);
+                    const e = this, i = new gt(t.columns, 1);
                     return this.states.push({
                         name: "inputMatrixToRow",
                         product: i,
@@ -18157,7 +18157,7 @@ var dataFormatter = {
                     }), i;
                 }
                 sigmoid(t) {
-                    const e = new dt(t.rows, t.columns);
+                    const e = new gt(t.rows, t.columns);
                     return this.states.push({
                         name: "sigmoid",
                         product: e,
@@ -18167,7 +18167,7 @@ var dataFormatter = {
                     }), e;
                 }
                 tanh(t) {
-                    const e = new dt(t.rows, t.columns);
+                    const e = new gt(t.rows, t.columns);
                     return this.states.push({
                         name: "tanh",
                         product: e,
@@ -18179,7 +18179,7 @@ var dataFormatter = {
                 observe(t) {
                     return this.states.push({
                         name: "observe",
-                        product: new dt,
+                        product: new gt,
                         forwardFn: ()=>{},
                         backpropagationFn: ()=>{}
                     }), t;
@@ -18217,7 +18217,7 @@ var dataFormatter = {
                     return i;
                 }
                 predictTargetIndex(t, e) {
-                    const i = this.runIndex(t), h = i, u = Xe(i);
+                    const i = this.runIndex(t), h = i, u = He(i);
                     return h.deltas = u.weights.slice(0), h.deltas[e] -= 1, -Math.log2(u.weights[e]);
                 }
             }
@@ -18246,7 +18246,7 @@ var dataFormatter = {
                 learningRate: .01,
                 callbackPeriod: 10,
                 timeout: 1 / 0
-            }, Me = ()=>({
+            }, Fe = ()=>({
                     inputSize: 20,
                     inputRange: 20,
                     hiddenLayers: [
@@ -18261,17 +18261,17 @@ var dataFormatter = {
                     maxPredictionLength: 100,
                     dataFormatter: new Jt
                 });
-            class ze {
+            class Me {
                 constructor(t = {}){
                     this.options = {
-                        ...Me()
+                        ...Fe()
                     }, this.trainOpts = {
                         ...ve
                     }, this.stepCache = {}, this.runs = 0, this.ratioClipped = 0, this.model = Object.seal({
                         isInitialized: !1,
-                        input: new dt(0, 0),
+                        input: new gt(0, 0),
                         hiddenLayers: [],
-                        output: new dt(0, 0),
+                        output: new gt(0, 0),
                         equations: [],
                         allMatrices: [],
                         equationConnections: [],
@@ -18301,7 +18301,7 @@ var dataFormatter = {
                     return {
                         weight: new Rt(t, e, .08),
                         transition: new Rt(t, t, .08),
-                        bias: new dt(t, 1)
+                        bias: new gt(t, 1)
                     };
                 }
                 getEquation(t, e, i, h) {
@@ -18319,7 +18319,7 @@ var dataFormatter = {
                     const { outputSize: t, hiddenLayers: e } = this.options, i = wi(e);
                     return {
                         outputConnector: new Rt(t + 1, i, .08),
-                        output: new dt(t + 1, 1)
+                        output: new gt(t + 1, 1)
                     };
                 }
                 bindEquation() {
@@ -18334,7 +18334,7 @@ var dataFormatter = {
                 }
                 mapModel() {
                     const t = [];
-                    this.initialLayerInputs = this.options.hiddenLayers.map((p)=>new dt(p, 1));
+                    this.initialLayerInputs = this.options.hiddenLayers.map((p)=>new gt(p, 1));
                     const e = this.createInputMatrix();
                     t.push(e);
                     const i = this.createHiddenLayers();
@@ -18403,9 +18403,9 @@ var dataFormatter = {
                     for(;;){
                         const a = l === 0 ? 0 : l < u.length ? u[l - 1] + 1 : d[l - 1];
                         for(; p.equations.length <= l;)this.bindEquation();
-                        const n = p.equations[l].runIndex(a), r = new dt(p.output.rows, p.output.columns);
+                        const n = p.equations[l].runIndex(a), r = new gt(p.output.rows, p.output.columns);
                         if (oa(r, n), i !== 1 && e) for(let E = 0, w = r.weights.length; E < w; E++)r.weights[E] /= i;
-                        const m = Xe(r), b = e ? bi(m) : xi(m);
+                        const m = He(r), b = e ? bi(m) : xi(m);
                         if (l++, b === 0 || l >= h) break;
                         d.push(b);
                     }
@@ -18535,23 +18535,23 @@ var dataFormatter = {
                     };
                 }
                 fromJSON(t) {
-                    const { options: e } = t, i = [], h = dt.fromJSON(t.input);
+                    const { options: e } = t, i = [], h = gt.fromJSON(t.input);
                     i.push(h);
                     const u = [];
                     t.hiddenLayers.forEach((l)=>{
                         const a = {};
-                        for(const o in l)a[o] = dt.fromJSON(l[o]), i.push(a[o]);
+                        for(const o in l)a[o] = gt.fromJSON(l[o]), i.push(a[o]);
                         u.push(a);
                     });
-                    const p = dt.fromJSON(t.outputConnector);
+                    const p = gt.fromJSON(t.outputConnector);
                     i.push(p);
-                    const d = dt.fromJSON(t.output);
+                    const d = gt.fromJSON(t.output);
                     return i.push(d), e.dataFormatter ? this.options = {
-                        ...Me(),
+                        ...Fe(),
                         ...e,
                         dataFormatter: Jt.fromJSON(e.dataFormatter)
                     } : this.options = {
-                        ...Me(),
+                        ...Fe(),
                         ...e,
                         dataFormatter: new Jt
                     }, this.model = Object.seal({
@@ -18563,7 +18563,7 @@ var dataFormatter = {
                         outputConnector: p,
                         equations: [],
                         equationConnections: []
-                    }), this.initialLayerInputs = this.options.hiddenLayers.map((l)=>new dt(l, 1)), this.bindEquation(), this;
+                    }), this.initialLayerInputs = this.options.hiddenLayers.map((l)=>new gt(l, 1)), this.bindEquation(), this;
                 }
                 toFunction(t) {
                     const { model: e } = this, { equations: i } = this.model, h = i[1], { states: u } = h, p = JSON.stringify(this.toJSON());
@@ -18691,7 +18691,7 @@ ${b.join(`
     this.weights = zeros(rows * columns);
   }
   ${Vt.toString()}
-  ${Xe.toString().replace("_1.Matrix", "Matrix")}
+  ${He.toString().replace("_1.Matrix", "Matrix")}
   ${be.toString()}
   ${bi.toString()}
   ${xi.toString()}`;
@@ -18705,7 +18705,7 @@ ${b.join(`
             function wi(c) {
                 return c[c.length - 1];
             }
-            class As extends ze {
+            class As extends Me {
                 getHiddenLayer(t, e) {
                     return Ds(t, e);
                 }
@@ -18717,13 +18717,13 @@ ${b.join(`
                 return {
                     updateGateInputMatrix: new Rt(c, t, .08),
                     updateGateHiddenMatrix: new Rt(c, c, .08),
-                    updateGateBias: new dt(c, 1),
+                    updateGateBias: new gt(c, 1),
                     resetGateInputMatrix: new Rt(c, t, .08),
                     resetGateHiddenMatrix: new Rt(c, c, .08),
-                    resetGateBias: new dt(c, 1),
+                    resetGateBias: new gt(c, 1),
                     cellWriteInputMatrix: new Rt(c, t, .08),
                     cellWriteHiddenMatrix: new Rt(c, c, .08),
-                    cellWriteBias: new dt(c, 1)
+                    cellWriteBias: new gt(c, 1)
                 };
             }
             function $s(c, t, e, i) {
@@ -18731,7 +18731,7 @@ ${b.join(`
                 const h = c.sigmoid.bind(c), u = c.add.bind(c), p = c.multiply.bind(c), d = c.multiplyElement.bind(c), l = c.tanh.bind(c), a = c.allOnes.bind(c), o = c.cloneNegative.bind(c), n = h(u(u(p(i.updateGateInputMatrix, t), p(i.updateGateHiddenMatrix, e)), i.updateGateBias)), r = h(u(u(p(i.resetGateInputMatrix, t), p(i.resetGateHiddenMatrix, e)), i.resetGateBias)), m = l(u(u(p(i.cellWriteInputMatrix, t), p(i.cellWriteHiddenMatrix, d(r, e))), i.cellWriteBias));
                 return u(d(u(a(n.rows, n.columns), o(n)), m), d(e, n));
             }
-            class Cs {
+            class Os {
                 constructor(t, e){
                     this.prop = e, this.length = 0, this.table = {};
                     for(let i = 0; i < t.length; i++){
@@ -18743,8 +18743,8 @@ ${b.join(`
                     }
                 }
             }
-            const Os = ()=>({
-                    ...Me(),
+            const Cs = ()=>({
+                    ...Fe(),
                     inputSize: 1,
                     hiddenLayers: [
                         20
@@ -18752,17 +18752,17 @@ ${b.join(`
                     outputSize: 1,
                     inputRange: 0
                 });
-            class Ye extends ze {
+            class Xe extends Me {
                 constructor(t = {}){
                     super(), this.inputLookupLength = 0, this.inputLookup = null, this.outputLookup = null, this.outputLookupLength = 0, this.model = Object.seal({
                         isInitialized: !1,
                         hiddenLayers: [],
-                        output: new dt(0, 0),
+                        output: new gt(0, 0),
                         equations: [],
                         allMatrices: [],
                         equationConnections: [],
                         outputConnector: new Rt(0, 0, .08)
-                    }), this.options = Os(), this.options = {
+                    }), this.options = Cs(), this.options = {
                         ...this.options,
                         ...t
                     }, this.updateTrainingOptions({
@@ -18782,7 +18782,7 @@ ${b.join(`
                 }
                 bindEquation() {
                     const { model: t, options: e } = this, { hiddenLayers: i, inputSize: h } = e, u = t.hiddenLayers, p = new Is, d = [], l = t.equationConnections.length > 0 ? t.equationConnections[t.equationConnections.length - 1] : this.initialLayerInputs;
-                    let a = this.getEquation(p, p.input(new dt(h, 1)), l[0], u[0]);
+                    let a = this.getEquation(p, p.input(new gt(h, 1)), l[0], u[0]);
                     d.push(a);
                     for(let o = 1, n = i.length; o < n; o++)a = this.getEquation(p, a, l[o], u[o]), d.push(a);
                     t.equationConnections.push(d), p.add(p.multiply(t.outputConnector, a), t.output), t.equations.push(p);
@@ -18792,7 +18792,7 @@ ${b.join(`
                 }
                 mapModel() {
                     const t = [];
-                    this.initialLayerInputs = this.options.hiddenLayers.map((u)=>new dt(u, 1));
+                    this.initialLayerInputs = this.options.hiddenLayers.map((u)=>new gt(u, 1));
                     const e = this.createHiddenLayers();
                     for(let u = 0, p = e.length; u < p; u++){
                         const d = e[u];
@@ -18813,7 +18813,7 @@ ${b.join(`
                     for(let t = this.model.equations.length - 1; t > -1; t--)this.model.equations[t].backpropagate();
                 }
                 run(t) {
-                    const e = ft.dataShape(t).join(",");
+                    const e = dt.dataShape(t).join(",");
                     switch(e){
                         case "array,number":
                             return this.runArray(t);
@@ -18828,7 +18828,7 @@ ${b.join(`
                     }
                 }
                 forecast(t, e = 1) {
-                    const i = ft.dataShape(t).join(",");
+                    const i = dt.dataShape(t).join(",");
                     switch(i){
                         case "array,number":
                             return this.forecastArray(t, e);
@@ -18874,8 +18874,8 @@ ${b.join(`
                 forecastArrayOfObject(t, e = 1) {
                     if (!this.inputLookup) throw new Error("this.inputLookup not set");
                     if (!this.outputLookup) throw new Error("this.outputLookup not set");
-                    const i = t.map((h)=>ft.toArray(this.inputLookup, h, this.inputLookupLength));
-                    return this.forecastArrayOfArray(i, e).map((h)=>ft.toObject(this.outputLookup, h));
+                    const i = t.map((h)=>dt.toArray(this.inputLookup, h, this.inputLookupLength));
+                    return this.forecastArrayOfArray(i, e).map((h)=>dt.toObject(this.outputLookup, h));
                 }
                 train(t, e = {}) {
                     this.trainOpts = e = {
@@ -18917,7 +18917,7 @@ ${b.join(`
                 }
                 setSize(t) {
                     let e = 0;
-                    switch(ft.dataShape(t).join(",")){
+                    switch(dt.dataShape(t).join(",")){
                         case "array,array,number":
                         case "array,object,number":
                         case "array,datum,array,number":
@@ -18928,13 +18928,13 @@ ${b.join(`
                             e = t[0][0].length;
                             break;
                         case "array,array,object,number":
-                            e = Object.keys(ft.toTable2D(t)).length;
+                            e = Object.keys(dt.toTable2D(t)).length;
                             break;
                         case "array,datum,array,array,number":
                             e = t[0].input[0].length;
                             break;
                         case "array,datum,array,object,number":
-                            e = Object.keys(ft.toInputTable2D(t)).length;
+                            e = Object.keys(dt.toInputTable2D(t)).length;
                             break;
                         default:
                             throw new Error("unknown data shape or configuration");
@@ -18971,21 +18971,21 @@ ${b.join(`
                     if (!this.outputLookup) throw new Error("this.outputLookup not set");
                     if (!this.outputLookupLength) throw new Error("this.outputLookupLength not set");
                     if (this.inputLookup === this.outputLookup) {
-                        const e = ft.toArrayShort(this.inputLookup, t);
-                        return ft.toObjectPartial(this.outputLookup, this.forecastArray(e, this.outputLookupLength - e.length), e.length);
+                        const e = dt.toArrayShort(this.inputLookup, t);
+                        return dt.toObjectPartial(this.outputLookup, this.forecastArray(e, this.outputLookupLength - e.length), e.length);
                     }
-                    return ft.toObject(this.outputLookup, this.forecastArray(ft.toArray(this.inputLookup, t, this.inputLookupLength), this.outputLookupLength));
+                    return dt.toObject(this.outputLookup, this.forecastArray(dt.toArray(this.inputLookup, t, this.inputLookupLength), this.outputLookupLength));
                 }
                 runArrayOfObject(t) {
                     if (this.inputLookup === null) throw new Error("this.inputLookup not set");
                     if (this.outputLookup === null) throw new Error("this.outputLookup not set");
-                    const e = t.map((i)=>ft.toArray(this.inputLookup, i, this.inputLookupLength));
-                    return this.forecastArrayOfArray(e, 1).map((i)=>ft.toObject(this.outputLookup, i))[0];
+                    const e = t.map((i)=>dt.toArray(this.inputLookup, i, this.inputLookupLength));
+                    return this.forecastArrayOfArray(e, 1).map((i)=>dt.toObject(this.outputLookup, i))[0];
                 }
                 runArrayOfObjectOfArray(t) {
                     if (!this.inputLookup) throw new Error("this.inputLookup not set");
                     if (!this.outputLookup) throw new Error("this.outputLookup not set");
-                    return ft.toObject(this.outputLookup, this.runArrayOfArray(ft.toArrays(this.inputLookup, t, this.inputLookupLength)));
+                    return dt.toObject(this.outputLookup, this.runArrayOfArray(dt.toArrays(this.inputLookup, t, this.inputLookupLength)));
                 }
                 end() {
                     this.model.equations[this.model.equations.length - 1].runInput(new Float32Array(this.options.outputSize));
@@ -19007,7 +19007,7 @@ ${b.join(`
                 formatArrayOfArray(t) {
                     const e = [], { inputSize: i, outputSize: h } = this.options;
                     if (i === 1 && h === 1) {
-                        for(let u = 0; u < t.length; u++)e.push(Ne(t[u]));
+                        for(let u = 0; u < t.length; u++)e.push(Pe(t[u]));
                         return e;
                     }
                     if (i !== t[0].length) throw new Error("inputSize must match data input size");
@@ -19042,7 +19042,7 @@ ${b.join(`
                     this.requireInputOutputOfOne();
                     for(let i = 0; i < t.length; i++){
                         const h = t[i];
-                        e.push(Ve(h.input, h.output));
+                        e.push(Ne(h.input, h.output));
                     }
                     return e;
                 }
@@ -19092,11 +19092,11 @@ ${b.join(`
                 }
                 formatArrayOfDatumOfArrayOfObject(t) {
                     if (!this.inputLookup) {
-                        const i = new Cs(t, "input");
+                        const i = new Os(t, "input");
                         this.inputLookup = i.table, this.inputLookupLength = i.length;
                     }
                     if (!this.outputLookup) {
-                        const i = new Cs(t, "output");
+                        const i = new Os(t, "output");
                         this.outputLookup = i.table, this.outputLookupLength = i.length;
                     }
                     if (!this.outputLookupLength) throw new Error("this.outputLookupLength not set to usable number");
@@ -19108,7 +19108,7 @@ ${b.join(`
                     return e;
                 }
                 formatData(t) {
-                    switch(ft.dataShape(t).join(",")){
+                    switch(dt.dataShape(t).join(",")){
                         case "array,number":
                             return this.formatArray(t);
                         case "array,array,number":
@@ -19159,7 +19159,7 @@ ${b.join(`
                 }
                 addFormat(t) {
                     var e, i, h, u, p, d;
-                    switch(ft.dataShape(t).join(",")){
+                    switch(dt.dataShape(t).join(",")){
                         case "array,array,number":
                         case "datum,array,array,number":
                         case "array,number":
@@ -19167,26 +19167,26 @@ ${b.join(`
                             return;
                         case "datum,object,number":
                             {
-                                this.inputLookup = ft.addKeys(t.input, (e = this.inputLookup) !== null && e !== void 0 ? e : {}), this.inputLookup && (this.inputLookupLength = Object.keys(this.inputLookup).length), this.outputLookup = ft.addKeys(t.output, (i = this.outputLookup) !== null && i !== void 0 ? i : {}), this.outputLookup && (this.outputLookupLength = Object.keys(this.outputLookup).length);
+                                this.inputLookup = dt.addKeys(t.input, (e = this.inputLookup) !== null && e !== void 0 ? e : {}), this.inputLookup && (this.inputLookupLength = Object.keys(this.inputLookup).length), this.outputLookup = dt.addKeys(t.output, (i = this.outputLookup) !== null && i !== void 0 ? i : {}), this.outputLookup && (this.outputLookupLength = Object.keys(this.outputLookup).length);
                                 break;
                             }
                         case "object,number":
                             {
-                                this.inputLookup = this.outputLookup = ft.addKeys(t, (h = this.inputLookup) !== null && h !== void 0 ? h : {}), this.inputLookup && (this.inputLookupLength = this.outputLookupLength = Object.keys(this.inputLookup).length);
+                                this.inputLookup = this.outputLookup = dt.addKeys(t, (h = this.inputLookup) !== null && h !== void 0 ? h : {}), this.inputLookup && (this.inputLookupLength = this.outputLookupLength = Object.keys(this.inputLookup).length);
                                 break;
                             }
                         case "array,object,number":
                             {
                                 const a = t;
-                                for(let o = 0; o < a.length; o++)this.inputLookup = this.outputLookup = ft.addKeys(a[o], (u = this.inputLookup) !== null && u !== void 0 ? u : {}), this.inputLookup && (this.inputLookupLength = this.outputLookupLength = Object.keys(this.inputLookup).length);
+                                for(let o = 0; o < a.length; o++)this.inputLookup = this.outputLookup = dt.addKeys(a[o], (u = this.inputLookup) !== null && u !== void 0 ? u : {}), this.inputLookup && (this.inputLookupLength = this.outputLookupLength = Object.keys(this.inputLookup).length);
                                 break;
                             }
                         case "datum,array,object,number":
                             {
                                 const a = t, o = a.input;
-                                for(let r = 0; r < o.length; r++)this.inputLookup = ft.addKeys(o[r], (p = this.inputLookup) !== null && p !== void 0 ? p : {}), this.inputLookup && (this.inputLookupLength = Object.keys(this.inputLookup).length);
+                                for(let r = 0; r < o.length; r++)this.inputLookup = dt.addKeys(o[r], (p = this.inputLookup) !== null && p !== void 0 ? p : {}), this.inputLookup && (this.inputLookupLength = Object.keys(this.inputLookup).length);
                                 const n = a.output;
-                                for(let r = 0; r < n.length; r++)this.outputLookup = ft.addKeys(n[r], (d = this.outputLookup) !== null && d !== void 0 ? d : {}), this.outputLookup && (this.outputLookupLength = Object.keys(this.outputLookup).length);
+                                for(let r = 0; r < n.length; r++)this.outputLookup = dt.addKeys(n[r], (d = this.outputLookup) !== null && d !== void 0 ? d : {}), this.outputLookup && (this.outputLookupLength = Object.keys(this.outputLookup).length);
                                 break;
                             }
                         default:
@@ -19197,7 +19197,7 @@ ${b.join(`
                     this.model || this.initialize();
                     const { model: t } = this, e = {
                         ...this.options,
-                        ...Me
+                        ...Fe
                     };
                     return {
                         type: this.constructor.name,
@@ -19219,14 +19219,14 @@ ${b.join(`
                     const { options: e } = t, i = [], h = [];
                     t.hiddenLayers.forEach((d)=>{
                         const l = {};
-                        for(const a in d)l[a] = dt.fromJSON(d[a]), i.push(l[a]);
+                        for(const a in d)l[a] = gt.fromJSON(d[a]), i.push(l[a]);
                         h.push(l);
                     });
-                    const u = dt.fromJSON(t.outputConnector);
+                    const u = gt.fromJSON(t.outputConnector);
                     i.push(u);
-                    const p = dt.fromJSON(t.output);
+                    const p = gt.fromJSON(t.output);
                     return i.push(p), this.options = {
-                        ...Os(),
+                        ...Cs(),
                         ...e
                     }, this.inputLookup = t.inputLookup, this.inputLookupLength = t.inputLookupLength, this.outputLookup = t.outputLookup, this.outputLookupLength = t.outputLookupLength, this.model = Object.seal({
                         isInitialized: !0,
@@ -19236,34 +19236,34 @@ ${b.join(`
                         outputConnector: u,
                         equations: [],
                         equationConnections: []
-                    }), this.initialLayerInputs = e.hiddenLayers.map((d)=>new dt(d, 1)), this.bindEquation(), this;
+                    }), this.initialLayerInputs = e.hiddenLayers.map((d)=>new gt(d, 1)), this.bindEquation(), this;
                 }
                 toFunction(t) {
                     const { model: e, inputLookup: i, inputLookupLength: h, outputLookup: u, outputLookupLength: p } = this, { inputSize: d } = this.options, { equations: l } = e, a = l[1], { states: o } = a, n = JSON.stringify(this.toJSON());
                     function r(x) {
                         const g = e.equationConnections[0], { states: I } = l[0];
-                        for(let A = 0, z = I.length; A < z; A++)if (I[A].product === x) return A;
+                        for(let A = 0, P = I.length; A < P; A++)if (I[A].product === x) return A;
                         return g.indexOf(x);
                     }
                     function m(x, g) {
                         for(let I = 0, A = o.length; I < A; I++){
-                            const z = o[I];
+                            const P = o[I];
                             if (I === g) {
-                                const C = r(x);
+                                const O = r(x);
                                 switch(x){
-                                    case z.left:
-                                        if (C > -1) return `typeof prevStates[${C}] === 'object' ? prevStates[${C}].product : new Matrix(${x.rows}, ${x.columns})`;
-                                    case z.right:
-                                        if (C > -1) return `typeof prevStates[${C}] === 'object' ? prevStates[${C}].product : new Matrix(${x.rows}, ${x.columns})`;
-                                    case z.product:
+                                    case P.left:
+                                        if (O > -1) return `typeof prevStates[${O}] === 'object' ? prevStates[${O}].product : new Matrix(${x.rows}, ${x.columns})`;
+                                    case P.right:
+                                        if (O > -1) return `typeof prevStates[${O}] === 'object' ? prevStates[${O}].product : new Matrix(${x.rows}, ${x.columns})`;
+                                    case P.product:
                                         return `new Matrix(${x.rows}, ${x.columns})`;
                                     default:
                                         throw Error("unknown state");
                                 }
                             }
-                            if (x === z.product) return `states[${I}].product`;
-                            if (x === z.right) return `states[${I}].right`;
-                            if (x === z.left) return `states[${I}].left`;
+                            if (x === P.product) return `states[${I}].product`;
+                            if (x === P.right) return `states[${I}].right`;
+                            if (x === P.left) return `states[${I}].left`;
                         }
                         return "";
                     }
@@ -19272,8 +19272,8 @@ ${b.join(`
                         if (x === e.outputConnector) return "json.outputConnector";
                         if (x === e.output) return "json.output";
                         for(let I = 0, A = e.hiddenLayers.length; I < A; I++){
-                            const z = e.hiddenLayers[I];
-                            for(const C in z)if (z.hasOwnProperty(C) && z[C] === x) return `json.hiddenLayers[${I}].${C}`;
+                            const P = e.hiddenLayers[I];
+                            for(const O in P)if (P.hasOwnProperty(O) && P[O] === x) return `json.hiddenLayers[${I}].${O}`;
                         }
                         return m(x, g);
                     }
@@ -19361,14 +19361,14 @@ ${b.join(`
           ${v(I.forwardFn.toString())}
           break;`));
                     }
-                    const O = d === 1 && this.outputLookup, M = `
+                    const C = d === 1 && this.outputLookup, M = `
   var input = ${this.inputLookup ? "lookupInput(rawInput)" : "rawInput"};
   var json = ${n};
   var output = [];
   var states = [];
   var prevStates;
   var state;
-  var max = ${O ? i === u ? h : `input.length + ${p - 1}` : "input.length"};
+  var max = ${C ? i === u ? h : `input.length + ${p - 1}` : "input.length"};
   for (var _i = 0; _i < max; _i++) {
     prevStates = states;
     states = [];
@@ -19396,7 +19396,7 @@ ${k.join(`
     this.columns = columns;
     this.weights = new Float32Array(rows * columns);
   }
-  ${Xe.toString().replace("_2.default", "Matrix")}
+  ${He.toString().replace("_2.default", "Matrix")}
   ${be.toString()}
   ${bi.toString()}
   ${xi.toString()}`;
@@ -19406,7 +19406,7 @@ ${k.join(`
             const _a = {
                 ...ve
             };
-            class Rs extends Ye {
+            class Rs extends Xe {
                 getHiddenLayer(t, e) {
                     return Ds(t, e);
                 }
@@ -19414,7 +19414,7 @@ ${k.join(`
                     return $s(t, e, i, h);
                 }
             }
-            class Fs extends ze {
+            class Fs extends Me {
                 getHiddenLayer(t, e) {
                     return Ms(t, e);
                 }
@@ -19426,16 +19426,16 @@ ${k.join(`
                 return {
                     inputMatrix: new Rt(c, t, .08),
                     inputHidden: new Rt(c, c, .08),
-                    inputBias: new dt(c, 1),
+                    inputBias: new gt(c, 1),
                     forgetMatrix: new Rt(c, t, .08),
                     forgetHidden: new Rt(c, c, .08),
-                    forgetBias: new dt(c, 1),
+                    forgetBias: new gt(c, 1),
                     outputMatrix: new Rt(c, t, .08),
                     outputHidden: new Rt(c, c, .08),
-                    outputBias: new dt(c, 1),
+                    outputBias: new gt(c, 1),
                     cellActivationMatrix: new Rt(c, t, .08),
                     cellActivationHidden: new Rt(c, c, .08),
-                    cellActivationBias: new dt(c, 1)
+                    cellActivationBias: new gt(c, 1)
                 };
             }
             function zs(c, t, e, i) {
@@ -19443,7 +19443,7 @@ ${k.join(`
                 const h = c.sigmoid.bind(c), u = c.add.bind(c), p = c.multiply.bind(c), d = c.multiplyElement.bind(c), l = c.tanh.bind(c), a = h(u(u(p(i.inputMatrix, t), p(i.inputHidden, e)), i.inputBias)), o = h(u(u(p(i.forgetMatrix, t), p(i.forgetHidden, e)), i.forgetBias)), n = h(u(u(p(i.outputMatrix, t), p(i.outputHidden, e)), i.outputBias)), r = l(u(u(p(i.cellActivationMatrix, t), p(i.cellActivationHidden, e)), i.cellActivationBias)), m = d(o, e), b = d(a, r), E = u(m, b);
                 return d(n, l(E));
             }
-            class Ps extends Ye {
+            class Ps extends Xe {
                 getHiddenLayer(t, e) {
                     return Ms(t, e);
                 }
@@ -19591,7 +19591,7 @@ ${k.join(`
                 }
                 return d;
             }
-            function Ca(c) {
+            function Oa(c) {
                 const { options: t } = c;
                 if (!t) throw new Error("options not defined");
                 if (!t.inputLayer) throw new Error("options.inputLater not defined");
@@ -19608,7 +19608,7 @@ ${k.join(`
                     outputSize: h.height
                 };
             }
-            function Oa(c) {
+            function Ca(c) {
                 const t = [], { options: e } = c;
                 if (!e.inputLayer) throw new Error("inputLayer not defined");
                 if (!e.outputLayer) throw new Error("outputLayer not defined");
@@ -19622,7 +19622,7 @@ ${k.join(`
                     outputSize: h.height
                 };
             }
-            function Je(c, t, e) {
+            function Ye(c, t, e) {
                 return `<svg
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -19693,32 +19693,32 @@ ${k.join(`
                     ...t
                 }, { width: i, height: h, inputs: u } = e;
                 let p = [];
-                if (c instanceof ui || c instanceof Ue) p = Fa(c);
+                if (c instanceof ui || c instanceof Ge) p = Fa(c);
                 else if (c instanceof Ls) {
-                    const { inputSize: d, hiddenLayers: l, outputSize: a } = Oa(c);
-                    p = [
-                        d
-                    ].concat(l).concat([
-                        a
-                    ]);
-                } else if (c instanceof Re) {
                     const { inputSize: d, hiddenLayers: l, outputSize: a } = Ca(c);
                     p = [
                         d
                     ].concat(l).concat([
                         a
                     ]);
+                } else if (c instanceof Ce) {
+                    const { inputSize: d, hiddenLayers: l, outputSize: a } = Oa(c);
+                    p = [
+                        d
+                    ].concat(l).concat([
+                        a
+                    ]);
                 } else {
-                    if (c instanceof ze || c instanceof Fs || c instanceof As || c instanceof Ye || c instanceof Ps || c instanceof Rs) return Je(Ns({
+                    if (c instanceof Me || c instanceof Fs || c instanceof As || c instanceof Xe || c instanceof Ps || c instanceof Rs) return Ye(Ns({
                         ...e,
-                        sizes: Ze(Vs(c), u.labels)
+                        sizes: Je(Vs(c), u.labels)
                     }), i, h);
                     if (c.hasOwnProperty("type")) switch(c.type){
                         case "NeuralNetwork":
                         case "NeuralNetworkGPU":
-                            return Je(Ti({
+                            return Ye(Ti({
                                 ...e,
-                                sizes: Ze(Ra(c), u.labels)
+                                sizes: Je(Ra(c), u.labels)
                             }), i, h);
                         case "RNN":
                         case "GRU":
@@ -19726,9 +19726,9 @@ ${k.join(`
                         case "RNNTimeStep":
                         case "GRUTimeStep":
                         case "LSTMTimeStep":
-                            return Je(Ns({
+                            return Ye(Ns({
                                 ...e,
-                                sizes: Ze(Vs(c), u.labels)
+                                sizes: Je(Vs(c), u.labels)
                             }), i, h);
                         default:
                             throw new Error("unrecognized network");
@@ -19743,27 +19743,27 @@ ${k.join(`
                     } else if (c.hasOwnProperty("sizes")) p = c.sizes;
                     else throw new Error("unrecognized network");
                 }
-                return Je(Ti({
+                return Ye(Ti({
                     ...e,
-                    sizes: Ze(p, u.labels)
+                    sizes: Je(p, u.labels)
                 }), i, h);
             }
-            function Ze(c, t) {
+            function Je(c, t) {
                 if (!c) throw new Error("sizes not set");
                 if (c.some((e)=>e < 1)) throw new Error("sizes not set correctly");
                 if (t && t.length !== c[0]) throw new Error("not enough labels for inputs");
                 return c;
             }
             const Pa = {
-                RNNTimeStep: Ye,
+                RNNTimeStep: Xe,
                 LSTMTimeStep: Ps,
                 GRUTimeStep: Rs,
-                RNN: ze,
+                RNN: Me,
                 LSTM: Fs,
                 GRU: As
             }, Na = {
                 max: oi,
-                mse: Ge,
+                mse: Ke,
                 ones: us,
                 ones2D: hs,
                 random: pn,
@@ -19775,69 +19775,77 @@ ${k.join(`
                 zeros: Vt,
                 toSVG: za
             };
-            P.AE = kn, P.CrossValidate = ue, P.FeedForward = Re, P.NeuralNetwork = ui, P.NeuralNetworkGPU = Ue, P.Recurrent = Ls, P.activation = mt, P.layer = mi, P.layerTypes = qt, P.likely = aa, P.lookup = ft, P.praxis = Nn, P.recurrent = Pa, P.utilities = Na, Object.defineProperty(P, "__esModule", {
+            N.AE = kn, N.CrossValidate = ue, N.FeedForward = Ce, N.NeuralNetwork = ui, N.NeuralNetworkGPU = Ge, N.Recurrent = Ls, N.activation = lt, N.layer = mi, N.layerTypes = qt, N.likely = aa, N.lookup = dt, N.praxis = Nn, N.recurrent = Pa, N.utilities = Na, Object.defineProperty(N, "__esModule", {
                 value: !0
             });
         });
     })(Ai, Ai.exports);
     var lo = Ai.exports;
     const Ii = ho(lo);
-    class Ee {
+    class ri {
         network;
         inputSize;
         hiddenSize;
         outputSize;
         lastInputs = [];
-        constructor($, P, V, G){
-            this.inputSize = $, this.hiddenSize = P, this.outputSize = V, G ? this.network = G : (this.network = new Ii.NeuralNetwork({
-                inputSize: this.inputSize,
-                hiddenLayers: [
-                    this.hiddenSize
-                ],
-                outputSize: this.outputSize,
-                activation: "sigmoid"
-            }), this.network.train([
-                {
-                    input: new Array($).fill(0),
-                    output: new Array(V).fill(0)
-                }
-            ], {
-                iterations: 1
-            }));
+        constructor($, N, V, z){
+            if (this.inputSize = $, this.hiddenSize = N, this.outputSize = V, z) this.network = z;
+            else {
+                this.network = new Ii.NeuralNetwork({
+                    inputSize: this.inputSize,
+                    hiddenLayers: [
+                        this.hiddenSize,
+                        this.hiddenSize
+                    ],
+                    outputSize: this.outputSize,
+                    activation: "sigmoid"
+                });
+                const j = new Array($).fill(0).map(()=>Math.random()), H = new Array(V).fill(0).map(()=>Math.random());
+                this.network.train([
+                    {
+                        input: j,
+                        output: H
+                    }
+                ], {
+                    iterations: 1
+                });
+            }
         }
         predict($) {
             return this.network.run($);
         }
-        mutate($, P) {
+        mutate($, N) {
             const V = this.network.toJSON();
-            V.layers && this.mutateLayers(V.layers, $, P), this.network = new Ii.NeuralNetwork({
+            V.layers && this.mutateLayers(V.layers, $, N), this.network = new Ii.NeuralNetwork({
                 inputSize: this.inputSize,
                 hiddenLayers: [
+                    this.hiddenSize,
                     this.hiddenSize
                 ],
                 outputSize: this.outputSize,
                 activation: "sigmoid"
             }), this.network.fromJSON(V);
         }
-        mutateLayers($, P, V) {
-            for (const G of $){
-                if (G.weights) for(const X in G.weights){
-                    const Z = G.weights[X];
-                    for(const H in Z)Math.random() < P && (Z[H] += (Math.random() * 2 - 1) * V, Z[H] > 10 && (Z[H] = 10), Z[H] < -10 && (Z[H] = -10));
+        mutateLayers($, N, V) {
+            for (const z of $){
+                if (z.weights) for(const j in z.weights){
+                    const H = z.weights[j];
+                    for(const Y in H)Math.random() < N && (H[Y] += (Math.random() * 2 - 1) * V, H[Y] > 10 && (H[Y] = 10), H[Y] < -10 && (H[Y] = -10));
                 }
-                if (G.biases) for(const X in G.biases)Math.random() < P && (G.biases[X] += (Math.random() * 2 - 1) * V, G.biases[X] > 10 && (G.biases[X] = 10), G.biases[X] < -10 && (G.biases[X] = -10));
+                if (z.biases) for(const j in z.biases)Math.random() < N && (z.biases[j] += (Math.random() * 2 - 1) * V, z.biases[j] > 10 && (z.biases[j] = 10), z.biases[j] < -10 && (z.biases[j] = -10));
             }
         }
         copy() {
-            const $ = this.network.toJSON(), P = new Ii.NeuralNetwork({
+            const $ = this.network.toJSON(), N = new Ii.NeuralNetwork({
                 inputSize: this.inputSize,
                 hiddenLayers: [
+                    this.hiddenSize,
                     this.hiddenSize
                 ],
                 outputSize: this.outputSize,
                 activation: "sigmoid"
             });
-            return P.fromJSON($), new Ee(this.inputSize, this.hiddenSize, this.outputSize, P);
+            return N.fromJSON($), new ri(this.inputSize, this.hiddenSize, this.outputSize, N);
         }
         getNetwork() {
             return this.network;
@@ -19846,8 +19854,8 @@ ${k.join(`
     class co {
         size;
         world;
-        constructor($, P = 2e3){
-            this.size = P;
+        constructor($, N = 2e3){
+            this.size = N;
             const V = {
                 x: 0,
                 y: 0
@@ -19861,11 +19869,11 @@ ${k.join(`
             this.world.step();
         }
         wrapPosition($) {
-            let { x: P, y: V } = $.translation();
-            const G = this.size / 2;
-            let X = !1;
-            P > G ? (P -= this.size, X = !0) : P < -G && (P += this.size, X = !0), V > G ? (V -= this.size, X = !0) : V < -G && (V += this.size, X = !0), X && $.setTranslation({
-                x: P,
+            let { x: N, y: V } = $.translation();
+            const z = this.size / 2;
+            let j = !1;
+            N > z ? (N -= this.size, j = !0) : N < -z && (N += this.size, j = !0), V > z ? (V -= this.size, j = !0) : V < -z && (V += this.size, j = !0), j && $.setTranslation({
+                x: N,
                 y: V
             }, !0);
         }
@@ -19881,10 +19889,13 @@ ${k.join(`
         SENSOR_ANGLE_SPREAD = Math.PI * .5;
         SENSOR_LENGTH = 400;
         brain;
-        constructor($, P, V){
+        alive = !0;
+        score = 0;
+        isBest = !1;
+        constructor($, N, V){
             this.THRUSTER_STEP = this.THRUSTER_MAX / 10;
-            const G = this.SENSOR_COUNT * 2, X = 10, Z = 2;
-            V ? this.brain = V : this.brain = new Ee(G, X, Z);
+            const z = this.SENSOR_COUNT * 2, j = 10, H = 2;
+            V ? this.brain = V : this.brain = new ri(z, j, H);
             for(let Tt = 0; Tt < this.SENSOR_COUNT; Tt++){
                 const kt = -this.SENSOR_ANGLE_SPREAD / 2 + Tt * this.SENSOR_ANGLE_SPREAD / (this.SENSOR_COUNT - 1);
                 this.sensors.push({
@@ -19896,8 +19907,8 @@ ${k.join(`
                     endY: 0
                 });
             }
-            const H = $.RigidBodyDesc.dynamic().setTranslation(0, 0).setLinearDamping(.5).setAngularDamping(2);
-            this.body = P.createRigidBody(H);
+            const Y = $.RigidBodyDesc.dynamic().setTranslation(0, 0).setLinearDamping(.5).setAngularDamping(2);
+            this.body = N.createRigidBody(Y);
             const bt = new Float32Array([
                 0,
                 15,
@@ -19905,96 +19916,111 @@ ${k.join(`
                 -10,
                 10,
                 -10
-            ]), ht = $.ColliderDesc.convexHull(bt);
-            P.createCollider(ht, this.body);
+            ]), ot = $.ColliderDesc.convexHull(bt);
+            ot.setSensor(!0), N.createCollider(ot, this.body);
         }
-        updateSensors($, P, V) {
-            const G = this.body.translation(), X = this.body.rotation();
-            for (const Z of this.sensors){
-                const H = X + Math.PI / 2 + Z.angle, bt = Math.cos(H), ht = Math.sin(H), Tt = G.x, kt = G.y;
-                let lt = this.SENSOR_LENGTH, ut = "NONE";
-                for (const ot of $){
-                    let mt = ot.x - Tt, vt = ot.y - kt;
-                    mt > V / 2 && (mt -= V), mt < -V / 2 && (mt += V), vt > V / 2 && (vt -= V), vt < -V / 2 && (vt += V);
-                    const Kt = Tt + mt, It = kt + vt, wt = this.rayCircleIntersect(Tt, kt, bt, ht, Kt, It, ot.radius);
-                    wt !== null && wt < lt && (lt = wt, ut = "FOOD");
+        updateSensors($, N, V) {
+            const z = this.body.translation(), j = this.body.rotation();
+            for (const H of this.sensors){
+                const Y = j + Math.PI / 2 + H.angle, bt = Math.cos(Y), ot = Math.sin(Y), Tt = z.x, kt = z.y;
+                let ct = this.SENSOR_LENGTH, ht = "NONE";
+                for (const ut of $){
+                    let lt = ut.x - Tt, vt = ut.y - kt;
+                    lt > V / 2 && (lt -= V), lt < -V / 2 && (lt += V), vt > V / 2 && (vt -= V), vt < -V / 2 && (vt += V);
+                    const Kt = Tt + lt, It = kt + vt, wt = this.rayCircleIntersect(Tt, kt, bt, ot, Kt, It, ut.radius);
+                    wt !== null && wt < ct && (ct = wt, ht = "FOOD");
                 }
-                for (const ot of P){
-                    let mt = ot.x - Tt, vt = ot.y - kt;
-                    mt > V / 2 && (mt -= V), mt < -V / 2 && (mt += V), vt > V / 2 && (vt -= V), vt < -V / 2 && (vt += V);
-                    const Kt = Tt + mt, It = kt + vt, wt = this.rayCircleIntersect(Tt, kt, bt, ht, Kt, It, ot.radius);
-                    wt !== null && wt < lt && (lt = wt, ut = "POISON");
+                for (const ut of N){
+                    let lt = ut.x - Tt, vt = ut.y - kt;
+                    lt > V / 2 && (lt -= V), lt < -V / 2 && (lt += V), vt > V / 2 && (vt -= V), vt < -V / 2 && (vt += V);
+                    const Kt = Tt + lt, It = kt + vt, wt = this.rayCircleIntersect(Tt, kt, bt, ot, Kt, It, ut.radius);
+                    wt !== null && wt < ct && (ct = wt, ht = "POISON");
                 }
-                Z.reading = 1 - lt / this.SENSOR_LENGTH, Z.detectedType = ut, Z.endX = Tt + bt * lt, Z.endY = kt + ht * lt;
+                H.reading = 1 - ct / this.SENSOR_LENGTH, H.detectedType = ht, H.endX = Tt + bt * ct, H.endY = kt + ot * ct;
             }
         }
-        rayCircleIntersect($, P, V, G, X, Z, H) {
-            const bt = X - $, ht = Z - P, Tt = bt * V + ht * G;
-            let kt = $ + V * Tt, lt = P + G * Tt;
-            const ut = (kt - X) * (kt - X) + (lt - Z) * (lt - Z);
-            if (ut > H * H) return null;
-            const ot = Math.sqrt(H * H - ut), mt = Tt - ot;
-            return mt < 0 || mt > this.SENSOR_LENGTH ? null : mt;
+        rayCircleIntersect($, N, V, z, j, H, Y) {
+            const bt = j - $, ot = H - N, Tt = bt * V + ot * z;
+            let kt = $ + V * Tt, ct = N + z * Tt;
+            const ht = (kt - j) * (kt - j) + (ct - H) * (ct - H);
+            if (ht > Y * Y) return null;
+            const ut = Math.sqrt(Y * Y - ht), lt = Tt - ut;
+            return lt < 0 || lt > this.SENSOR_LENGTH ? null : lt;
         }
-        updateThrusters($, P, V, G) {
-            ($ || P || V || G) && ($ && (this.leftThruster = Math.min(this.leftThruster + this.THRUSTER_STEP, this.THRUSTER_MAX)), P && (this.leftThruster = Math.max(this.leftThruster - this.THRUSTER_STEP, 0)), V && (this.rightThruster = Math.min(this.rightThruster + this.THRUSTER_STEP, this.THRUSTER_MAX)), G && (this.rightThruster = Math.max(this.rightThruster - this.THRUSTER_STEP, 0))), this.applyThrusterForces();
+        updateThrusters($, N, V, z) {
+            ($ || N || V || z) && ($ && (this.leftThruster = Math.min(this.leftThruster + this.THRUSTER_STEP, this.THRUSTER_MAX)), N && (this.leftThruster = Math.max(this.leftThruster - this.THRUSTER_STEP, 0)), V && (this.rightThruster = Math.min(this.rightThruster + this.THRUSTER_STEP, this.THRUSTER_MAX)), z && (this.rightThruster = Math.max(this.rightThruster - this.THRUSTER_STEP, 0))), this.applyThrusterForces();
         }
         think() {
             const $ = [];
             for (const V of this.sensors){
                 $.push(V.reading);
-                let G = 0;
-                V.detectedType === "FOOD" && (G = 1), V.detectedType === "POISON" && (G = -1), $.push(G);
+                let z = 0;
+                V.detectedType === "FOOD" && (z = 1), V.detectedType === "POISON" && (z = -1), $.push(z);
             }
             this.brain.lastInputs = $;
-            const P = this.brain.predict($);
-            this.leftThruster = P[0] * this.THRUSTER_MAX, this.rightThruster = P[1] * this.THRUSTER_MAX;
+            const N = this.brain.predict($);
+            this.leftThruster = N[0] * this.THRUSTER_MAX, this.rightThruster = N[1] * this.THRUSTER_MAX;
+        }
+        die() {
+            this.alive = !1, this.body.setLinvel({
+                x: 0,
+                y: 0
+            }, !0), this.body.setAngvel(0, !0);
+        }
+        reset($) {
+            this.alive = !0, this.score = 0, $ && (this.brain = $), this.body.setTranslation({
+                x: 0,
+                y: 0
+            }, !0), this.body.setLinvel({
+                x: 0,
+                y: 0
+            }, !0), this.body.setAngvel(0, !0), this.body.setRotation(0, !0);
         }
         applyThrusterForces() {
-            const $ = this.body.rotation(), P = -Math.sin($), V = Math.cos($), G = {
+            const $ = this.body.rotation(), N = -Math.sin($), V = Math.cos($), z = {
                 x: -10,
                 y: -10
-            }, X = {
+            }, j = {
                 x: 10,
                 y: -10
-            }, Z = (bt, ht)=>({
-                    x: bt.x * Math.cos(ht) - bt.y * Math.sin(ht),
-                    y: bt.x * Math.sin(ht) + bt.y * Math.cos(ht)
-                }), H = this.body.translation();
+            }, H = (bt, ot)=>({
+                    x: bt.x * Math.cos(ot) - bt.y * Math.sin(ot),
+                    y: bt.x * Math.sin(ot) + bt.y * Math.cos(ot)
+                }), Y = this.body.translation();
             if (this.leftThruster > 0) {
-                const bt = Z(G, $);
+                const bt = H(z, $);
                 this.body.applyImpulseAtPoint({
-                    x: P * this.leftThruster * .1,
+                    x: N * this.leftThruster * .1,
                     y: V * this.leftThruster * .1
                 }, {
-                    x: H.x + bt.x,
-                    y: H.y + bt.y
+                    x: Y.x + bt.x,
+                    y: Y.y + bt.y
                 }, !0);
             }
             if (this.rightThruster > 0) {
-                const bt = Z(X, $);
+                const bt = H(j, $);
                 this.body.applyImpulseAtPoint({
-                    x: P * this.rightThruster * .1,
+                    x: N * this.rightThruster * .1,
                     y: V * this.rightThruster * .1
                 }, {
-                    x: H.x + bt.x,
-                    y: H.y + bt.y
+                    x: Y.x + bt.x,
+                    y: Y.y + bt.y
                 }, !0);
             }
         }
         draw($) {
-            const P = this.getPosition();
+            const N = this.getPosition();
             $.save(), $.lineWidth = 1;
-            for (const G of this.sensors)G.detectedType === "FOOD" ? $.strokeStyle = "#00ff00" : G.detectedType === "POISON" ? $.strokeStyle = "#ff0000" : $.strokeStyle = "rgba(200, 200, 200, 0.2)", $.beginPath(), $.moveTo(0, 0), $.lineTo(G.endX - P.x, G.endY - P.y), $.stroke();
-            $.restore(), $.save(), $.rotate(this.body.rotation()), $.beginPath(), $.moveTo(0, 15), $.lineTo(-10, -10), $.lineTo(10, -10), $.closePath(), $.fillStyle = "#fff", $.fill(), $.strokeStyle = "#4facfe", $.lineWidth = 2, $.stroke();
+            for (const z of this.sensors)z.detectedType === "FOOD" ? $.strokeStyle = "#00ff00" : z.detectedType === "POISON" ? $.strokeStyle = "#ff0000" : $.strokeStyle = "rgba(200, 200, 200, 0.2)", $.beginPath(), $.moveTo(0, 0), $.lineTo(z.endX - N.x, z.endY - N.y), $.stroke();
+            $.restore(), $.save(), $.rotate(this.body.rotation()), $.beginPath(), $.moveTo(0, 15), $.lineTo(-10, -10), $.lineTo(10, -10), $.closePath(), $.fillStyle = this.isBest ? "#ffd700" : "#fff", $.fill(), $.strokeStyle = this.isBest ? "#ffffff" : "#4facfe", $.lineWidth = this.isBest ? 4 : 2, $.stroke(), this.isBest && ($.shadowBlur = 15, $.shadowColor = "#ffd700", $.stroke(), $.shadowBlur = 0);
             const V = 30;
             if (this.leftThruster > 0) {
-                const G = this.leftThruster / this.THRUSTER_MAX * V;
-                $.beginPath(), $.moveTo(-7, -10), $.lineTo(-7, -10 - G), $.strokeStyle = "#ff4b2b", $.lineWidth = 4, $.stroke();
+                const z = this.leftThruster / this.THRUSTER_MAX * V;
+                $.beginPath(), $.moveTo(-7, -10), $.lineTo(-7, -10 - z), $.strokeStyle = "#ff4b2b", $.lineWidth = 4, $.stroke();
             }
             if (this.rightThruster > 0) {
-                const G = this.rightThruster / this.THRUSTER_MAX * V;
-                $.beginPath(), $.moveTo(7, -10), $.lineTo(7, -10 - G), $.strokeStyle = "#ff4b2b", $.lineWidth = 4, $.stroke();
+                const z = this.rightThruster / this.THRUSTER_MAX * V;
+                $.beginPath(), $.moveTo(7, -10), $.lineTo(7, -10 - z), $.strokeStyle = "#ff4b2b", $.lineWidth = 4, $.stroke();
             }
             $.restore();
         }
@@ -20029,11 +20055,11 @@ ${k.join(`
     class go {
         x = 0;
         y = 0;
-        follow($, P) {
-            this.x = $, this.y = P;
+        follow($, N) {
+            this.x = $, this.y = N;
         }
-        applyTransform($, P) {
-            $.save(), $.translate(P.width / 2, P.height / 2), $.scale(1, -1), $.translate(-this.x, -this.y);
+        applyTransform($, N) {
+            $.save(), $.translate(N.width / 2, N.height / 2), $.scale(1, -1), $.translate(-this.x, -this.y);
         }
         resetTransform($) {
             $.restore();
@@ -20052,8 +20078,8 @@ ${k.join(`
         clear() {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         }
-        drawWorld($, P, V) {
-            this.ctx.save(), this.ctx.translate(this.canvas.width / 2, this.canvas.height / 2), this.ctx.scale(1, -1), this.ctx.save(), this.ctx.translate(-$.x, -$.y), this.drawGrid(), this.drawBorders(), P.forEach((G)=>this.drawItemWithGhosts(G, $.x, $.y)), V.forEach((G)=>this.drawItemWithGhosts(G, $.x, $.y)), this.ctx.restore(), this.ctx.restore();
+        drawWorld($, N, V) {
+            this.ctx.save(), this.ctx.translate(this.canvas.width / 2, this.canvas.height / 2), this.ctx.scale(1, -1), this.ctx.save(), this.ctx.translate(-$.x, -$.y), this.drawGrid(), this.drawBorders(), N.forEach((z)=>this.drawItemWithGhosts(z, $.x, $.y)), V.forEach((z)=>this.drawItemWithGhosts(z, $.x, $.y)), this.ctx.restore(), this.ctx.restore();
         }
         drawGrid() {
             this.ctx.strokeStyle = "rgba(255, 255, 255, 0.05)", this.ctx.lineWidth = 1;
@@ -20063,114 +20089,114 @@ ${k.join(`
             this.ctx.strokeStyle = "#4facfe", this.ctx.lineWidth = 6, this.ctx.strokeRect(-this.worldSize / 2, -this.worldSize / 2, this.worldSize, this.worldSize);
             const $ = 20;
             this.ctx.fillStyle = "#4facfe";
-            const P = this.worldSize / 2;
-            this.ctx.fillRect(-P - 3, -P - 3, $, $), this.ctx.fillRect(P - $ + 3, -P - 3, $, $), this.ctx.fillRect(-P - 3, P - $ + 3, $, $), this.ctx.fillRect(P - $ + 3, P - $ + 3, $, $);
+            const N = this.worldSize / 2;
+            this.ctx.fillRect(-N - 3, -N - 3, $, $), this.ctx.fillRect(N - $ + 3, -N - 3, $, $), this.ctx.fillRect(-N - 3, N - $ + 3, $, $), this.ctx.fillRect(N - $ + 3, N - $ + 3, $, $);
         }
-        drawItemWithGhosts($, P, V) {
-            const G = Math.max(this.canvas.width, this.canvas.height) / 2 + 100, X = this.worldSize / 2;
+        drawItemWithGhosts($, N, V) {
+            const z = Math.max(this.canvas.width, this.canvas.height) / 2 + 100, j = this.worldSize / 2;
             $.draw(this.ctx);
-            const Z = [];
-            $.x - P < -X + G && Z.push({
+            const H = [];
+            $.x - N < -j + z && H.push({
                 dx: this.worldSize,
                 dy: 0
-            }), $.x - P > X - G && Z.push({
+            }), $.x - N > j - z && H.push({
                 dx: -this.worldSize,
                 dy: 0
-            }), $.y - V < -X + G && Z.push({
+            }), $.y - V < -j + z && H.push({
                 dx: 0,
                 dy: this.worldSize
-            }), $.y - V > X - G && Z.push({
+            }), $.y - V > j - z && H.push({
                 dx: 0,
                 dy: -this.worldSize
             });
-            for (const H of Z)this.ctx.save(), this.ctx.translate(H.dx, H.dy), $.draw(this.ctx), this.ctx.restore();
+            for (const Y of H)this.ctx.save(), this.ctx.translate(Y.dx, Y.dy), $.draw(this.ctx), this.ctx.restore();
         }
         drawBoidAtCenter($) {
             this.ctx.save(), this.ctx.translate(this.canvas.width / 2, this.canvas.height / 2), this.ctx.scale(1, -1), $(this.ctx), this.ctx.restore();
         }
-        drawMinimap($, P, V, G) {
-            const H = this.canvas.width - 200 - 20, bt = 20;
-            this.ctx.save(), this.ctx.setTransform(1, 0, 0, 1, 0, 0), this.ctx.fillStyle = "rgba(0, 0, 0, 0.7)", this.ctx.fillRect(H, bt, 200, 200), this.ctx.strokeStyle = "#4facfe", this.ctx.lineWidth = 2, this.ctx.strokeRect(H, bt, 200, 200);
-            const ht = 200 / this.worldSize, Tt = (ot)=>(ot + this.worldSize / 2) * ht, kt = (ot)=>(this.worldSize / 2 - ot) * ht;
-            this.ctx.strokeStyle = "rgba(79, 172, 254, 0.5)", this.ctx.lineWidth = 1, this.ctx.strokeRect(H, bt, 200, 200), this.ctx.fillStyle = "#00ff88", V.forEach((ot)=>{
-                const mt = H + Tt(ot.x), vt = bt + kt(ot.y);
-                this.ctx.fillRect(mt - 1.5, vt - 1.5, 3, 3);
-            }), this.ctx.fillStyle = "#ff4444", G.forEach((ot)=>{
-                const mt = H + Tt(ot.x), vt = bt + kt(ot.y);
-                this.ctx.fillRect(mt - 1.5, vt - 1.5, 3, 3);
+        drawMinimap($, N, V, z) {
+            const Y = this.canvas.width - 200 - 20, bt = 20;
+            this.ctx.save(), this.ctx.setTransform(1, 0, 0, 1, 0, 0), this.ctx.fillStyle = "rgba(0, 0, 0, 0.7)", this.ctx.fillRect(Y, bt, 200, 200), this.ctx.strokeStyle = "#4facfe", this.ctx.lineWidth = 2, this.ctx.strokeRect(Y, bt, 200, 200);
+            const ot = 200 / this.worldSize, Tt = (ut)=>(ut + this.worldSize / 2) * ot, kt = (ut)=>(this.worldSize / 2 - ut) * ot;
+            this.ctx.strokeStyle = "rgba(79, 172, 254, 0.5)", this.ctx.lineWidth = 1, this.ctx.strokeRect(Y, bt, 200, 200), this.ctx.fillStyle = "#00ff88", V.forEach((ut)=>{
+                const lt = Y + Tt(ut.x), vt = bt + kt(ut.y);
+                this.ctx.fillRect(lt - 1.5, vt - 1.5, 3, 3);
+            }), this.ctx.fillStyle = "#ff4444", z.forEach((ut)=>{
+                const lt = Y + Tt(ut.x), vt = bt + kt(ut.y);
+                this.ctx.fillRect(lt - 1.5, vt - 1.5, 3, 3);
             });
-            const lt = H + Tt($), ut = bt + kt(P);
-            this.ctx.fillStyle = "#ffffff", this.ctx.beginPath(), this.ctx.arc(lt, ut, 4, 0, Math.PI * 2), this.ctx.fill(), this.ctx.strokeStyle = "#4facfe", this.ctx.lineWidth = 2, this.ctx.stroke(), this.ctx.restore();
+            const ct = Y + Tt($), ht = bt + kt(N);
+            this.ctx.fillStyle = "#ffffff", this.ctx.beginPath(), this.ctx.arc(ct, ht, 4, 0, Math.PI * 2), this.ctx.fill(), this.ctx.strokeStyle = "#4facfe", this.ctx.lineWidth = 2, this.ctx.stroke(), this.ctx.restore();
         }
         drawBrain($) {
             const V = $.getNetwork().toJSON();
             if (!V.layers) return;
-            const G = [];
+            const z = [];
             if ($.lastInputs && $.lastInputs.length > 0) {
-                G.push([
+                z.push([
                     ...$.lastInputs
                 ]);
-                let lt = $.lastInputs;
-                for (const ut of V.layers){
-                    const ot = [], mt = Object.keys(ut.weights || {}).map((It)=>parseInt(It)), Kt = (mt.length > 0 ? Math.max(...mt) : 0) + 1;
+                let ct = $.lastInputs;
+                for (const ht of V.layers){
+                    const ut = [], lt = Object.keys(ht.weights || {}).map((It)=>parseInt(It)), Kt = (lt.length > 0 ? Math.max(...lt) : 0) + 1;
                     for(let It = 0; It < Kt; It++){
                         let wt = 0;
-                        if (ut.biases && ut.biases[It] && (wt += ut.biases[It]), ut.weights && ut.weights[It]) {
-                            const oe = ut.weights[It];
+                        if (ht.biases && ht.biases[It] && (wt += ht.biases[It]), ht.weights && ht.weights[It]) {
+                            const oe = ht.weights[It];
                             for(const fe in oe){
                                 const Qt = parseInt(fe);
-                                Qt < lt.length && (wt += oe[fe] * lt[Qt]);
+                                Qt < ct.length && (wt += oe[fe] * ct[Qt]);
                             }
                         }
-                        const ft = 1 / (1 + Math.exp(-wt));
-                        ot.push(ft);
+                        const dt = 1 / (1 + Math.exp(-wt));
+                        ut.push(dt);
                     }
-                    G.push(ot), lt = ot;
+                    z.push(ut), ct = ut;
                 }
             }
-            const X = 20, Z = 300, H = 200, bt = this.canvas.height - H - 20;
-            this.ctx.save(), this.ctx.setTransform(1, 0, 0, 1, 0, 0), this.ctx.fillStyle = "rgba(0, 0, 0, 0.8)", this.ctx.fillRect(X, bt, Z, H), this.ctx.strokeStyle = "#4facfe", this.ctx.lineWidth = 2, this.ctx.strokeRect(X, bt, Z, H);
-            const ht = [];
-            V.sizes ? ht.push(...V.sizes) : (ht.push(18), ht.push(10), ht.push(2));
-            const Tt = Z / (ht.length + 1), kt = [];
-            for(let lt = 0; lt < ht.length; lt++){
-                const ut = ht[lt], ot = X + (lt + 1) * Tt, mt = [], vt = Math.min(30, (H - 40) / ut), Kt = bt + H / 2 - (ut - 1) * vt / 2;
-                for(let It = 0; It < ut; It++){
+            const j = 20, H = 300, Y = 200, bt = this.canvas.height - Y - 20;
+            this.ctx.save(), this.ctx.setTransform(1, 0, 0, 1, 0, 0), this.ctx.fillStyle = "rgba(0, 0, 0, 0.8)", this.ctx.fillRect(j, bt, H, Y), this.ctx.strokeStyle = "#4facfe", this.ctx.lineWidth = 2, this.ctx.strokeRect(j, bt, H, Y);
+            const ot = [];
+            V.sizes ? ot.push(...V.sizes) : (ot.push(18), ot.push(10), ot.push(10), ot.push(2));
+            const Tt = H / (ot.length + 1), kt = [];
+            for(let ct = 0; ct < ot.length; ct++){
+                const ht = ot[ct], ut = j + (ct + 1) * Tt, lt = [], vt = Math.min(30, (Y - 40) / ht), Kt = bt + Y / 2 - (ht - 1) * vt / 2;
+                for(let It = 0; It < ht; It++){
                     const wt = Kt + It * vt;
-                    mt.push({
-                        x: ot,
+                    lt.push({
+                        x: ut,
                         y: wt
                     });
                 }
-                kt.push(mt);
+                kt.push(lt);
             }
-            if (V.layers) for(let lt = 0; lt < V.layers.length; lt++){
-                const ut = lt + 1, ot = lt, mt = V.layers[lt], vt = kt[ut], Kt = kt[ot];
-                if (!vt || !Kt || !mt.weights) continue;
-                const It = G[ot];
-                for(const wt in mt.weights){
-                    const ft = parseInt(wt), oe = mt.weights[wt];
-                    if (!(ft >= vt.length)) for(const fe in oe){
-                        const Qt = parseInt(fe), Ne = oe[fe];
+            if (V.layers) for(let ct = 0; ct < V.layers.length; ct++){
+                const ht = ct + 1, ut = ct, lt = V.layers[ct], vt = kt[ht], Kt = kt[ut];
+                if (!vt || !Kt || !lt.weights) continue;
+                const It = z[ut];
+                for(const wt in lt.weights){
+                    const dt = parseInt(wt), oe = lt.weights[wt];
+                    if (!(dt >= vt.length)) for(const fe in oe){
+                        const Qt = parseInt(fe), Pe = oe[fe];
                         if (Qt >= Kt.length) continue;
-                        const Ve = Kt[Qt], Ke = vt[ft];
-                        let xe = .1;
+                        const Ne = Kt[Qt], Ve = vt[dt];
+                        let xe = .05;
                         if (It && Qt < It.length) {
-                            const ai = Math.abs(It[Qt] * Ne);
-                            xe = Math.min(ai + .05, .8);
+                            const ai = Math.abs(It[Qt] * Pe);
+                            xe = Math.min(ai + .1, .8);
                         }
-                        this.ctx.beginPath(), this.ctx.moveTo(Ve.x, Ve.y), this.ctx.lineTo(Ke.x, Ke.y), Ne > 0 ? this.ctx.strokeStyle = `rgba(0, 255, 0, ${xe})` : this.ctx.strokeStyle = `rgba(255, 0, 0, ${xe})`, this.ctx.lineWidth = xe * 2, this.ctx.stroke();
+                        this.ctx.beginPath(), this.ctx.moveTo(Ne.x, Ne.y), this.ctx.lineTo(Ve.x, Ve.y), Pe > 0 ? this.ctx.strokeStyle = `rgba(0, 255, 0, ${xe})` : this.ctx.strokeStyle = `rgba(255, 0, 0, ${xe})`, this.ctx.lineWidth = xe * 2, this.ctx.stroke();
                     }
                 }
             }
-            for(let lt = 0; lt < kt.length; lt++){
-                const ut = G[lt];
-                for(let ot = 0; ot < kt[lt].length; ot++){
-                    const mt = kt[lt][ot];
+            for(let ct = 0; ct < kt.length; ct++){
+                const ht = z[ct];
+                for(let ut = 0; ut < kt[ct].length; ut++){
+                    const lt = kt[ct][ut];
                     let vt = 0;
-                    ut && ot < ut.length && (vt = ut[ot]), this.ctx.beginPath(), this.ctx.arc(mt.x, mt.y, 4, 0, Math.PI * 2);
+                    ht && ut < ht.length && (vt = ht[ut]), this.ctx.beginPath(), this.ctx.arc(lt.x, lt.y, 4, 0, Math.PI * 2);
                     const Kt = 20 + vt * 80;
-                    this.ctx.fillStyle = `hsl(120, 0%, ${Kt}%)`, vt > .5 ? (this.ctx.strokeStyle = "#fff", this.ctx.lineWidth = 2) : (this.ctx.strokeStyle = "rgba(255,255,255,0.3)", this.ctx.lineWidth = 1), this.ctx.stroke(), this.ctx.fill();
+                    this.ctx.fillStyle = `hsl(120, 0%, ${Kt}%)`, vt > .5 ? (this.ctx.strokeStyle = "#fff", this.ctx.lineWidth = 2) : (this.ctx.strokeStyle = "rgba(255,255,255,0.3)", this.ctx.lineWidth = 1), this.ctx.stroke(), this.ctx.fill(), vt > .05 && (this.ctx.beginPath(), this.ctx.moveTo(lt.x, lt.y), this.ctx.lineTo(lt.x + vt * 15, lt.y), this.ctx.strokeStyle = "#fff", this.ctx.lineWidth = 1, this.ctx.stroke());
                 }
             }
             this.ctx.restore();
@@ -20186,7 +20212,7 @@ ${k.join(`
         poisonStat;
         collectedStat;
         trainingStat;
-        constructor($, P, V){
+        constructor($, N, V){
             this.element = document.createElement("div"), this.element.style.position = "absolute", this.element.style.top = "20px", this.element.style.left = "20px", this.element.style.padding = "20px", this.element.style.background = "rgba(0, 0, 0, 0.7)", this.element.style.borderRadius = "12px", this.element.style.backdropFilter = "blur(10px)", this.element.style.border = "1px solid rgba(255, 255, 255, 0.1)", this.element.style.pointerEvents = "none", this.element.style.fontSize = "14px", this.element.innerHTML = `
             <div style="margin-bottom: 10px; font-weight: bold; color: #4facfe;">BOID SYSTEMS</div>
             <div id="seed-stat">Seed: ${$}</div>
@@ -20196,18 +20222,33 @@ ${k.join(`
             <div id="vel-stat">Velocity: 0</div>
             <div id="rot-stat">Rotation Power: 0</div>
             <div style="margin-top: 8px; opacity: 0.7;">---</div>
-            <div id="food-stat">Food: ${P}</div>
+            <div id="food-stat">Food: ${N}</div>
             <div id="poison-stat">Poison: ${V}</div>
             <div id="collected-stat">Collected: 0 food, 0 poison</div>
             <div style="margin-top: 8px; opacity: 0.7;">---</div>
             <div id="training-stat">Mode: Manual | Gen: 0 | Best: 0</div>
             <div style="margin-top: 10px; opacity: 0.6; font-size: 12px;">Q/A: Left | W/S: Right | T: Auto Mode</div>
-        `, document.body.appendChild(this.element), this.leftStat = document.getElementById("left-stat"), this.rightStat = document.getElementById("right-stat"), this.velStat = document.getElementById("vel-stat"), this.rotStat = document.getElementById("rot-stat"), this.foodStat = document.getElementById("food-stat"), this.poisonStat = document.getElementById("poison-stat"), this.collectedStat = document.getElementById("collected-stat"), this.trainingStat = document.getElementById("training-stat");
+            <button id="reset-btn" style="
+                margin-top: 15px;
+                width: 100%;
+                background: #ff4b2b;
+                color: white;
+                border: none;
+                padding: 8px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: bold;
+                pointer-events: auto;
+                transition: opacity 0.2s;
+            " onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">RESET EVOLUTION</button>
+        `, document.body.appendChild(this.element), document.getElementById("reset-btn").addEventListener("click", ()=>{
+                confirm("Are you sure you want to reset all evolution progress?") && (localStorage.clear(), window.location.reload());
+            }), this.leftStat = document.getElementById("left-stat"), this.rightStat = document.getElementById("right-stat"), this.velStat = document.getElementById("vel-stat"), this.rotStat = document.getElementById("rot-stat"), this.foodStat = document.getElementById("food-stat"), this.poisonStat = document.getElementById("poison-stat"), this.collectedStat = document.getElementById("collected-stat"), this.trainingStat = document.getElementById("training-stat");
         }
-        updateStats($, P, V, G, X, Z, H, bt, ht, Tt, kt, lt) {
-            this.leftStat.innerText = `Left Thruster: ${Math.round($)}%`, this.rightStat.innerText = `Right Thruster: ${Math.round(P)}%`;
-            const ut = Math.sqrt(V.x * V.x + V.y * V.y), ot = Math.round(Math.atan2(V.y, V.x) * 180 / Math.PI);
-            this.velStat.innerText = `Velocity: ${Math.round(ut)} | Angle: ${ot}°`, this.rotStat.innerText = `Rotation Power: ${G.toFixed(2)}`, this.foodStat.innerText = `Food: ${X}`, this.poisonStat.innerText = `Poison: ${Z}`, this.collectedStat.innerText = `Collected: ${H} food, ${bt} poison`, this.trainingStat.innerText = `Mode: ${ht ? "AUTO" : "MANUAL"} | Gen: ${Tt} | Score: ${lt} | Best: ${kt}`, ht ? this.trainingStat.style.color = "#00ff00" : this.trainingStat.style.color = "#ffffff";
+        updateStats($, N, V, z, j, H, Y, bt, ot, Tt, kt, ct) {
+            this.leftStat.innerText = `Left Thruster: ${Math.round($)}%`, this.rightStat.innerText = `Right Thruster: ${Math.round(N)}%`;
+            const ht = Math.sqrt(V.x * V.x + V.y * V.y), ut = Math.round(Math.atan2(V.y, V.x) * 180 / Math.PI);
+            this.velStat.innerText = `Velocity: ${Math.round(ht)} | Angle: ${ut}°`, this.rotStat.innerText = `Rotation Power: ${z.toFixed(2)}`, this.foodStat.innerText = `Food: ${j}`, this.poisonStat.innerText = `Poison: ${H}`, this.collectedStat.innerText = `Collected: ${Y} food, ${bt} poison`, this.trainingStat.innerText = `Mode: ${ot ? "AUTO" : "MANUAL"} | Gen: ${Tt} | Score: ${ct} | Best: ${kt}`, ot ? this.trainingStat.style.color = "#00ff00" : this.trainingStat.style.color = "#ffffff";
         }
     }
     class xo {
@@ -20215,12 +20256,12 @@ ${k.join(`
         y;
         radius;
         color;
-        constructor($, P, V = 16){
-            this.x = $, this.y = P, this.radius = V, this.color = "#00ff88";
+        constructor($, N, V = 24){
+            this.x = $, this.y = N, this.radius = V, this.color = "#00ff88";
         }
-        isColliding($, P, V) {
-            const G = this.x - $, X = this.y - P;
-            return Math.sqrt(G * G + X * X) < this.radius + V;
+        isColliding($, N, V) {
+            const z = this.x - $, j = this.y - N;
+            return Math.sqrt(z * z + j * j) < this.radius + V;
         }
         draw($) {
             $.beginPath(), $.arc(this.x, this.y, this.radius, 0, Math.PI * 2), $.fillStyle = this.color, $.fill(), $.strokeStyle = "#00ff88", $.lineWidth = 2, $.stroke();
@@ -20231,12 +20272,12 @@ ${k.join(`
         y;
         radius;
         color;
-        constructor($, P, V = 16){
-            this.x = $, this.y = P, this.radius = V, this.color = "#ff4444";
+        constructor($, N, V = 16){
+            this.x = $, this.y = N, this.radius = V, this.color = "#ff4444";
         }
-        isColliding($, P, V) {
-            const G = this.x - $, X = this.y - P;
-            return Math.sqrt(G * G + X * X) < this.radius + V;
+        isColliding($, N, V) {
+            const z = this.x - $, j = this.y - N;
+            return Math.sqrt(z * z + j * j) < this.radius + V;
         }
         draw($) {
             $.beginPath(), $.arc(this.x, this.y, this.radius, 0, Math.PI * 2), $.fillStyle = this.color, $.fill(), $.strokeStyle = "#ff0000", $.lineWidth = 2, $.stroke();
@@ -20248,25 +20289,25 @@ ${k.join(`
         collisionRadius;
         worldSize;
         rng;
-        constructor($, P, V){
-            this.worldSize = $, this.collisionRadius = P, this.rng = V;
+        constructor($, N, V){
+            this.worldSize = $, this.collisionRadius = N, this.rng = V;
         }
-        checkCollisions($, P, V, G) {
-            let X = 0, Z = 0;
-            for(let H = V.length - 1; H >= 0; H--)V[H].isColliding($, P, this.collisionRadius) && (V.splice(H, 1), V.push(this.spawnFood()), this.foodCollected++, X++);
-            for(let H = G.length - 1; H >= 0; H--)G[H].isColliding($, P, this.collisionRadius) && (G.splice(H, 1), G.push(this.spawnPoison()), this.poisonCollected++, Z++);
+        checkCollisions($, N, V, z) {
+            let j = 0, H = 0;
+            for(let Y = V.length - 1; Y >= 0; Y--)V[Y].isColliding($, N, this.collisionRadius) && (V.splice(Y, 1), V.push(this.spawnFood()), this.foodCollected++, j++);
+            for(let Y = z.length - 1; Y >= 0; Y--)z[Y].isColliding($, N, this.collisionRadius) && (z.splice(Y, 1), z.push(this.spawnPoison()), this.poisonCollected++, H++);
             return {
-                foodCollected: X,
-                poisonCollected: Z
+                foodCollected: j,
+                poisonCollected: H
             };
         }
         spawnFood() {
-            const $ = this.worldSize / 2, P = this.rng.randomRange(-$ + 50, $ - 50), V = this.rng.randomRange(-$ + 50, $ - 50);
-            return new xo(P, V);
+            const $ = this.worldSize / 2, N = this.rng.randomRange(-$ + 50, $ - 50), V = this.rng.randomRange(-$ + 50, $ - 50);
+            return new xo(N, V);
         }
         spawnPoison() {
-            const $ = this.worldSize / 2, P = this.rng.randomRange(-$ + 50, $ - 50), V = this.rng.randomRange(-$ + 50, $ - 50);
-            return new bo(P, V);
+            const $ = this.worldSize / 2, N = this.rng.randomRange(-$ + 50, $ - 50), V = this.rng.randomRange(-$ + 50, $ - 50);
+            return new bo(N, V);
         }
         getFoodCollected() {
             return this.foodCollected;
@@ -20277,7 +20318,7 @@ ${k.join(`
     }
     class To {
         world;
-        boid;
+        boids = [];
         inputManager;
         camera;
         renderer;
@@ -20290,6 +20331,7 @@ ${k.join(`
         FOOD_COUNT = 40;
         POISON_COUNT = 15;
         BOID_COLLISION_RADIUS = 15;
+        POPULATION_SIZE = 10;
         trainMode = !1;
         score = 0;
         maxFitness = 0;
@@ -20298,17 +20340,30 @@ ${k.join(`
         timeAlive = 0;
         MAX_TIME_ALIVE = 3e3;
         constructor($){
-            const P = Date.now();
-            this.rng = new uo(P), console.log("World Seed:", P), this.world = new co($, this.WORLD_SIZE), this.boid = new po($, this.world.getPhysicsWorld()), this.inputManager = new fo, this.camera = new go, this.renderer = new mo(this.WORLD_SIZE), this.hud = new yo(P, this.FOOD_COUNT, this.POISON_COUNT), this.collisionManager = new wo(this.WORLD_SIZE, this.BOID_COLLISION_RADIUS, this.rng), this.initializeItems(), this.loadBestBrain(), window.addEventListener("keydown", (V)=>{
+            const N = Date.now();
+            this.rng = new uo(N), console.log("World Seed:", N), this.world = new co($, this.WORLD_SIZE), this.inputManager = new fo, this.camera = new go, this.renderer = new mo(this.WORLD_SIZE), this.hud = new yo(N, this.FOOD_COUNT, this.POISON_COUNT), this.collisionManager = new wo(this.WORLD_SIZE, this.BOID_COLLISION_RADIUS, this.rng), this.loadBestBrain();
+            for(let V = 0; V < this.POPULATION_SIZE; V++){
+                const z = new po($, this.world.getPhysicsWorld());
+                this.bestBrainJSON && (z.brain.getNetwork().fromJSON(this.bestBrainJSON), V > 0 && z.brain.mutate(.1, .1)), this.boids.push(z);
+            }
+            this.initializeItems(), window.addEventListener("keydown", (V)=>{
                 V.key.toLowerCase() === "t" && this.toggleTrainMode();
             });
         }
         loadBestBrain() {
             const $ = localStorage.getItem("bestBrain");
-            $ && (this.bestBrainJSON = JSON.parse($), console.log("Loaded best brain from storage"), this.boid.brain && this.boid.brain.getNetwork().fromJSON(this.bestBrainJSON));
+            if ($) try {
+                this.bestBrainJSON = JSON.parse($), console.log("Loaded best brain from storage");
+            } catch (z) {
+                console.error("Failed to parse best brain", z);
+            }
+            const N = localStorage.getItem("generation");
+            N && (this.generation = parseInt(N));
+            const V = localStorage.getItem("maxFitness");
+            V && (this.maxFitness = parseFloat(V));
         }
-        saveBestBrain() {
-            this.boid.brain && (this.bestBrainJSON = this.boid.brain.getNetwork().toJSON(), localStorage.setItem("bestBrain", JSON.stringify(this.bestBrainJSON)));
+        saveBestBrain($) {
+            $.brain && (this.bestBrainJSON = $.brain.getNetwork().toJSON(), localStorage.setItem("bestBrain", JSON.stringify(this.bestBrainJSON)), localStorage.setItem("generation", this.generation.toString()), localStorage.setItem("maxFitness", this.maxFitness.toString()));
         }
         toggleTrainMode() {
             this.trainMode = !this.trainMode, console.log("Train Mode:", this.trainMode);
@@ -20318,34 +20373,38 @@ ${k.join(`
             for(let $ = 0; $ < this.POISON_COUNT; $++)this.poisons.push(this.collisionManager.spawnPoison());
         }
         update() {
-            this.trainMode && this.boid.think(), this.boid.updateThrusters(this.inputManager.isKeyPressed("q"), this.inputManager.isKeyPressed("a"), this.inputManager.isKeyPressed("w"), this.inputManager.isKeyPressed("s")), this.boid.updateSensors(this.foods, this.poisons, this.WORLD_SIZE), this.world.step(), this.world.wrapPosition(this.boid.getBody());
-            const $ = this.boid.getPosition(), P = this.collisionManager.checkCollisions($.x, $.y, this.foods, this.poisons);
-            if (this.trainMode) {
-                if (this.timeAlive++, P.foodCollected > 0 && (this.score += 10 * P.foodCollected, this.timeAlive = 0), P.poisonCollected > 0) {
-                    this.score -= 20 * P.poisonCollected, this.resetGeneration();
-                    return;
-                }
-                if (this.timeAlive > this.MAX_TIME_ALIVE) {
-                    this.resetGeneration();
-                    return;
-                }
+            let $ = !0, N = null, V = -1 / 0;
+            for (const z of this.boids){
+                if (!z.alive) continue;
+                $ = !1, z.updateSensors(this.foods, this.poisons, this.WORLD_SIZE), z.think(), this.boids.indexOf(z) === 0 ? z.updateThrusters(this.inputManager.isKeyPressed("q"), this.inputManager.isKeyPressed("a"), this.inputManager.isKeyPressed("w"), this.inputManager.isKeyPressed("s")) : z.updateThrusters(!1, !1, !1, !1), this.world.wrapPosition(z.getBody());
+                const j = z.getPosition(), H = this.collisionManager.checkCollisions(j.x, j.y, this.foods, this.poisons);
+                this.trainMode && (z.score += H.foodCollected * 10, z.score -= H.poisonCollected * 20, H.poisonCollected > 0 && z.die()), z.score > V && (V = z.score, N = z);
             }
+            this.boids.forEach((z)=>z.isBest = z === N), N && (this.score = N.score), this.world.step(), this.trainMode && (this.timeAlive++, ($ || this.timeAlive > this.MAX_TIME_ALIVE) && this.resetGeneration());
         }
         resetGeneration() {
-            console.log(`Generation ${this.generation} ended. Score: ${this.score}`), this.score > this.maxFitness && (this.maxFitness = this.score, this.saveBestBrain(), console.log("New record!"));
-            let $;
-            this.bestBrainJSON ? ($ = new Ee(0, 0, 0), $ = new Ee(18, 10, 2), $.getNetwork().fromJSON(this.bestBrainJSON), $.mutate(.1, .1)) : $ = new Ee(18, 10, 2), this.boid.brain = $, this.boid.getBody().setTranslation({
-                x: 0,
-                y: 0
-            }, !0), this.boid.getBody().setLinvel({
-                x: 0,
-                y: 0
-            }, !0), this.boid.getBody().setAngvel(0, !0), this.boid.getBody().setRotation(0, !0), this.foods = [], this.poisons = [], this.initializeItems(), this.score = 0, this.timeAlive = 0, this.generation++;
+            let $ = this.boids[0], N = -1 / 0;
+            for (const z of this.boids)z.score > N && (N = z.score, $ = z);
+            console.log(`Generation ${this.generation} ended. Top Score: ${N}`), N > this.maxFitness && (this.maxFitness = N, this.saveBestBrain($), console.log("New record!"));
+            const V = $.brain.getNetwork().toJSON();
+            for(let z = 0; z < this.boids.length; z++){
+                const j = this.boids[z], H = new ri(18, 10, 2);
+                H.getNetwork().fromJSON(V), z > 0 && H.mutate(.1, .2), j.reset(H);
+            }
+            this.foods = [], this.poisons = [], this.initializeItems(), this.score = 0, this.timeAlive = 0, this.generation++;
         }
         draw() {
             this.renderer.clear();
-            const $ = this.boid.getPosition();
-            this.camera.follow($.x, $.y), this.renderer.drawWorld(this.camera, this.foods, this.poisons), this.renderer.drawBoidAtCenter((P)=>this.boid.draw(P)), this.renderer.drawMinimap($.x, $.y, this.foods, this.poisons), this.boid.brain && this.renderer.drawBrain(this.boid.brain), this.hud.updateStats(this.boid.getLeftThrusterPercent(), this.boid.getRightThrusterPercent(), this.boid.getVelocity(), this.boid.getAngularVelocity(), this.foods.length, this.poisons.length, this.collisionManager.getFoodCollected(), this.collisionManager.getPoisonCollected(), this.trainMode, this.generation, this.maxFitness, this.score);
+            const $ = this.boids.find((V)=>V.isBest) || this.boids[0], N = $.getPosition();
+            this.camera.follow(N.x, N.y), this.renderer.drawWorld(this.camera, this.foods, this.poisons);
+            for (const V of this.boids)V.alive && this.renderer.drawBoidAtCenter((z)=>{
+                const j = V.getPosition(), H = {
+                    x: this.camera.x,
+                    y: this.camera.y
+                };
+                z.save(), z.translate(j.x - H.x, j.y - H.y), V.draw(z), z.restore();
+            });
+            this.renderer.drawMinimap(N.x, N.y, this.foods, this.poisons), $.brain && this.renderer.drawBrain($.brain), this.hud.updateStats($.getLeftThrusterPercent(), $.getRightThrusterPercent(), $.getVelocity(), $.getAngularVelocity(), this.foods.length, this.poisons.length, this.collisionManager.getFoodCollected(), this.collisionManager.getPoisonCollected(), this.trainMode, this.generation, this.maxFitness, this.score);
         }
         loop = ()=>{
             this.update(), this.draw(), requestAnimationFrame(this.loop);
