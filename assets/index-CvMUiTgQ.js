@@ -3918,6 +3918,7 @@ var _r = Ee((cr, Ce) => {
     }
   }
   async function or() {
+    await (void 0)();
     const a = document.createElement("canvas"), t = a.getContext("2d");
     document.getElementById("app").appendChild(a);
     function e() {
