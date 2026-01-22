@@ -6,7 +6,9 @@ export class HUD {
     private rotStat: HTMLElement;
     private foodStat: HTMLElement;
     private poisonStat: HTMLElement;
+
     private collectedStat: HTMLElement;
+    private trainingStat: HTMLElement;
 
     constructor(seed: number, foodCount: number, poisonCount: number) {
         this.element = document.createElement('div');
@@ -32,7 +34,9 @@ export class HUD {
             <div id="food-stat">Food: ${foodCount}</div>
             <div id="poison-stat">Poison: ${poisonCount}</div>
             <div id="collected-stat">Collected: 0 food, 0 poison</div>
-            <div style="margin-top: 10px; opacity: 0.6; font-size: 12px;">Q/A: Left | W/S: Right</div>
+            <div style="margin-top: 8px; opacity: 0.7;">---</div>
+            <div id="training-stat">Mode: Manual | Gen: 0 | Best: 0</div>
+            <div style="margin-top: 10px; opacity: 0.6; font-size: 12px;">Q/A: Left | W/S: Right | T: Auto Mode</div>
         `;
         document.body.appendChild(this.element);
 
@@ -43,6 +47,7 @@ export class HUD {
         this.foodStat = document.getElementById('food-stat')!;
         this.poisonStat = document.getElementById('poison-stat')!;
         this.collectedStat = document.getElementById('collected-stat')!;
+        this.trainingStat = document.getElementById('training-stat')!;
     }
 
     updateStats(
@@ -53,7 +58,11 @@ export class HUD {
         foodCount: number,
         poisonCount: number,
         foodCollected: number,
-        poisonCollected: number
+        poisonCollected: number,
+        trainMode: boolean,
+        generation: number,
+        maxFitness: number,
+        currentScore: number
     ): void {
         this.leftStat.innerText = `Left Thruster: ${Math.round(leftThruster)}%`;
         this.rightStat.innerText = `Right Thruster: ${Math.round(rightThruster)}%`;
@@ -66,5 +75,12 @@ export class HUD {
         this.foodStat.innerText = `Food: ${foodCount}`;
         this.poisonStat.innerText = `Poison: ${poisonCount}`;
         this.collectedStat.innerText = `Collected: ${foodCollected} food, ${poisonCollected} poison`;
+
+        this.trainingStat.innerText = `Mode: ${trainMode ? 'AUTO' : 'MANUAL'} | Gen: ${generation} | Score: ${currentScore} | Best: ${maxFitness}`;
+        if (trainMode) {
+            this.trainingStat.style.color = '#00ff00';
+        } else {
+            this.trainingStat.style.color = '#ffffff';
+        }
     }
 }

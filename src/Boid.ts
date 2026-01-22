@@ -1,4 +1,5 @@
 import type RAPIER from '@dimforge/rapier2d-compat';
+import { Brain } from './Brain';
 
 export interface Sensor {
     angle: number;
@@ -21,8 +22,28 @@ export class Boid {
     private readonly SENSOR_ANGLE_SPREAD = Math.PI * 0.5;
     private readonly SENSOR_LENGTH = 400;
 
-    constructor(RAPIER: typeof import('@dimforge/rapier2d-compat'), world: RAPIER.World) {
+    brain: Brain;
+
+    constructor(RAPIER: typeof import('@dimforge/rapier2d-compat'), world: RAPIER.World, brain?: Brain) {
         this.THRUSTER_STEP = this.THRUSTER_MAX / 10;
+
+        // Initialize Brain (Inputs: Sensors * 3 (reading, food?, poison?), Hidden: 8, Output: 2)
+        // Sensors return reading (0-1) and detectedType.
+        // Let's feed: For each sensor: [reading, isFood, isPoison]
+        // 9 sensors * 3 = 27 inputs.
+        // Actually simplifies: Reading, isFood (1/0), isPoison (1/0) might be better?
+        // Or: 
+        // Input: [Sensor1Reading, Sensor1Type, Sensor2Reading, ....]
+        // Type could be: 1 for Food, -1 for Poison, 0 for None.
+        const inputSize = this.SENSOR_COUNT * 2; // Reading + Type
+        const hiddenSize = 10;
+        const outputSize = 2; // Left, Right thruster
+
+        if (brain) {
+            this.brain = brain;
+        } else {
+            this.brain = new Brain(inputSize, hiddenSize, outputSize);
+        }
 
         // Initialize Sensors
         for (let i = 0; i < this.SENSOR_COUNT; i++) {
@@ -169,15 +190,39 @@ export class Boid {
     }
 
     updateThrusters(qPressed: boolean, aPressed: boolean, wPressed: boolean, sPressed: boolean): void {
-        // Left Thruster: Q (up), A (down)
-        if (qPressed) this.leftThruster = Math.min(this.leftThruster + this.THRUSTER_STEP, this.THRUSTER_MAX);
-        if (aPressed) this.leftThruster = Math.max(this.leftThruster - this.THRUSTER_STEP, 0);
+        // Manual Control (Override)
+        if (qPressed || aPressed || wPressed || sPressed) {
+            // Left Thruster: Q (up), A (down)
+            if (qPressed) this.leftThruster = Math.min(this.leftThruster + this.THRUSTER_STEP, this.THRUSTER_MAX);
+            if (aPressed) this.leftThruster = Math.max(this.leftThruster - this.THRUSTER_STEP, 0);
 
-        // Right Thruster: W (up), S (down)
-        if (wPressed) this.rightThruster = Math.min(this.rightThruster + this.THRUSTER_STEP, this.THRUSTER_MAX);
-        if (sPressed) this.rightThruster = Math.max(this.rightThruster - this.THRUSTER_STEP, 0);
+            // Right Thruster: W (up), S (down)
+            if (wPressed) this.rightThruster = Math.min(this.rightThruster + this.THRUSTER_STEP, this.THRUSTER_MAX);
+            if (sPressed) this.rightThruster = Math.max(this.rightThruster - this.THRUSTER_STEP, 0);
+        }
 
         this.applyThrusterForces();
+    }
+
+    think(): void {
+        const inputs: number[] = [];
+        for (const sensor of this.sensors) {
+            inputs.push(sensor.reading);
+            // Type: Food=1, Poison=-1, None=0
+            let typeVal = 0;
+            if (sensor.detectedType === 'FOOD') typeVal = 1;
+            if (sensor.detectedType === 'POISON') typeVal = -1;
+            inputs.push(typeVal);
+        }
+
+        this.brain.lastInputs = inputs;
+        const outputs = this.brain.predict(inputs);
+        // Outputs are 0-1. Map to Thruster Force.
+        // Threshold? Or proportional?
+        // Let's say separate outputs for Left and Right power.
+
+        this.leftThruster = outputs[0] * this.THRUSTER_MAX;
+        this.rightThruster = outputs[1] * this.THRUSTER_MAX;
     }
 
     private applyThrusterForces(): void {

@@ -1,6 +1,7 @@
 import { Food } from './Food';
 import { Poison } from './Poison';
 import { Camera } from './Camera';
+import { Brain } from './Brain';
 
 export class Renderer {
     private canvas: HTMLCanvasElement;
@@ -164,6 +165,177 @@ export class Renderer {
         this.ctx.strokeStyle = '#4facfe';
         this.ctx.lineWidth = 2;
         this.ctx.stroke();
+
+        this.ctx.restore();
+    }
+
+    drawBrain(brain: Brain): void {
+        const network = brain.getNetwork();
+        const json = network.toJSON();
+
+        if (!json.layers) return;
+
+        // Calculate Activations if inputs are available
+        const activations: number[][] = [];
+        if (brain.lastInputs && brain.lastInputs.length > 0) {
+            activations.push([...brain.lastInputs]);
+
+            let currentActivations = brain.lastInputs;
+
+            for (const layer of json.layers) {
+                const nextActivations = [];
+                // layer.weights is keyed by TARGET neuron index
+                const targetIndices = Object.keys(layer.weights || {}).map(k => parseInt(k));
+                const maxTarget = targetIndices.length > 0 ? Math.max(...targetIndices) : 0;
+                const count = maxTarget + 1;
+
+                for (let i = 0; i < count; i++) {
+                    let sum = 0;
+                    if (layer.biases && layer.biases[i]) {
+                        sum += layer.biases[i];
+                    }
+
+                    if (layer.weights && layer.weights[i]) {
+                        const weights = layer.weights[i];
+                        for (const sourceId in weights) {
+                            const sourceIdx = parseInt(sourceId);
+                            if (sourceIdx < currentActivations.length) {
+                                sum += weights[sourceId] * currentActivations[sourceIdx];
+                            }
+                        }
+                    }
+
+                    const val = 1 / (1 + Math.exp(-sum));
+                    nextActivations.push(val);
+                }
+                activations.push(nextActivations);
+                currentActivations = nextActivations;
+            }
+        }
+
+        const x = 20;
+        const width = 300;
+        const height = 200;
+        const y = this.canvas.height - height - 20;
+
+
+        this.ctx.save();
+        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+        // Background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+        this.ctx.fillRect(x, y, width, height);
+        this.ctx.strokeStyle = '#4facfe';
+        this.ctx.lineWidth = 2;
+        this.ctx.strokeRect(x, y, width, height);
+
+        const layerSizes = [];
+        if (json.sizes) {
+            layerSizes.push(...json.sizes);
+        } else {
+            layerSizes.push(18);
+            layerSizes.push(10);
+            layerSizes.push(2);
+        }
+
+        const layerGap = width / (layerSizes.length + 1);
+
+        // Positions
+        const positions: { x: number, y: number }[][] = [];
+
+        for (let l = 0; l < layerSizes.length; l++) {
+            const count = layerSizes[l];
+            const layerX = x + (l + 1) * layerGap;
+            const layerPositions = [];
+            const neuronGap = Math.min(30, (height - 40) / count);
+
+            const startY = y + height / 2 - ((count - 1) * neuronGap) / 2;
+
+            for (let n = 0; n < count; n++) {
+                const neuronY = startY + n * neuronGap;
+                layerPositions.push({ x: layerX, y: neuronY });
+            }
+            positions.push(layerPositions);
+        }
+
+        // Draw Connections
+        if (json.layers) {
+            for (let l = 0; l < json.layers.length; l++) {
+                const targetLayerIndex = l + 1;
+                const sourceLayerIndex = l;
+
+                const layerData = json.layers[l];
+                const targetPositions = positions[targetLayerIndex];
+                const sourcePositions = positions[sourceLayerIndex];
+
+                if (!targetPositions || !sourcePositions) continue;
+
+                if (!layerData.weights) continue;
+
+                const sourceActivations = activations[sourceLayerIndex];
+
+                for (const targetId in layerData.weights) {
+                    const targetIdx = parseInt(targetId);
+                    const sourceWeights = layerData.weights[targetId];
+
+                    if (targetIdx >= targetPositions.length) continue;
+
+                    for (const sourceId in sourceWeights) {
+                        const sourceIdx = parseInt(sourceId);
+                        const weight = sourceWeights[sourceId];
+
+                        if (sourceIdx >= sourcePositions.length) continue;
+
+                        const sourcePos = sourcePositions[sourceIdx];
+                        const targetPos = targetPositions[targetIdx];
+
+                        let signalForLine = 0.1;
+                        if (sourceActivations && sourceIdx < sourceActivations.length) {
+                            const signal = Math.abs(sourceActivations[sourceIdx] * weight);
+                            signalForLine = Math.min(signal + 0.05, 0.8);
+                        }
+
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(sourcePos.x, sourcePos.y);
+                        this.ctx.lineTo(targetPos.x, targetPos.y);
+
+                        if (weight > 0) this.ctx.strokeStyle = `rgba(0, 255, 0, ${signalForLine})`;
+                        else this.ctx.strokeStyle = `rgba(255, 0, 0, ${signalForLine})`;
+
+                        this.ctx.lineWidth = signalForLine * 2;
+                        this.ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Draw Neurons
+        for (let l = 0; l < positions.length; l++) {
+            const layerActivations = activations[l];
+            for (let n = 0; n < positions[l].length; n++) {
+                const pos = positions[l][n];
+
+                let val = 0;
+                if (layerActivations && n < layerActivations.length) {
+                    val = layerActivations[n];
+                }
+
+                this.ctx.beginPath();
+                this.ctx.arc(pos.x, pos.y, 4, 0, Math.PI * 2);
+
+                const lightness = 20 + val * 80;
+                this.ctx.fillStyle = `hsl(120, 0%, ${lightness}%)`;
+                if (val > 0.5) {
+                    this.ctx.strokeStyle = '#fff';
+                    this.ctx.lineWidth = 2;
+                } else {
+                    this.ctx.strokeStyle = `rgba(255,255,255,0.3)`;
+                    this.ctx.lineWidth = 1;
+                }
+                this.ctx.stroke();
+                this.ctx.fill();
+            }
+        }
 
         this.ctx.restore();
     }
