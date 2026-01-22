@@ -3,7 +3,7 @@ import wasm from "vite-plugin-wasm";
 import topLevelAwait from "vite-plugin-top-level-await";
 
 export default defineConfig({
-  base: '/NeuralBoidTraining/',
+  base: './',
   plugins: [
     wasm(),
     topLevelAwait()
@@ -11,7 +11,14 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  optimizeDeps: {
+    exclude: ['@dimforge/rapier2d-compat']
+  },
   build: {
+    target: 'esnext',
     outDir: 'dist',
   },
 });
+
+
+

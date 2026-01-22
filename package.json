@@ -11,7 +11,7 @@
     "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
-    "@dimforge/rapier2d": "^0.13.1",
+    "@dimforge/rapier2d-compat": "^0.19.3",
     "gh-pages": "^6.3.0",
     "typescript": "^5.5.3",
     "vite": "^5.4.1",

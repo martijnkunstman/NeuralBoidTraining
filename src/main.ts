@@ -1,9 +1,17 @@
-import * as RAPIER from '@dimforge/rapier2d';
+
 
 async function run() {
-    // RapierJS version 0.13.x with WASM ESM integration in Vite 
-    // does not have a separate .init() function because the WASM 
-    // is imported as a module and initialized automatically.
+    console.log('Starting boid simulation...');
+
+    // Dynamic import is the most compatible way for Rapier in Vite
+    const RAPIER = await import('@dimforge/rapier2d-compat');
+
+    // Check if we need to call init.
+    if ((RAPIER as any).init) {
+        await (RAPIER as any).init();
+    }
+
+    console.log('RAPIER module ready');
 
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d')!;
