@@ -12,7 +12,7 @@ import { CollisionManager } from './CollisionManager';
 
 export class Game {
     private world: World;
-    private boid: Boid;
+    private boids: Boid[] = [];
     private inputManager: InputManager;
     private camera: Camera;
     private renderer: Renderer;
@@ -26,6 +26,7 @@ export class Game {
     private readonly FOOD_COUNT = 40;
     private readonly POISON_COUNT = 15;
     private readonly BOID_COLLISION_RADIUS = 15;
+    private readonly POPULATION_SIZE = 10;
 
     // Training Vars
     private trainMode: boolean = false;
@@ -34,19 +35,14 @@ export class Game {
     private generation: number = 1;
     private bestBrainJSON: any = null;
     private timeAlive: number = 0;
-    private readonly MAX_TIME_ALIVE = 3000; // Reset if taking too long without progress? Or just keep going.
-    // Actually, we want to reset if they die. 
-    // Let's add stats to HUD too.
+    private readonly MAX_TIME_ALIVE = 3000;
 
     constructor(RAPIER: typeof import('@dimforge/rapier2d-compat')) {
-        // Initialize random seed system
         const SEED = Date.now();
         this.rng = new SeededRandom(SEED);
         console.log('World Seed:', SEED);
 
-        // Initialize subsystems
         this.world = new World(RAPIER, this.WORLD_SIZE);
-        this.boid = new Boid(RAPIER, this.world.getPhysicsWorld());
         this.inputManager = new InputManager();
         this.camera = new Camera();
         this.renderer = new Renderer(this.WORLD_SIZE);
@@ -57,13 +53,19 @@ export class Game {
             this.rng
         );
 
-        // Initialize food and poison
-        this.initializeItems();
-
         this.loadBestBrain();
 
-        // Auto-start training?
-        // this.toggleTrainMode();
+        // Spawn population
+        for (let i = 0; i < this.POPULATION_SIZE; i++) {
+            const boid = new Boid(RAPIER, this.world.getPhysicsWorld());
+            if (this.bestBrainJSON) {
+                boid.brain.getNetwork().fromJSON(this.bestBrainJSON);
+                if (i > 0) boid.brain.mutate(0.1, 0.1);
+            }
+            this.boids.push(boid);
+        }
+
+        this.initializeItems();
 
         window.addEventListener('keydown', (e) => {
             if (e.key.toLowerCase() === 't') {
@@ -75,18 +77,27 @@ export class Game {
     private loadBestBrain(): void {
         const saved = localStorage.getItem('bestBrain');
         if (saved) {
-            this.bestBrainJSON = JSON.parse(saved);
-            console.log("Loaded best brain from storage");
-            if (this.boid.brain) {
-                this.boid.brain.getNetwork().fromJSON(this.bestBrainJSON);
+            try {
+                this.bestBrainJSON = JSON.parse(saved);
+                console.log("Loaded best brain from storage");
+            } catch (e) {
+                console.error("Failed to parse best brain", e);
             }
         }
+
+        const savedGen = localStorage.getItem('generation');
+        if (savedGen) this.generation = parseInt(savedGen);
+
+        const savedMaxFit = localStorage.getItem('maxFitness');
+        if (savedMaxFit) this.maxFitness = parseFloat(savedMaxFit);
     }
 
-    private saveBestBrain(): void {
-        if (this.boid.brain) {
-            this.bestBrainJSON = this.boid.brain.getNetwork().toJSON();
+    private saveBestBrain(bestBoid: Boid): void {
+        if (bestBoid.brain) {
+            this.bestBrainJSON = bestBoid.brain.getNetwork().toJSON();
             localStorage.setItem('bestBrain', JSON.stringify(this.bestBrainJSON));
+            localStorage.setItem('generation', this.generation.toString());
+            localStorage.setItem('maxFitness', this.maxFitness.toString());
         }
     }
 
@@ -105,141 +116,133 @@ export class Game {
     }
 
     private update(): void {
-        if (this.trainMode) {
-            this.boid.think();
+        let allDead = true;
+        let bestBoid: Boid | null = null;
+        let maxScore = -Infinity;
+
+        for (const boid of this.boids) {
+            if (!boid.alive) continue;
+            allDead = false;
+
+            boid.updateSensors(this.foods, this.poisons, this.WORLD_SIZE);
+            boid.think();
+
+            if (this.boids.indexOf(boid) === 0) {
+                boid.updateThrusters(
+                    this.inputManager.isKeyPressed('q'),
+                    this.inputManager.isKeyPressed('a'),
+                    this.inputManager.isKeyPressed('w'),
+                    this.inputManager.isKeyPressed('s')
+                );
+            } else {
+                // If in training mode, other boids follow their brain. 
+                // In manual mode, they stay still or follow brain but we don't apply forces if we want 'pure' manual.
+                // However, boid.think() already set the thrusters. 
+                // Let's call updateThrusters(false...) which will just apply current thruster values.
+                boid.updateThrusters(false, false, false, false);
+            }
+            this.world.wrapPosition(boid.getBody());
+
+            const pos = boid.getPosition();
+            const result = this.collisionManager.checkCollisions(pos.x, pos.y, this.foods, this.poisons);
+
+            if (this.trainMode) {
+                boid.score += result.foodCollected * 10;
+                boid.score -= result.poisonCollected * 20;
+                if (result.poisonCollected > 0) {
+                    boid.die();
+                }
+            }
+
+            if (boid.score > maxScore) {
+                maxScore = boid.score;
+                bestBoid = boid;
+            }
         }
 
-        // Update boid thrusters based on input (Manual override still works if keys pressed)
-        this.boid.updateThrusters(
-            this.inputManager.isKeyPressed('q'),
-            this.inputManager.isKeyPressed('a'),
-            this.inputManager.isKeyPressed('w'),
-            this.inputManager.isKeyPressed('s')
-        );
+        this.boids.forEach(b => b.isBest = (b === bestBoid));
+        if (bestBoid) this.score = bestBoid.score;
 
-        // Update boid sensors
-        this.boid.updateSensors(this.foods, this.poisons, this.WORLD_SIZE);
-
-        // Step physics
         this.world.step();
 
-        // Wrap world
-        this.world.wrapPosition(this.boid.getBody());
-
-        // Check collisions
-        const pos = this.boid.getPosition();
-        const result = this.collisionManager.checkCollisions(pos.x, pos.y, this.foods, this.poisons);
-
-        // Update Score/Fitness
         if (this.trainMode) {
             this.timeAlive++;
-            // Reward for collecting food
-            if (result.foodCollected > 0) {
-                this.score += 10 * result.foodCollected;
-                this.timeAlive = 0; // Reset timeout on progress? Or just accumulate score.
-                // Maybe heal boid?
-            }
-            // Penalty for poison
-            if (result.poisonCollected > 0) {
-                this.score -= 20 * result.poisonCollected;
-                // Die?
+            if (allDead || this.timeAlive > this.MAX_TIME_ALIVE) {
                 this.resetGeneration();
-                return;
-            }
-
-            // Timeout to prevent spinning in circles
-            if (this.timeAlive > this.MAX_TIME_ALIVE) { // ~50 seconds at 60fps
-                // If score is low, kill.
-                // If score is high, maybe just reset to avoid infinite life?
-                this.resetGeneration();
-                return;
             }
         }
     }
 
     private resetGeneration(): void {
-        // Evaluate Fitness
-        // Simple fitness: Score + TimeAlive/100?
-        // Or just Score.
-        console.log(`Generation ${this.generation} ended. Score: ${this.score}`);
+        let winner = this.boids[0];
+        let maxScore = -Infinity;
+        for (const boid of this.boids) {
+            if (boid.score > maxScore) {
+                maxScore = boid.score;
+                winner = boid;
+            }
+        }
 
-        if (this.score > this.maxFitness) {
-            this.maxFitness = this.score;
-            this.saveBestBrain();
+        console.log(`Generation ${this.generation} ended. Top Score: ${maxScore}`);
+
+        if (maxScore > this.maxFitness) {
+            this.maxFitness = maxScore;
+            this.saveBestBrain(winner);
             console.log("New record!");
         }
 
-        // Create new brain
-        // If we have a best brain, mutate it.
-        // If not, random (already done by constructor, or we should re-randomize if very bad?)
-
-        let newBrain: Brain;
-        if (this.bestBrainJSON) {
-            newBrain = new Brain(0, 0, 0); // Sizes ignored if fromJSON
-            // Wiat, constructor needs sizes.
-            // Boid uses: Input 18, Hidden 10, Output 2
-            // 9 sensors * 2 inputs = 18.
-            newBrain = new Brain(18, 10, 2);
-            newBrain.getNetwork().fromJSON(this.bestBrainJSON);
-            // Mutate
-            newBrain.mutate(0.1, 0.1); // Rate, Amount
-        } else {
-            newBrain = new Brain(18, 10, 2);
+        const winnerJSON = winner.brain.getNetwork().toJSON();
+        for (let i = 0; i < this.boids.length; i++) {
+            const boid = this.boids[i];
+            const newBrain = new Brain(18, 10, 2);
+            newBrain.getNetwork().fromJSON(winnerJSON);
+            if (i > 0) {
+                newBrain.mutate(0.1, 0.2);
+            }
+            boid.reset(newBrain);
         }
 
-        // Respawn Boid
-        // We need to re-create Boid or reset it.
-        // Rapier bodies are hard to reset fully without recreation sometimes, but we can just set translation.
-        // But we want to inject the new brain.
-        // The boid class has the brain. We can just set it.
-        this.boid.brain = newBrain;
-
-        // Reset Physics
-        this.boid.getBody().setTranslation({ x: 0, y: 0 }, true);
-        this.boid.getBody().setLinvel({ x: 0, y: 0 }, true);
-        this.boid.getBody().setAngvel(0, true);
-        this.boid.getBody().setRotation(0, true);
-
-        // Reset Items
         this.foods = [];
         this.poisons = [];
-        this.initializeItems(); // Re-randomize items
+        this.initializeItems();
 
-        // Reset Vars
         this.score = 0;
         this.timeAlive = 0;
         this.generation++;
     }
 
     private draw(): void {
-        // Clear canvas
         this.renderer.clear();
-
-        // Update camera to follow boid
-        const pos = this.boid.getPosition();
+        const bestBoid = this.boids.find(b => b.isBest) || this.boids[0];
+        const pos = bestBoid.getPosition();
         this.camera.follow(pos.x, pos.y);
 
-        // Draw world (grid, borders, food, poison)
         this.renderer.drawWorld(this.camera, this.foods, this.poisons);
 
-        // Draw boid at center
-        this.renderer.drawBoidAtCenter((ctx) => this.boid.draw(ctx));
-
-        // Draw minimap
-        this.renderer.drawMinimap(pos.x, pos.y, this.foods, this.poisons);
-
-        // Draw Brain
-        // We need to pass the brain to the renderer
-        if (this.boid.brain) {
-            this.renderer.drawBrain(this.boid.brain);
+        for (const boid of this.boids) {
+            if (boid.alive) {
+                this.renderer.drawBoidAtCenter((ctx) => {
+                    const bPos = boid.getPosition();
+                    const cPos = { x: this.camera.x, y: this.camera.y };
+                    ctx.save();
+                    ctx.translate(bPos.x - cPos.x, bPos.y - cPos.y);
+                    boid.draw(ctx);
+                    ctx.restore();
+                });
+            }
         }
 
-        // Update HUD
+        this.renderer.drawMinimap(pos.x, pos.y, this.foods, this.poisons);
+
+        if (bestBoid.brain) {
+            this.renderer.drawBrain(bestBoid.brain);
+        }
+
         this.hud.updateStats(
-            this.boid.getLeftThrusterPercent(),
-            this.boid.getRightThrusterPercent(),
-            this.boid.getVelocity(),
-            this.boid.getAngularVelocity(),
+            bestBoid.getLeftThrusterPercent(),
+            bestBoid.getRightThrusterPercent(),
+            bestBoid.getVelocity(),
+            bestBoid.getAngularVelocity(),
             this.foods.length,
             this.poisons.length,
             this.collisionManager.getFoodCollected(),

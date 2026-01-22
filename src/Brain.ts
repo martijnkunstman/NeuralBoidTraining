@@ -17,7 +17,7 @@ export class Brain {
         } else {
             this.network = new brain.NeuralNetwork({
                 inputSize: this.inputSize,
-                hiddenLayers: [this.hiddenSize],
+                hiddenLayers: [this.hiddenSize, this.hiddenSize],
                 outputSize: this.outputSize,
                 activation: 'sigmoid'
             });
@@ -29,7 +29,10 @@ export class Brain {
             // brain.js might be tricky for direct weight manipulation without 'toJSON' / 'fromJSON'.
             // Let's force an initialization.
             // Force initialization
-            this.network.train([{ input: new Array(inputSize).fill(0), output: new Array(outputSize).fill(0) }], { iterations: 1 });
+            // Force initialization with randomish values so weights aren't all zero
+            const dummyInput = new Array(inputSize).fill(0).map(() => Math.random());
+            const dummyOutput = new Array(outputSize).fill(0).map(() => Math.random());
+            this.network.train([{ input: dummyInput, output: dummyOutput }], { iterations: 1 });
         }
     }
 
@@ -47,7 +50,7 @@ export class Brain {
 
         this.network = new brain.NeuralNetwork({
             inputSize: this.inputSize,
-            hiddenLayers: [this.hiddenSize],
+            hiddenLayers: [this.hiddenSize, this.hiddenSize],
             outputSize: this.outputSize,
             activation: 'sigmoid'
         });
@@ -85,7 +88,7 @@ export class Brain {
         const json = this.network.toJSON();
         const newNet = new brain.NeuralNetwork({
             inputSize: this.inputSize,
-            hiddenLayers: [this.hiddenSize],
+            hiddenLayers: [this.hiddenSize, this.hiddenSize],
             outputSize: this.outputSize,
             activation: 'sigmoid'
         });

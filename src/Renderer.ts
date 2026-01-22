@@ -235,6 +235,7 @@ export class Renderer {
         } else {
             layerSizes.push(18);
             layerSizes.push(10);
+            layerSizes.push(10);
             layerSizes.push(2);
         }
 
@@ -289,10 +290,10 @@ export class Renderer {
                         const sourcePos = sourcePositions[sourceIdx];
                         const targetPos = targetPositions[targetIdx];
 
-                        let signalForLine = 0.1;
+                        let signalForLine = 0.05; // Base visibility
                         if (sourceActivations && sourceIdx < sourceActivations.length) {
                             const signal = Math.abs(sourceActivations[sourceIdx] * weight);
-                            signalForLine = Math.min(signal + 0.05, 0.8);
+                            signalForLine = Math.min(signal + 0.1, 0.8);
                         }
 
                         this.ctx.beginPath();
@@ -334,6 +335,16 @@ export class Renderer {
                 }
                 this.ctx.stroke();
                 this.ctx.fill();
+
+                // Draw Activation Vector
+                if (val > 0.05) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(pos.x, pos.y);
+                    this.ctx.lineTo(pos.x + val * 15, pos.y);
+                    this.ctx.strokeStyle = '#fff';
+                    this.ctx.lineWidth = 1;
+                    this.ctx.stroke();
+                }
             }
         }
 

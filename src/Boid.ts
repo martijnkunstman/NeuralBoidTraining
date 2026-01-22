@@ -23,6 +23,9 @@ export class Boid {
     private readonly SENSOR_LENGTH = 400;
 
     brain: Brain;
+    public alive: boolean = true;
+    public score: number = 0;
+    public isBest: boolean = false;
 
     constructor(RAPIER: typeof import('@dimforge/rapier2d-compat'), world: RAPIER.World, brain?: Brain) {
         this.THRUSTER_STEP = this.THRUSTER_MAX / 10;
@@ -68,6 +71,7 @@ export class Boid {
         // Triangle Shape (pointing up)
         const vertices = new Float32Array([0, 15, -10, -10, 10, -10]);
         const colliderDesc = RAPIER.ColliderDesc.convexHull(vertices)!;
+        colliderDesc.setSensor(true);
         world.createCollider(colliderDesc, this.body);
     }
 
@@ -225,6 +229,23 @@ export class Boid {
         this.rightThruster = outputs[1] * this.THRUSTER_MAX;
     }
 
+    die(): void {
+        this.alive = false;
+        this.body.setLinvel({ x: 0, y: 0 }, true);
+        this.body.setAngvel(0, true);
+        // Move out of view or handle in Game
+    }
+
+    reset(brain?: Brain): void {
+        this.alive = true;
+        this.score = 0;
+        if (brain) this.brain = brain;
+        this.body.setTranslation({ x: 0, y: 0 }, true);
+        this.body.setLinvel({ x: 0, y: 0 }, true);
+        this.body.setAngvel(0, true);
+        this.body.setRotation(0, true);
+    }
+
     private applyThrusterForces(): void {
         const rotation = this.body.rotation();
         const fx = -Math.sin(rotation);
@@ -299,11 +320,19 @@ export class Boid {
         ctx.lineTo(-10, -10);
         ctx.lineTo(10, -10);
         ctx.closePath();
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = this.isBest ? '#ffd700' : '#fff'; // Gold for best
         ctx.fill();
-        ctx.strokeStyle = '#4facfe';
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = this.isBest ? '#ffffff' : '#4facfe';
+        ctx.lineWidth = this.isBest ? 4 : 2;
         ctx.stroke();
+
+        if (this.isBest) {
+            // Glow effect
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#ffd700';
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+        }
 
         // Thrusters
         const tLen = 30;

@@ -37,8 +37,28 @@ export class HUD {
             <div style="margin-top: 8px; opacity: 0.7;">---</div>
             <div id="training-stat">Mode: Manual | Gen: 0 | Best: 0</div>
             <div style="margin-top: 10px; opacity: 0.6; font-size: 12px;">Q/A: Left | W/S: Right | T: Auto Mode</div>
+            <button id="reset-btn" style="
+                margin-top: 15px;
+                width: 100%;
+                background: #ff4b2b;
+                color: white;
+                border: none;
+                padding: 8px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: bold;
+                pointer-events: auto;
+                transition: opacity 0.2s;
+            " onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">RESET EVOLUTION</button>
         `;
         document.body.appendChild(this.element);
+
+        document.getElementById('reset-btn')!.addEventListener('click', () => {
+            if (confirm('Are you sure you want to reset all evolution progress?')) {
+                localStorage.clear();
+                window.location.reload();
+            }
+        });
 
         this.leftStat = document.getElementById('left-stat')!;
         this.rightStat = document.getElementById('right-stat')!;

@@ -7,7 +7,7 @@ export class Food {
     public radius: number;
     public color: string;
 
-    constructor(x: number, y: number, radius: number = 16) {
+    constructor(x: number, y: number, radius: number = 24) {
         this.x = x;
         this.y = y;
         this.radius = radius;
