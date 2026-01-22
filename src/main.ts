@@ -1,4 +1,6 @@
-
+import { SeededRandom } from './SeededRandom';
+import { Food } from './Food';
+import { Poison } from './Poison';
 
 async function run() {
     console.log('Starting boid simulation...');
@@ -28,6 +30,11 @@ async function run() {
     const gravity = { x: 0.0, y: 0.0 };
     const world = new RAPIER.World(gravity);
 
+    // Random Seed System
+    const SEED = Date.now();
+    const rng = new SeededRandom(SEED);
+    console.log('World Seed:', SEED);
+
     // Boid Parameters
     const WORLD_SIZE = 2000;
     const THRUSTER_MAX = 500.0;
@@ -45,6 +52,38 @@ async function run() {
     const vertices = new Float32Array([0, 15, -10, -10, 10, -10]);
     const colliderDesc = RAPIER.ColliderDesc.convexHull(vertices)!;
     world.createCollider(colliderDesc, body);
+
+    // Food and Poison System
+    const foods: Food[] = [];
+    const poisons: Poison[] = [];
+    const FOOD_COUNT = 40;
+    const POISON_COUNT = 15;
+    const BOID_COLLISION_RADIUS = 15; // Approximate boid size
+
+    function spawnFood(): Food {
+        const half = WORLD_SIZE / 2;
+        const x = rng.randomRange(-half + 50, half - 50);
+        const y = rng.randomRange(-half + 50, half - 50);
+        return new Food(x, y);
+    }
+
+    function spawnPoison(): Poison {
+        const half = WORLD_SIZE / 2;
+        const x = rng.randomRange(-half + 50, half - 50);
+        const y = rng.randomRange(-half + 50, half - 50);
+        return new Poison(x, y);
+    }
+
+    // Initialize food and poison
+    for (let i = 0; i < FOOD_COUNT; i++) {
+        foods.push(spawnFood());
+    }
+    for (let i = 0; i < POISON_COUNT; i++) {
+        poisons.push(spawnPoison());
+    }
+
+    let foodCollected = 0;
+    let poisonCollected = 0;
 
     // Input State
     const keys: Record<string, boolean> = {};
@@ -68,10 +107,16 @@ async function run() {
     hud.style.fontSize = '14px';
     hud.innerHTML = `
     <div style="margin-bottom: 10px; font-weight: bold; color: #4facfe;">BOID SYSTEMS</div>
+    <div id="seed-stat">Seed: ${SEED}</div>
+    <div style="margin-top: 8px; opacity: 0.7;">---</div>
     <div id="left-stat">Left Thruster: 0</div>
     <div id="right-stat">Right Thruster: 0</div>
     <div id="vel-stat">Velocity: 0</div>
     <div id="rot-stat">Rotation Power: 0</div>
+    <div style="margin-top: 8px; opacity: 0.7;">---</div>
+    <div id="food-stat">Food: ${FOOD_COUNT}</div>
+    <div id="poison-stat">Poison: ${POISON_COUNT}</div>
+    <div id="collected-stat">Collected: 0 food, 0 poison</div>
     <div style="margin-top: 10px; opacity: 0.6; font-size: 12px;">Q/A: Left | W/S: Right</div>
   `;
     document.body.appendChild(hud);
@@ -80,6 +125,9 @@ async function run() {
     const rightStat = document.getElementById('right-stat')!;
     const velStat = document.getElementById('vel-stat')!;
     const rotStat = document.getElementById('rot-stat')!;
+    const foodStat = document.getElementById('food-stat')!;
+    const poisonStat = document.getElementById('poison-stat')!;
+    const collectedStat = document.getElementById('collected-stat')!;
 
     function updateThrusters() {
         // Left Thruster: Q (up), A (down)
@@ -141,6 +189,28 @@ async function run() {
         }
     }
 
+    function checkCollisions() {
+        const pos = body.translation();
+
+        // Check food collisions
+        for (let i = foods.length - 1; i >= 0; i--) {
+            if (foods[i].isColliding(pos.x, pos.y, BOID_COLLISION_RADIUS)) {
+                foods.splice(i, 1);
+                foods.push(spawnFood());
+                foodCollected++;
+            }
+        }
+
+        // Check poison collisions
+        for (let i = poisons.length - 1; i >= 0; i--) {
+            if (poisons[i].isColliding(pos.x, pos.y, BOID_COLLISION_RADIUS)) {
+                poisons.splice(i, 1);
+                poisons.push(spawnPoison());
+                poisonCollected++;
+            }
+        }
+    }
+
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -169,10 +239,49 @@ async function run() {
             ctx.stroke();
         }
 
-        // Borders
+        // Enhanced Borders
         ctx.strokeStyle = '#4facfe';
-        ctx.lineWidth = 4;
+        ctx.lineWidth = 6;
         ctx.strokeRect(-WORLD_SIZE / 2, -WORLD_SIZE / 2, WORLD_SIZE, WORLD_SIZE);
+
+        // Corner markers
+        const cornerSize = 20;
+        ctx.fillStyle = '#4facfe';
+        const half = WORLD_SIZE / 2;
+        ctx.fillRect(-half - 3, -half - 3, cornerSize, cornerSize);
+        ctx.fillRect(half - cornerSize + 3, -half - 3, cornerSize, cornerSize);
+        ctx.fillRect(-half - 3, half - cornerSize + 3, cornerSize, cornerSize);
+        ctx.fillRect(half - cornerSize + 3, half - cornerSize + 3, cornerSize, cornerSize);
+
+        // Helper function to draw items with wrapping
+        const drawItemWithGhosts = (item: Food | Poison, camX: number, camY: number) => {
+            const viewDist = Math.max(canvas.width, canvas.height) / 2 + 100;
+
+            // Draw main item
+            item.draw(ctx);
+
+            // Check if we need to draw ghost copies
+            const offsets = [];
+            if (item.x - camX < -half + viewDist) offsets.push({ dx: WORLD_SIZE, dy: 0 });
+            if (item.x - camX > half - viewDist) offsets.push({ dx: -WORLD_SIZE, dy: 0 });
+            if (item.y - camY < -half + viewDist) offsets.push({ dx: 0, dy: WORLD_SIZE });
+            if (item.y - camY > half - viewDist) offsets.push({ dx: 0, dy: -WORLD_SIZE });
+
+            // Draw ghost copies
+            for (const offset of offsets) {
+                ctx.save();
+                ctx.translate(offset.dx, offset.dy);
+                item.draw(ctx);
+                ctx.restore();
+            }
+        };
+
+        // Draw Food
+        foods.forEach(food => drawItemWithGhosts(food, camX, camY));
+
+        // Draw Poison
+        poisons.forEach(poison => drawItemWithGhosts(poison, camX, camY));
+
         ctx.restore();
 
         // Draw Boid (at center)
@@ -214,6 +323,64 @@ async function run() {
         ctx.restore();
         ctx.restore();
 
+        // Minimap
+        const minimapSize = 200;
+        const minimapPadding = 20;
+        const minimapX = canvas.width - minimapSize - minimapPadding;
+        const minimapY = minimapPadding;
+
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
+
+        // Minimap background
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        ctx.fillRect(minimapX, minimapY, minimapSize, minimapSize);
+
+        // Minimap border
+        ctx.strokeStyle = '#4facfe';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(minimapX, minimapY, minimapSize, minimapSize);
+
+        // Scale factor for minimap
+        const scale = minimapSize / WORLD_SIZE;
+        const centerMinimapX = (coord: number) => (coord + WORLD_SIZE / 2) * scale;
+        const centerMinimapY = (coord: number) => (WORLD_SIZE / 2 - coord) * scale; // Flip Y-axis
+
+        // Draw world border on minimap
+        ctx.strokeStyle = 'rgba(79, 172, 254, 0.5)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(minimapX, minimapY, minimapSize, minimapSize);
+
+        // Draw food on minimap
+        ctx.fillStyle = '#00ff88';
+        foods.forEach(food => {
+            const mx = minimapX + centerMinimapX(food.x);
+            const my = minimapY + centerMinimapY(food.y);
+            ctx.fillRect(mx - 1.5, my - 1.5, 3, 3);
+        });
+
+        // Draw poison on minimap
+        ctx.fillStyle = '#ff4444';
+        poisons.forEach(poison => {
+            const mx = minimapX + centerMinimapX(poison.x);
+            const my = minimapY + centerMinimapY(poison.y);
+            ctx.fillRect(mx - 1.5, my - 1.5, 3, 3);
+        });
+
+        // Draw boid on minimap
+        const boidPos = body.translation();
+        const boidX = minimapX + centerMinimapX(boidPos.x);
+        const boidY = minimapY + centerMinimapY(boidPos.y);
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(boidX, boidY, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#4facfe';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.restore();
+
         // UI Updates
         leftStat.innerText = `Left Thruster: ${Math.round((leftThruster / THRUSTER_MAX) * 100)}%`;
         rightStat.innerText = `Right Thruster: ${Math.round((rightThruster / THRUSTER_MAX) * 100)}%`;
@@ -221,12 +388,16 @@ async function run() {
         const speed = Math.sqrt(vel.x * vel.x + vel.y * vel.y);
         velStat.innerText = `Velocity: ${Math.round(speed)} | Angle: ${Math.round(Math.atan2(vel.y, vel.x) * 180 / Math.PI)}°`;
         rotStat.innerText = `Rotation Power: ${body.angvel().toFixed(2)}`;
+        foodStat.innerText = `Food: ${foods.length}`;
+        poisonStat.innerText = `Poison: ${poisons.length}`;
+        collectedStat.innerText = `Collected: ${foodCollected} food, ${poisonCollected} poison`;
     }
 
     function loop() {
         updateThrusters();
         world.step();
         wrapWorld();
+        checkCollisions();
         draw();
         requestAnimationFrame(loop);
     }
