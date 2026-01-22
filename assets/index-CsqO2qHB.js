@@ -53,7 +53,7 @@
         });
     };
     async function $() {
-        console.log("Starting boid simulation...");
+        console.log("Starting boid simulation (v1.0.3)...");
         const x = await D(()=>import("./rapier-DWAjj0uv.js"), [], import.meta.url);
         await new Promise((i)=>setTimeout(i, 100)), console.log("RAPIER module ready");
         const l = document.createElement("canvas"), e = l.getContext("2d");
