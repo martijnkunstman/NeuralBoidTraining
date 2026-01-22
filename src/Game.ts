@@ -67,6 +67,9 @@ export class Game {
             this.inputManager.isKeyPressed('s')
         );
 
+        // Update boid sensors
+        this.boid.updateSensors(this.foods, this.poisons, this.WORLD_SIZE);
+
         // Step physics
         this.world.step();
 
