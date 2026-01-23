@@ -88,4 +88,48 @@ export class NeuralNetwork {
     sigmoid(x: number): number {
         return 1 / (1 + Math.exp(-x));
     }
+
+    copy(): NeuralNetwork {
+        const nn = new NeuralNetwork(this.inputNodes, this.hiddenNodes, this.outputNodes);
+        nn.weightsIH = this.weightsIH.map(row => [...row]);
+        nn.weightsHO = this.weightsHO.map(row => [...row]);
+        nn.biasH = [...this.biasH];
+        nn.biasO = [...this.biasO];
+        return nn;
+    }
+
+    mutate(rate: number, amount: number) {
+        const mutateVal = (val: number) => {
+            if (Math.random() < rate) {
+                // Tweak weight by a random amount
+                return val + (Math.random() * 2 - 1) * amount;
+            }
+            return val;
+        };
+
+        this.weightsIH = this.weightsIH.map(row => row.map(mutateVal));
+        this.weightsHO = this.weightsHO.map(row => row.map(mutateVal));
+        this.biasH = this.biasH.map(mutateVal);
+        this.biasO = this.biasO.map(mutateVal);
+    }
+    toJSON(): any {
+        return {
+            inputNodes: this.inputNodes,
+            hiddenNodes: this.hiddenNodes,
+            outputNodes: this.outputNodes,
+            weightsIH: this.weightsIH,
+            weightsHO: this.weightsHO,
+            biasH: this.biasH,
+            biasO: this.biasO
+        };
+    }
+
+    static fromJSON(data: any): NeuralNetwork {
+        const nn = new NeuralNetwork(data.inputNodes, data.hiddenNodes, data.outputNodes);
+        nn.weightsIH = data.weightsIH;
+        nn.weightsHO = data.weightsHO;
+        nn.biasH = data.biasH;
+        nn.biasO = data.biasO;
+        return nn;
+    }
 }

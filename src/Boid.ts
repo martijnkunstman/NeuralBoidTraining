@@ -1,5 +1,8 @@
 import type RAPIER from '@dimforge/rapier2d-compat';
 import { NeuralNetwork } from './NeuralNetwork';
+import { Food } from './Food';
+import { Poison } from './Poison';
+import { CollisionManager } from './CollisionManager';
 
 export interface Sensor {
     angle: number;
@@ -28,6 +31,14 @@ export class Boid {
     private readonly OUTPUT_NODES = 2;
 
     public lastInputs: number[] = [];
+
+    // Neuroevolution properties
+    public score: number = 0;
+    public foods: Food[] = [];
+    public poisons: Poison[] = [];
+    public isDead: boolean = false;
+    public timeAlive: number = 0;
+
 
     constructor(RAPIER: typeof import('@dimforge/rapier2d-compat'), world: RAPIER.World) {
 
@@ -64,7 +75,7 @@ export class Boid {
      * Updates the sensors based on the current position and nearby entities.
      * Uses simplified raycasting against circular objects.
      */
-    updateSensors(foods: { x: number, y: number, radius: number }[], poisons: { x: number, y: number, radius: number }[], worldSize: number): void {
+    updateSensors(worldSize: number): void {
         const pos = this.body.translation();
         const rotation = this.body.rotation();
 
@@ -85,7 +96,7 @@ export class Boid {
             let detected = 'NONE';
 
             // Check Foods
-            for (const food of foods) {
+            for (const food of this.foods) {
                 // Ghost sensing: find closest wrapped position
                 let dx = food.x - startX;
                 let dy = food.y - startY;
@@ -106,7 +117,7 @@ export class Boid {
             }
 
             // Check Poisons
-            for (const poison of poisons) {
+            for (const poison of this.poisons) {
                 // Ghost sensing: find closest wrapped position
                 let dx = poison.x - startX;
                 let dy = poison.y - startY;
@@ -177,6 +188,51 @@ export class Boid {
 
         return t1;
     }
+
+    // Initialize environment with own food/poison
+    initializeEnvironment(foodCount: number, poisonCount: number, spawner: CollisionManager) {
+        this.foods = [];
+        this.poisons = [];
+        for (let i = 0; i < foodCount; i++) this.foods.push(spawner.spawnFood());
+        for (let i = 0; i < poisonCount; i++) this.poisons.push(spawner.spawnPoison());
+        this.score = 0;
+        this.timeAlive = 0;
+        this.isDead = false;
+    }
+
+    checkCollisions(spawner: CollisionManager): void {
+        const pos = this.getPosition();
+        const BOID_RADIUS = 15; // From Game.ts constants
+
+        // Check food
+        for (let i = this.foods.length - 1; i >= 0; i--) {
+            if (this.foods[i].isColliding(pos.x, pos.y, BOID_RADIUS)) {
+                this.foods.splice(i, 1);
+                this.foods.push(spawner.spawnFood());
+                this.score += 10;
+            }
+        }
+
+        // Check poison
+        for (let i = this.poisons.length - 1; i >= 0; i--) {
+            if (this.poisons[i].isColliding(pos.x, pos.y, BOID_RADIUS)) {
+                this.poisons.splice(i, 1);
+                this.poisons.push(spawner.spawnPoison());
+                this.score -= 50;
+            }
+        }
+
+        // Survival points (approx 60fps)
+        this.score += 1 / 60;
+        this.timeAlive += 1 / 60;
+    }
+
+    // Helper to apply brain from another boid
+    copyBrainFrom(other: Boid) {
+        this.brain = other.brain.copy();
+    }
+
+
 
     updateThrusters(): void {
         // Manual override or training inputs could go here

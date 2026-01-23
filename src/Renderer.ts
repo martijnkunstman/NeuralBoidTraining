@@ -3,6 +3,8 @@ import { Poison } from './Poison';
 import { Camera } from './Camera';
 import { NeuralNetwork } from './NeuralNetwork';
 
+import { Boid } from './Boid';
+
 export class Renderer {
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
@@ -103,13 +105,54 @@ export class Renderer {
         }
     }
 
-    drawBoidAtCenter(drawCallback: (ctx: CanvasRenderingContext2D) => void): void {
+    // Draw all boids with ghosting
+    drawBoids(boids: Boid[], camera: Camera, bestBoid: Boid): void {
         this.ctx.save();
         this.ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
         this.ctx.scale(1, -1);
-        drawCallback(this.ctx);
+        this.ctx.translate(-camera.x, -camera.y);
+
+        const viewDist = Math.max(this.canvas.width, this.canvas.height) / 2 + 100;
+        const half = this.worldSize / 2;
+
+        boids.forEach(boid => {
+            // Draw regular (unless it's best boid, maybe draw differently?)
+            const isBest = boid === bestBoid;
+            const alpha = isBest ? 1.0 : 0.3; // dim others
+
+            this.ctx.globalAlpha = alpha;
+            this.drawBoidWithGhosts(boid, camera.x, camera.y, viewDist, half);
+            this.ctx.globalAlpha = 1.0;
+        });
+
         this.ctx.restore();
     }
+
+    private drawBoidWithGhosts(boid: Boid, camX: number, camY: number, viewDist: number, half: number): void {
+        const pos = boid.getPosition();
+
+        // Helper to draw at position
+        const drawAt = (x: number, y: number) => {
+            this.ctx.save();
+            this.ctx.translate(x, y);
+            boid.draw(this.ctx);
+            this.ctx.restore();
+        };
+
+        drawAt(pos.x, pos.y);
+
+        // Check ghosts
+        const offsets = [];
+        if (pos.x - camX < -half + viewDist) offsets.push({ dx: this.worldSize, dy: 0 });
+        if (pos.x - camX > half - viewDist) offsets.push({ dx: -this.worldSize, dy: 0 });
+        if (pos.y - camY < -half + viewDist) offsets.push({ dx: 0, dy: this.worldSize });
+        if (pos.y - camY > half - viewDist) offsets.push({ dx: 0, dy: -this.worldSize });
+
+        for (const offset of offsets) {
+            drawAt(pos.x + offset.dx, pos.y + offset.dy);
+        }
+    }
+
 
     drawMinimap(boidX: number, boidY: number, foods: Food[], poisons: Poison[]): void {
         const minimapSize = 200;
