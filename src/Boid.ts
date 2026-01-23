@@ -1,4 +1,5 @@
 import type RAPIER from '@dimforge/rapier2d-compat';
+import { NeuralNetwork } from './NeuralNetwork';
 
 export interface Sensor {
     angle: number;
@@ -14,15 +15,21 @@ export class Boid {
     private leftThruster: number = 0;
     private rightThruster: number = 0;
     private readonly THRUSTER_MAX = 500.0;
-    private readonly THRUSTER_STEP: number;
+
 
     private sensors: Sensor[] = [];
     private readonly SENSOR_COUNT = 21;
     private readonly SENSOR_ANGLE_SPREAD = Math.PI * 0.5;
     private readonly SENSOR_LENGTH = 600;
 
+    public brain: NeuralNetwork;
+    private readonly INPUT_NODES = 14;
+    private readonly HIDDEN_NODES = 12;
+    private readonly OUTPUT_NODES = 2;
+
+    public lastInputs: number[] = [];
+
     constructor(RAPIER: typeof import('@dimforge/rapier2d-compat'), world: RAPIER.World) {
-        this.THRUSTER_STEP = this.THRUSTER_MAX / 10;
 
         // Initialize Sensors
         for (let i = 0; i < this.SENSOR_COUNT; i++) {
@@ -48,6 +55,9 @@ export class Boid {
         const vertices = new Float32Array([0, 15, -10, -10, 10, -10]);
         const colliderDesc = RAPIER.ColliderDesc.convexHull(vertices)!;
         world.createCollider(colliderDesc, this.body);
+
+        // Initialize Brain
+        this.brain = new NeuralNetwork(this.INPUT_NODES, this.HIDDEN_NODES, this.OUTPUT_NODES);
     }
 
     /*
@@ -168,16 +178,69 @@ export class Boid {
         return t1;
     }
 
-    updateThrusters(qPressed: boolean, aPressed: boolean, wPressed: boolean, sPressed: boolean): void {
-        // Left Thruster: Q (up), A (down)
-        if (qPressed) this.leftThruster = Math.min(this.leftThruster + this.THRUSTER_STEP, this.THRUSTER_MAX);
-        if (aPressed) this.leftThruster = Math.max(this.leftThruster - this.THRUSTER_STEP, 0);
+    updateThrusters(): void {
+        // Manual override or training inputs could go here
 
-        // Right Thruster: W (up), S (down)
-        if (wPressed) this.rightThruster = Math.min(this.rightThruster + this.THRUSTER_STEP, this.THRUSTER_MAX);
-        if (sPressed) this.rightThruster = Math.max(this.rightThruster - this.THRUSTER_STEP, 0);
+        // Use Brain to decide
+        this.decide();
+
+        // If we want manual override to work alongside AI (e.g. for testing inputs):
+        // But for this task, the brain controls it.
+        // We can just trust decide set the thrusters.
 
         this.applyThrusterForces();
+    }
+
+    decide(): void {
+        const inputs: number[] = [];
+
+        // We have 21 sensors.
+        // First 7 inputs: Food detection. 21 sensors / 7 = 3 sensors per input.
+        // Max value of the group.
+
+        // Group 1: Sensors 0, 1, 2
+        // Group 2: Sensors 3, 4, 5
+        // ...
+
+        const SENSORS_PER_INPUT = 3;
+        const INPUT_GROUPS = 7;
+
+        // inputs[0-6]: Food
+        for (let i = 0; i < INPUT_GROUPS; i++) {
+            let maxVal = 0;
+            for (let j = 0; j < SENSORS_PER_INPUT; j++) {
+                const sensorIdx = i * SENSORS_PER_INPUT + j;
+                const sensor = this.sensors[sensorIdx];
+                if (sensor.detectedType === 'FOOD') {
+                    if (sensor.reading > maxVal) maxVal = sensor.reading;
+                }
+            }
+            inputs.push(maxVal);
+        }
+
+        // inputs[7-13]: Poison
+        for (let i = 0; i < INPUT_GROUPS; i++) {
+            let maxVal = 0;
+            for (let j = 0; j < SENSORS_PER_INPUT; j++) {
+                const sensorIdx = i * SENSORS_PER_INPUT + j;
+                const sensor = this.sensors[sensorIdx];
+                if (sensor.detectedType === 'POISON') {
+                    if (sensor.reading > maxVal) maxVal = sensor.reading;
+                }
+            }
+            inputs.push(maxVal);
+        }
+
+        this.lastInputs = inputs;
+        const outputs = this.brain.feedForward(inputs);
+
+        // Output 0 -> Left Thruster
+        // Output 1 -> Right Thruster
+        // Outputs are 0-1.
+
+        // Thresholding? Or continuous? "0 for no thrust 1 for full thrust" implies continuous mapped to max.
+        this.leftThruster = outputs[0] * this.THRUSTER_MAX;
+        this.rightThruster = outputs[1] * this.THRUSTER_MAX;
     }
 
     private applyThrusterForces(): void {
@@ -309,5 +372,9 @@ export class Boid {
 
     getRightThrusterPercent(): number {
         return (this.rightThruster / this.THRUSTER_MAX) * 100;
+    }
+
+    getSensors(): Sensor[] {
+        return this.sensors;
     }
 }

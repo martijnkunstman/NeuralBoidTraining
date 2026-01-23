@@ -1,6 +1,7 @@
 import { Food } from './Food';
 import { Poison } from './Poison';
 import { Camera } from './Camera';
+import { NeuralNetwork } from './NeuralNetwork';
 
 export class Renderer {
     private canvas: HTMLCanvasElement;
@@ -164,6 +165,111 @@ export class Renderer {
         this.ctx.strokeStyle = '#4facfe';
         this.ctx.lineWidth = 2;
         this.ctx.stroke();
+
+        this.ctx.restore();
+    }
+
+    drawBrain(brain: NeuralNetwork, x: number, y: number, w: number, h: number): void {
+        this.ctx.save();
+        this.ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform for UI drawing
+        this.ctx.translate(x, y);
+
+        const nodeRadius = 5;
+        const layerGap = w / 2; // gaps between 3 layers: Input -> Hidden -> Output
+
+        // Calculate Y positions for nodes to center them vertically
+        // Input Layer
+        const inputX = 0;
+        const inputStepY = h / (brain.inputNodes + 1);
+
+        // Hidden Layer
+        const hiddenX = inputX + layerGap;
+        const hiddenStepY = h / (brain.hiddenNodes + 1);
+
+        // Output Layer
+        const outputX = hiddenX + layerGap;
+        const outputStepY = h / (brain.outputNodes + 1);
+
+        // Draw Weights
+        // Input -> Hidden
+        for (let i = 0; i < brain.inputNodes; i++) {
+            for (let j = 0; j < brain.hiddenNodes; j++) {
+                const weight = brain.weightsIH[j][i];
+                const iy = (i + 1) * inputStepY;
+                const hy = (j + 1) * hiddenStepY;
+
+                this.ctx.beginPath();
+                this.ctx.moveTo(inputX, iy);
+                this.ctx.lineTo(hiddenX, hy);
+                const alpha = Math.abs(weight) * 0.5 + 0.1;
+                this.ctx.strokeStyle = weight > 0 ? `rgba(0, 255, 0, ${alpha})` : `rgba(255, 0, 0, ${alpha})`;
+                this.ctx.lineWidth = Math.abs(weight);
+                this.ctx.stroke();
+            }
+        }
+
+        // Hidden -> Output
+        for (let i = 0; i < brain.hiddenNodes; i++) {
+            for (let j = 0; j < brain.outputNodes; j++) {
+                const weight = brain.weightsHO[j][i];
+                const hy = (i + 1) * hiddenStepY;
+                const oy = (j + 1) * outputStepY;
+
+                this.ctx.beginPath();
+                this.ctx.moveTo(hiddenX, hy);
+                this.ctx.lineTo(outputX, oy);
+                const alpha = Math.abs(weight) * 0.5 + 0.1;
+                this.ctx.strokeStyle = weight > 0 ? `rgba(0, 255, 0, ${alpha})` : `rgba(255, 0, 0, ${alpha})`;
+                this.ctx.lineWidth = Math.abs(weight);
+                this.ctx.stroke();
+            }
+        }
+
+        // Draw Nodes
+        // Input Nodes
+        for (let i = 0; i < brain.inputNodes; i++) {
+            const iy = (i + 1) * inputStepY;
+            const val = brain.lastInput[i] || 0;
+
+            this.ctx.beginPath();
+            this.ctx.arc(inputX, iy, nodeRadius, 0, Math.PI * 2);
+            this.ctx.fillStyle = `rgba(255, 255, 255, ${val * 0.8 + 0.2})`;
+            this.ctx.fill();
+            this.ctx.strokeStyle = '#fff';
+            this.ctx.lineWidth = 1;
+            this.ctx.stroke();
+        }
+
+        // Hidden Nodes
+        for (let i = 0; i < brain.hiddenNodes; i++) {
+            const hy = (i + 1) * hiddenStepY;
+            const val = brain.lastHidden[i] || 0;
+
+            this.ctx.beginPath();
+            this.ctx.arc(hiddenX, hy, nodeRadius, 0, Math.PI * 2);
+            this.ctx.fillStyle = `rgba(255, 255, 255, ${val * 0.8 + 0.2})`;
+            this.ctx.fill();
+            this.ctx.strokeStyle = '#fff';
+            this.ctx.stroke();
+        }
+
+        // Output Nodes
+        for (let i = 0; i < brain.outputNodes; i++) {
+            const oy = (i + 1) * outputStepY;
+            const val = brain.lastOutput[i] || 0;
+
+            this.ctx.beginPath();
+            this.ctx.arc(outputX, oy, nodeRadius, 0, Math.PI * 2);
+            this.ctx.fillStyle = `rgba(255, 255, 255, ${val * 0.8 + 0.2})`;
+            this.ctx.fill();
+            this.ctx.strokeStyle = '#fff';
+            this.ctx.stroke();
+        }
+
+        // Borders / Label
+        this.ctx.fillStyle = '#fff';
+        this.ctx.font = '12px Arial';
+        this.ctx.fillText("Brain Activity", 0, -10);
 
         this.ctx.restore();
     }

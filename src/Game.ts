@@ -8,6 +8,7 @@ import { Camera } from './Camera';
 import { Renderer } from './Renderer';
 import { HUD } from './HUD';
 import { CollisionManager } from './CollisionManager';
+import { DebugPanel } from './DebugPanel';
 
 export class Game {
     private world: World;
@@ -20,10 +21,12 @@ export class Game {
     private foods: Food[] = [];
     private poisons: Poison[] = [];
     private rng: SeededRandom;
+    private debugPanel: DebugPanel;
+    private isPaused: boolean = false;
 
     private readonly WORLD_SIZE = 2000;
-    private readonly FOOD_COUNT = 40;
-    private readonly POISON_COUNT = 15;
+    private readonly FOOD_COUNT = 50;
+    private readonly POISON_COUNT = 25;
     private readonly BOID_COLLISION_RADIUS = 15;
 
     constructor(RAPIER: typeof import('@dimforge/rapier2d-compat')) {
@@ -45,6 +48,10 @@ export class Game {
             this.rng
         );
 
+        this.debugPanel = new DebugPanel(() => {
+            this.isPaused = !this.isPaused;
+        });
+
         // Initialize food and poison
         this.initializeItems();
     }
@@ -59,13 +66,10 @@ export class Game {
     }
 
     private update(): void {
+        if (this.isPaused) return;
+
         // Update boid thrusters based on input
-        this.boid.updateThrusters(
-            this.inputManager.isKeyPressed('q'),
-            this.inputManager.isKeyPressed('a'),
-            this.inputManager.isKeyPressed('w'),
-            this.inputManager.isKeyPressed('s')
-        );
+        this.boid.updateThrusters();
 
         // Update boid sensors
         this.boid.updateSensors(this.foods, this.poisons, this.WORLD_SIZE);
@@ -98,6 +102,13 @@ export class Game {
         // Draw minimap
         this.renderer.drawMinimap(pos.x, pos.y, this.foods, this.poisons);
 
+        // Draw Brain
+        const brainWidth = 200;
+        const brainHeight = 300;
+        const margin = 20;
+        // Position at bottom left
+        this.renderer.drawBrain(this.boid.brain, margin, window.innerHeight - brainHeight - margin, brainWidth, brainHeight);
+
         // Update HUD
         this.hud.updateStats(
             this.boid.getLeftThrusterPercent(),
@@ -109,6 +120,9 @@ export class Game {
             this.collisionManager.getFoodCollected(),
             this.collisionManager.getPoisonCollected()
         );
+
+        // Update Debug Panel
+        this.debugPanel.update(this.boid.getSensors(), this.boid.lastInputs);
     }
 
     private loop = (): void => {
