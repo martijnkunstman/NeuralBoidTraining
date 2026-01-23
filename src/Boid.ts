@@ -17,9 +17,9 @@ export class Boid {
     private readonly THRUSTER_STEP: number;
 
     private sensors: Sensor[] = [];
-    private readonly SENSOR_COUNT = 9;
+    private readonly SENSOR_COUNT = 21;
     private readonly SENSOR_ANGLE_SPREAD = Math.PI * 0.5;
-    private readonly SENSOR_LENGTH = 400;
+    private readonly SENSOR_LENGTH = 600;
 
     constructor(RAPIER: typeof import('@dimforge/rapier2d-compat'), world: RAPIER.World) {
         this.THRUSTER_STEP = this.THRUSTER_MAX / 10;
@@ -233,9 +233,13 @@ export class Boid {
         // endX - pos.x, endY - pos.y
         ctx.lineWidth = 1;
         for (const sensor of this.sensors) {
-            if (sensor.detectedType === 'FOOD') ctx.strokeStyle = '#00ff00';
-            else if (sensor.detectedType === 'POISON') ctx.strokeStyle = '#ff0000';
-            else ctx.strokeStyle = 'rgba(200, 200, 200, 0.2)';
+            if (sensor.detectedType === 'FOOD') {
+                ctx.strokeStyle = `rgba(0, 255, 0, ${sensor.reading})`;
+            } else if (sensor.detectedType === 'POISON') {
+                ctx.strokeStyle = `rgba(255, 0, 0, ${sensor.reading})`;
+            } else {
+                ctx.strokeStyle = 'rgba(200, 200, 200, 0.2)';
+            }
 
             ctx.beginPath();
             ctx.moveTo(0, 0); // Center of boid
