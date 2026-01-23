@@ -29,14 +29,14 @@ export class Game {
     private totalTime: number = 0;
     private allTimeBestScore: number = 0;
 
-    private readonly WORLD_SIZE = 2000;
+    private readonly WORLD_SIZE = 3000;
     private readonly FOOD_COUNT = 50;
     private readonly POISON_COUNT = 25;
     private readonly BOID_COLLISION_RADIUS = 15;
 
     constructor(RAPIER: typeof import('@dimforge/rapier2d-compat')) {
         // Initialize random seed system
-        const SEED = Date.now();
+        const SEED = Math.floor(Date.now() / (1000 * 60 * 60));
         this.rng = new SeededRandom(SEED);
         console.log('World Seed:', SEED);
 
@@ -55,7 +55,8 @@ export class Game {
 
         this.debugPanel = new DebugPanel(
             () => { this.isPaused = !this.isPaused; },
-            () => { this.resetTraining(); }
+            () => { this.resetTraining(); },
+            (gens) => { this.fastTrain(gens); }
         );
 
         // Initialize Population
@@ -228,6 +229,42 @@ export class Game {
         this.generationTimer = 0;
         this.initializePopulation(); // Re-creates random brains
         console.log('Training reset.');
+    }
+
+    private fastTrain(generations: number): void {
+        const stepsPerGen = this.GENERATION_DURATION * 60;
+        const totalSteps = generations * stepsPerGen;
+
+        console.log(`Starting fast training for ${generations} generations (${totalSteps} steps)...`);
+
+        const startTime = performance.now();
+
+        // We simulate "generations" by running until we hit the generation count target
+        // But since evolution is triggered dynamically (by time OR death), 
+        // we can't just run N * steps. We have to run `update` repeatedly.
+        // We can track the current generation and stop when we've advanced N times.
+
+        const targetGeneration = this.generation + generations;
+
+        // Safety Break: Don't run forever. 
+        // Max steps roughly estimated + buffer. 
+        // Logic: if all die early, generation advances faster. 
+        // So simple loop while this.generation < targetGeneration is best.
+
+        // Protect against infinite loops if logic breaks? 
+        let steps = 0;
+        const MAX_STEPS = totalSteps * 2; // Buffer for safety
+
+        while (this.generation < targetGeneration && steps < MAX_STEPS) {
+            this.update(); // Simulate one tick
+            steps++;
+        }
+
+        const duration = performance.now() - startTime;
+        console.log(`Fast training complete. Advanced to Gen ${this.generation}. Took ${duration.toFixed(0)}ms.`);
+
+        // Refresh visuals
+        this.draw();
     }
 
     private draw(): void {

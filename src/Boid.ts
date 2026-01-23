@@ -23,7 +23,7 @@ export class Boid {
     private sensors: Sensor[] = [];
     private readonly SENSOR_COUNT = 21;
     private readonly SENSOR_ANGLE_SPREAD = Math.PI * 0.5;
-    private readonly SENSOR_LENGTH = 600;
+    private readonly SENSOR_LENGTH = 400;
 
     public brain: NeuralNetwork;
     private readonly INPUT_NODES = 14;
@@ -40,7 +40,7 @@ export class Boid {
     public timeAlive: number = 0;
     public life: number = 100;
     private readonly MAX_LIFE = 100;
-    private readonly LIFE_DECAY_RATE = 5; // per second
+    private readonly LIFE_DECAY_RATE = 2; // per second
 
 
     constructor(RAPIER: typeof import('@dimforge/rapier2d-compat'), world: RAPIER.World) {

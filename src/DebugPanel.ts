@@ -16,9 +16,14 @@ export class DebugPanel {
     private resetBtn: HTMLButtonElement;
     private onReset: () => void;
 
-    constructor(onPauseToggle: () => void, onReset: () => void) {
+    private trainInput: HTMLInputElement;
+    private trainBtn: HTMLButtonElement;
+    private onFastTrain: (gens: number) => void;
+
+    constructor(onPauseToggle: () => void, onReset: () => void, onFastTrain: (gens: number) => void) {
         this.onPauseToggle = onPauseToggle;
         this.onReset = onReset;
+        this.onFastTrain = onFastTrain;
 
         this.element = document.createElement('div');
         this.element.style.position = 'absolute';
@@ -79,6 +84,47 @@ export class DebugPanel {
         header.appendChild(title);
         header.appendChild(buttonGroup);
         this.element.appendChild(header);
+
+        // Fast Train Controls
+        const trainRow = document.createElement('div');
+        trainRow.style.marginBottom = '10px';
+        trainRow.style.display = 'flex';
+        trainRow.style.gap = '5px';
+
+        this.trainInput = document.createElement('input');
+        this.trainInput.type = 'number';
+        this.trainInput.value = '5';
+        this.trainInput.style.width = '40px';
+        this.trainInput.style.background = '#333';
+        this.trainInput.style.border = '1px solid #555';
+        this.trainInput.style.color = 'white';
+        this.trainInput.style.padding = '2px';
+        this.trainInput.style.borderRadius = '4px';
+
+        this.trainBtn = document.createElement('button');
+        this.trainBtn.innerText = 'FAST TRAIN';
+        this.trainBtn.style.background = '#8800ff';
+        this.trainBtn.style.border = 'none';
+        this.trainBtn.style.color = 'white';
+        this.trainBtn.style.padding = '2px 8px';
+        this.trainBtn.style.borderRadius = '4px';
+        this.trainBtn.style.cursor = 'pointer';
+        this.trainBtn.style.flexGrow = '1';
+        this.trainBtn.onclick = () => {
+            const gens = parseInt(this.trainInput.value) || 1;
+            this.trainBtn.disabled = true;
+            this.trainBtn.innerText = 'TRAINING...';
+            // Allow UI to update before locking up
+            setTimeout(() => {
+                this.onFastTrain(gens);
+                this.trainBtn.disabled = false;
+                this.trainBtn.innerText = 'FAST TRAIN';
+            }, 50);
+        };
+
+        trainRow.appendChild(this.trainInput);
+        trainRow.appendChild(this.trainBtn);
+        this.element.appendChild(trainRow);
 
         // Helper to create row
         const createRow = (label: string, color: string = '#aaa') => {
