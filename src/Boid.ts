@@ -14,7 +14,7 @@ export class Boid {
     private body: RAPIER.RigidBody;
     private leftThruster: number = 0;
     private rightThruster: number = 0;
-    private readonly THRUSTER_MAX = 500.0;
+    private readonly THRUSTER_MAX = 800.0;
 
 
     private sensors: Sensor[] = [];
@@ -47,7 +47,7 @@ export class Boid {
         // Create rigid body
         const bodyDesc = RAPIER.RigidBodyDesc.dynamic()
             .setTranslation(0, 0)
-            .setLinearDamping(0.5)
+            .setLinearDamping(0.3)
             .setAngularDamping(2.0);
         this.body = world.createRigidBody(bodyDesc);
 
