@@ -20,16 +20,13 @@ export class CollisionManager {
         boidY: number,
         foods: Food[],
         poisons: Poison[]
-    ): { foodCollected: number, poisonCollected: number } {
-        let currentFoodCollected = 0;
-        let currentPoisonCollected = 0;
+    ): void {
         // Check food collisions
         for (let i = foods.length - 1; i >= 0; i--) {
             if (foods[i].isColliding(boidX, boidY, this.collisionRadius)) {
                 foods.splice(i, 1);
                 foods.push(this.spawnFood());
                 this.foodCollected++;
-                currentFoodCollected++;
             }
         }
 
@@ -39,11 +36,8 @@ export class CollisionManager {
                 poisons.splice(i, 1);
                 poisons.push(this.spawnPoison());
                 this.poisonCollected++;
-                currentPoisonCollected++;
             }
         }
-
-        return { foodCollected: currentFoodCollected, poisonCollected: currentPoisonCollected };
     }
 
     public spawnFood(): Food {
