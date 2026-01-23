@@ -170,11 +170,12 @@ export class Game {
     }
 
     private saveTrainingData(): void {
-        // Assume boids are sorted by score (called inside evolve after sort)
-        const bestBrain = this.boids[0].brain;
+        const brainsData = this.boids.map(b => b.brain.toJSON());
         const data = {
             generation: this.generation,
-            bestBrain: bestBrain.toJSON()
+            totalTime: this.totalTime,
+            allTimeBestScore: this.allTimeBestScore,
+            brains: brainsData
         };
         localStorage.setItem('boid_training_data', JSON.stringify(data));
         console.log('Training data saved for Gen ' + this.generation);
@@ -186,18 +187,35 @@ export class Game {
             try {
                 const data = JSON.parse(json);
                 this.generation = data.generation;
-                const loadedBrain = NeuralNetwork.fromJSON(data.bestBrain);
+                this.totalTime = data.totalTime || 0;
+                this.allTimeBestScore = data.allTimeBestScore || 0;
 
                 console.log('Loaded training data. Gen: ' + this.generation);
 
-                // Apply to population
-                // Strategy: Keep 1 exact copy, mutate rest
-                this.boids[0].brain = loadedBrain.copy();
-
-                for (let i = 1; i < this.POPULATION_SIZE; i++) {
-                    this.boids[i].brain = loadedBrain.copy();
-                    this.boids[i].brain.mutate(0.1, 0.2);
+                if (data.brains && Array.isArray(data.brains)) {
+                    // Load full population
+                    for (let i = 0; i < this.POPULATION_SIZE; i++) {
+                        if (data.brains[i]) {
+                            this.boids[i].brain = NeuralNetwork.fromJSON(data.brains[i]);
+                        } else {
+                            // If population increased, fill remainder with mutations of best (or random if no brains)
+                            // Fallback: Copy from index 0 if available, else random
+                            if (i > 0) {
+                                this.boids[i].brain = this.boids[0].brain.copy();
+                                this.boids[i].brain.mutate(0.1, 0.2);
+                            }
+                        }
+                    }
+                } else if (data.bestBrain) {
+                    // Legacy support for single best brain save
+                    const loadedBrain = NeuralNetwork.fromJSON(data.bestBrain);
+                    this.boids[0].brain = loadedBrain.copy();
+                    for (let i = 1; i < this.POPULATION_SIZE; i++) {
+                        this.boids[i].brain = loadedBrain.copy();
+                        this.boids[i].brain.mutate(0.1, 0.2);
+                    }
                 }
+
             } catch (e) {
                 console.error('Failed to load training data', e);
             }
