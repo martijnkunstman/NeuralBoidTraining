@@ -38,6 +38,9 @@ export class Boid {
     public poisons: Poison[] = [];
     public isDead: boolean = false;
     public timeAlive: number = 0;
+    public life: number = 100;
+    private readonly MAX_LIFE = 100;
+    private readonly LIFE_DECAY_RATE = 5; // per second
 
 
     constructor(RAPIER: typeof import('@dimforge/rapier2d-compat'), world: RAPIER.World) {
@@ -65,6 +68,8 @@ export class Boid {
         // Triangle Shape (pointing up)
         const vertices = new Float32Array([0, 15, -10, -10, 10, -10]);
         const colliderDesc = RAPIER.ColliderDesc.convexHull(vertices)!;
+        // Disable collisions: Membership group 1, Filter group 0 (interact with nothing)
+        colliderDesc.setCollisionGroups(0x00010000);
         world.createCollider(colliderDesc, this.body);
 
         // Initialize Brain
@@ -197,21 +202,17 @@ export class Boid {
         for (let i = 0; i < poisonCount; i++) this.poisons.push(spawner.spawnPoison());
         this.score = 0;
         this.timeAlive = 0;
+        this.life = 100;
         this.isDead = false;
+
+        // Reset physics
+        this.body.setLinvel({ x: 0, y: 0 }, true);
+        this.body.setAngvel(0, true);
     }
 
     checkCollisions(spawner: CollisionManager): void {
         const pos = this.getPosition();
         const BOID_RADIUS = 15; // From Game.ts constants
-
-        // Check food
-        for (let i = this.foods.length - 1; i >= 0; i--) {
-            if (this.foods[i].isColliding(pos.x, pos.y, BOID_RADIUS)) {
-                this.foods.splice(i, 1);
-                this.foods.push(spawner.spawnFood());
-                this.score += 10;
-            }
-        }
 
         // Check poison
         for (let i = this.poisons.length - 1; i >= 0; i--) {
@@ -219,12 +220,32 @@ export class Boid {
                 this.poisons.splice(i, 1);
                 this.poisons.push(spawner.spawnPoison());
                 this.score -= 50;
+                this.life -= 50;
+            }
+        }
+
+        // Check food
+        for (let i = this.foods.length - 1; i >= 0; i--) {
+            if (this.foods[i].isColliding(pos.x, pos.y, BOID_RADIUS)) {
+                this.foods.splice(i, 1);
+                this.foods.push(spawner.spawnFood());
+                this.score += 10;
+                this.life += 20;
+                if (this.life > this.MAX_LIFE) this.life = this.MAX_LIFE;
             }
         }
 
         // Survival points (approx 60fps)
         this.score += 1 / 60;
         this.timeAlive += 1 / 60;
+
+        // Life decay
+        this.life -= this.LIFE_DECAY_RATE / 60;
+
+        if (this.life <= 0) {
+            this.life = 0;
+            this.isDead = true;
+        }
     }
 
     // Helper to apply brain from another boid
@@ -235,6 +256,17 @@ export class Boid {
 
 
     updateThrusters(): void {
+        if (this.isDead) {
+            // Stop applying forces if dead.
+            // Force zero velocity to "freeze" it immediately
+            this.body.setLinvel({ x: 0, y: 0 }, true);
+            this.body.setAngvel(0, true);
+
+            this.leftThruster = 0;
+            this.rightThruster = 0;
+            return;
+        }
+
         // Manual override or training inputs could go here
 
         // Use Brain to decide
@@ -338,34 +370,25 @@ export class Boid {
 
         // Draw Sensors (World Space because they are calculated in world space)
         // We do this BEFORE rotation because we have world coords
-        ctx.save();
-        // Reset transform to identity (draw caller might have NOT applied translation yet? 
-        // Game.ts says: `this.renderer.drawBoidAtCenter((ctx) => this.boid.draw(ctx));`
-        // Renderer does: `ctx.translate(canvas.width/2, canvas.height/2);` then calls callback.
-        // So `0,0` is where the boid IS visually.
-        // BUT my sensor coordinates are in WORLD space.
-        // I need to convert them to relative space (Relative to Boid) OR
-        // Ask Renderer to handle world-space drawing?
-        // 
-        // Let's modify: `updateSensors` stores RELATIVE coords? Or easier:
-        // Inverse transform the world points.
-        // endX - pos.x, endY - pos.y
-        ctx.lineWidth = 1;
-        for (const sensor of this.sensors) {
-            if (sensor.detectedType === 'FOOD') {
-                ctx.strokeStyle = `rgba(0, 255, 0, ${sensor.reading})`;
-            } else if (sensor.detectedType === 'POISON') {
-                ctx.strokeStyle = `rgba(255, 0, 0, ${sensor.reading})`;
-            } else {
-                ctx.strokeStyle = 'rgba(200, 200, 200, 0.2)';
-            }
+        if (!this.isDead) {
+            ctx.save();
+            ctx.lineWidth = 1;
+            for (const sensor of this.sensors) {
+                if (sensor.detectedType === 'FOOD') {
+                    ctx.strokeStyle = `rgba(0, 255, 0, ${sensor.reading})`;
+                } else if (sensor.detectedType === 'POISON') {
+                    ctx.strokeStyle = `rgba(255, 0, 0, ${sensor.reading})`;
+                } else {
+                    ctx.strokeStyle = 'rgba(200, 200, 200, 0.2)';
+                }
 
-            ctx.beginPath();
-            ctx.moveTo(0, 0); // Center of boid
-            ctx.lineTo(sensor.endX - pos.x, sensor.endY - pos.y);
-            ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(0, 0); // Center of boid
+                ctx.lineTo(sensor.endX - pos.x, sensor.endY - pos.y);
+                ctx.stroke();
+            }
+            ctx.restore();
         }
-        ctx.restore();
 
 
         ctx.save();
@@ -377,11 +400,32 @@ export class Boid {
         ctx.lineTo(-10, -10);
         ctx.lineTo(10, -10);
         ctx.closePath();
-        ctx.fillStyle = '#fff';
+        ctx.closePath();
+
+        if (this.isDead) {
+            ctx.fillStyle = '#555'; // Dark grey for dead
+            ctx.strokeStyle = '#ff0000'; // Red for dead
+        } else {
+            ctx.fillStyle = '#fff';
+            ctx.strokeStyle = '#4facfe';
+        }
+
         ctx.fill();
-        ctx.strokeStyle = '#4facfe';
         ctx.lineWidth = 2;
         ctx.stroke();
+
+        // Draw Health Bar
+        if (!this.isDead) {
+            const barWidth = 30;
+            const barHeight = 4;
+            const healthPct = this.life / this.MAX_LIFE;
+
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.7)';
+            ctx.fillRect(-barWidth / 2, 20, barWidth, barHeight);
+
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.7)';
+            ctx.fillRect(-barWidth / 2, 20, barWidth * healthPct, barHeight);
+        }
 
         // Thrusters
         const tLen = 30;

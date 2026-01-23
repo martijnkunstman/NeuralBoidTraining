@@ -5,7 +5,9 @@ export class DebugPanel {
     private genRow: HTMLSpanElement;
     private aliveRow: HTMLSpanElement;
     private scoreRow: HTMLSpanElement;
+    private highScoreRow: HTMLSpanElement;
     private timeRow: HTMLSpanElement;
+    private totalTimeRow: HTMLSpanElement;
 
     private pauseBtn: HTMLButtonElement;
     private onPauseToggle: () => void;
@@ -100,8 +102,10 @@ export class DebugPanel {
 
         this.genRow = createRow('Generation:', '#4facfe');
         this.aliveRow = createRow('Alive:', '#00ff88');
-        this.scoreRow = createRow('Best Score:', '#ffcc00');
-        this.timeRow = createRow('Time:', '#ff4444');
+        this.scoreRow = createRow('Current Best:', '#ffcc00');
+        this.highScoreRow = createRow('High Score:', '#ffa500');
+        this.timeRow = createRow('Gen Time:', '#ff4444');
+        this.totalTimeRow = createRow('Total Time:', '#ffffff');
 
         document.body.appendChild(this.element);
     }
@@ -113,10 +117,16 @@ export class DebugPanel {
         this.onPauseToggle();
     }
 
-    update(generation: number, aliveCount: number, bestScore: number, time: number): void {
+    update(generation: number, aliveCount: number, currentBest: number, allTimeBest: number, genTime: number, totalTime: number): void {
         this.genRow.innerText = generation.toString();
         this.aliveRow.innerText = aliveCount.toString();
-        this.scoreRow.innerText = bestScore.toFixed(2);
-        this.timeRow.innerText = time.toFixed(1) + 's';
+        this.scoreRow.innerText = currentBest.toFixed(2);
+        this.highScoreRow.innerText = allTimeBest.toFixed(2);
+        this.timeRow.innerText = genTime.toFixed(1) + 's';
+
+        // Format total time mm:ss
+        const m = Math.floor(totalTime / 60);
+        const s = Math.floor(totalTime % 60);
+        this.totalTimeRow.innerText = `${m}:${s.toString().padStart(2, '0')}`;
     }
 }

@@ -22,9 +22,12 @@ export class Game {
 
     // Evolution settings
     private readonly POPULATION_SIZE = 50;
-    private readonly GENERATION_DURATION = 15; // Seconds
+    private readonly GENERATION_DURATION = 45; // Seconds
     private generationTimer: number = 0;
+
     private generation: number = 1;
+    private totalTime: number = 0;
+    private allTimeBestScore: number = 0;
 
     private readonly WORLD_SIZE = 2000;
     private readonly FOOD_COUNT = 50;
@@ -97,15 +100,32 @@ export class Game {
             this.evolve();
         }
 
+        this.totalTime += 1 / 60;
+
         // Step physics
         this.world.step();
 
+        // Check for early exit if all dead
+        let aliveCount = 0;
+
         // Update all boids
         for (const boid of this.boids) {
-            boid.updateThrusters();
-            boid.updateSensors(this.WORLD_SIZE);
+            // Always wrap position so bodies sustain in world
             this.world.wrapPosition(boid.getBody());
-            boid.checkCollisions(this.collisionManager);
+
+            // Always update thrusters (handles dead state freezing internally)
+            boid.updateThrusters();
+
+            if (!boid.isDead) {
+                aliveCount++;
+                boid.updateSensors(this.WORLD_SIZE);
+                boid.checkCollisions(this.collisionManager);
+            }
+        }
+
+        // Check if all dead or time up
+        if (this.generationTimer > this.GENERATION_DURATION || aliveCount <= 1) {
+            this.evolve();
         }
     }
 
@@ -113,11 +133,16 @@ export class Game {
         // Sort by score (fitness)
         this.boids.sort((a, b) => b.score - a.score);
 
-        console.log(`Generation ${this.generation} complete. Best Score: ${this.boids[0].score}`);
+        const currentBestScore = this.boids[0].score;
+        if (currentBestScore > this.allTimeBestScore) {
+            this.allTimeBestScore = currentBestScore;
+        }
+
+        console.log(`Generation ${this.generation} complete. Survivors: ${this.boids.filter(b => !b.isDead).length}. Best Score: ${currentBestScore}.`);
 
         const half = Math.floor(this.POPULATION_SIZE / 2);
 
-        // 1. Keep Top 50% (Survivors) - Just reset them
+        // 1. Keep Top 50% (Survivors/Best) - Just reset them
         for (let i = 0; i < half; i++) {
             this.resetBoid(this.boids[i]);
         }
@@ -194,12 +219,19 @@ export class Game {
         // Update camera to follow boid
         // Find best boid (highest score) for camera and viz
         // Since we only sort at end of gen, we search linear
+        // Since some boids might be dead/removed, bestBoid might not be index 0 if not sorted.
+        // Also boids array might be empty if we are in middle of update? 
+        // But draw happens after update. If all died, we called evolve() which refilled them.
+        // So boids should not be empty.
+
         let bestBoid = this.boids[0];
         let maxScore = -Infinity;
-        for (const b of this.boids) {
-            if (b.score > maxScore) {
-                maxScore = b.score;
-                bestBoid = b;
+        if (this.boids.length > 0) {
+            for (const b of this.boids) {
+                if (b.score > maxScore) {
+                    maxScore = b.score;
+                    bestBoid = b;
+                }
             }
         }
 
@@ -231,11 +263,14 @@ export class Game {
         );
 
         // Update Debug Panel with Neuroevolution Stats
+        const aliveBoids = this.boids.filter(b => !b.isDead).length;
         this.debugPanel.update(
             this.generation,
-            this.boids.length, // Currently all 50 are alive/present
+            aliveBoids,
             bestBoid.score,
-            this.generationTimer
+            this.allTimeBestScore,
+            this.generationTimer,
+            this.totalTime
         );
 
         // Draw Generation Info on Canvas (Quick hack or add to Renderer?)
