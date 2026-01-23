@@ -4,6 +4,8 @@ export class DebugPanel {
     private element: HTMLDivElement;
     private sensorRow: HTMLDivElement;
     private inputRow: HTMLDivElement;
+    private hiddenRow: HTMLDivElement;
+    private outputRow: HTMLDivElement;
     private pauseBtn: HTMLButtonElement;
     private onPauseToggle: () => void;
     private isPaused: boolean = false;
@@ -64,7 +66,24 @@ export class DebugPanel {
         this.inputRow.style.marginTop = '2px';
         this.inputRow.style.wordBreak = 'break-all';
         this.inputRow.style.color = '#aaa';
+        this.inputRow.style.color = '#aaa';
         this.element.appendChild(this.inputRow);
+
+        // Hidden Row
+        this.element.appendChild(document.createTextNode('HIDDEN (12):'));
+        this.hiddenRow = document.createElement('div');
+        this.hiddenRow.style.marginTop = '2px';
+        this.hiddenRow.style.wordBreak = 'break-all';
+        this.hiddenRow.style.color = '#aaa';
+        this.element.appendChild(this.hiddenRow);
+
+        // Output Row
+        this.element.appendChild(document.createTextNode('OUTPUTS (2):'));
+        this.outputRow = document.createElement('div');
+        this.outputRow.style.marginTop = '2px';
+        this.outputRow.style.wordBreak = 'break-all';
+        this.outputRow.style.color = '#aaa';
+        this.element.appendChild(this.outputRow);
 
         document.body.appendChild(this.element);
     }
@@ -76,7 +95,7 @@ export class DebugPanel {
         this.onPauseToggle();
     }
 
-    update(sensors: Sensor[], inputs: number[]): void {
+    update(sensors: Sensor[], inputs: number[], hidden: number[], outputs: number[]): void {
         // Update Sensor Text
         const sensorValues = sensors.map(s => s.reading.toFixed(2));
         this.sensorRow.innerText = sensorValues.join(', ');
@@ -84,5 +103,13 @@ export class DebugPanel {
         // Update Input Text
         const inputValues = inputs.map(v => v.toFixed(2));
         this.inputRow.innerText = inputValues.join(', ');
+
+        // Update Hidden Text
+        const hiddenValues = hidden.map(v => v.toFixed(2));
+        this.hiddenRow.innerText = hiddenValues.join(', ');
+
+        // Update Output Text
+        const outputValues = outputs.map(v => v.toFixed(2));
+        this.outputRow.innerText = outputValues.join(', ');
     }
 }

@@ -122,7 +122,12 @@ export class Game {
         );
 
         // Update Debug Panel
-        this.debugPanel.update(this.boid.getSensors(), this.boid.lastInputs);
+        this.debugPanel.update(
+            this.boid.getSensors(),
+            this.boid.lastInputs,
+            this.boid.brain.lastHidden,
+            this.boid.brain.lastOutput
+        );
     }
 
     private loop = (): void => {
