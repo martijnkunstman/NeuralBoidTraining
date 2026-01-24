@@ -26,8 +26,8 @@ export class Boid {
     private readonly SENSOR_LENGTH = 600;
 
     public brain: NeuralNetwork;
-    private readonly INPUT_NODES = 14;
-    private readonly HIDDEN_NODES = 12;
+    private readonly INPUT_NODES = 17; // Added 3 inputs for velocity
+    private readonly HIDDEN_NODES = 16;
     private readonly OUTPUT_NODES = 2;
 
     public lastInputs: number[] = [];
@@ -40,7 +40,7 @@ export class Boid {
     public timeAlive: number = 0;
     public life: number = 100;
     private readonly MAX_LIFE = 100;
-    private readonly LIFE_DECAY_RATE = 2; // per second
+    private readonly LIFE_DECAY_RATE = 1; // Reduced from 2 - they live longer now
 
 
     constructor(RAPIER: typeof import('@dimforge/rapier2d-compat'), world: RAPIER.World) {
@@ -61,7 +61,7 @@ export class Boid {
         // Create rigid body
         const bodyDesc = RAPIER.RigidBodyDesc.dynamic()
             .setTranslation(0, 0)
-            .setLinearDamping(0.6)
+            .setLinearDamping(0.4) // Reduced from 0.6 to help them move easier
             .setAngularDamping(1.5);
         this.body = world.createRigidBody(bodyDesc);
 
@@ -229,7 +229,7 @@ export class Boid {
             if (this.foods[i].isColliding(pos.x, pos.y, BOID_RADIUS)) {
                 this.foods.splice(i, 1);
                 this.foods.push(spawner.spawnFood());
-                this.score += 10;
+                this.score += 25; // Increased from 10
                 this.life += 20;
                 if (this.life > this.MAX_LIFE) this.life = this.MAX_LIFE;
             }
@@ -238,6 +238,16 @@ export class Boid {
         // Survival points (approx 60fps)
         this.score += 1 / 60;
         this.timeAlive += 1 / 60;
+
+        // Proximity reward: small bonus for having food in sensors (encourages seeking)
+        // Sum up food sensor readings and give a tiny bonus
+        let foodProximityBonus = 0;
+        for (const sensor of this.sensors) {
+            if (sensor.detectedType === 'FOOD') {
+                foodProximityBonus += sensor.reading * 0.01; // Closer = more bonus
+            }
+        }
+        this.score += foodProximityBonus;
 
         // Life decay
         this.life -= this.LIFE_DECAY_RATE / 60;
@@ -318,6 +328,36 @@ export class Boid {
             }
             inputs.push(maxVal);
         }
+
+        // inputs[14, 15, 16]: Proprioception (Self-sensing)
+        // We need local velocity to know if we are drifting sideways vs moving forward.
+        const vel = this.body.linvel();
+        const angVel = this.body.angvel();
+        const rotation = this.body.rotation();
+
+        // Rotate velocity to local space
+        // localX = forward velocity, localY = sideways drift
+
+        // Wait, Boid nose is (0, 15). "Up" in local is +Y? 
+        // Let's verify orientation.
+        // In draw(): moveTo(0, 15) is nose.
+        // In applyThrusterForces(): fx = -Math.sin(rotation), fy = Math.cos(rotation).
+        // If rotation=0, fx=0, fy=1. So (0, 1) is forward?
+        // Yes, 0 degrees is facing +Y.
+
+        // So to get local coordinates relative to "Forward":
+        // Forward vector F = (-sin(rot), cos(rot))
+        // Right vector R = (cos(rot), sin(rot))
+
+        // Dot product with velocity
+        const forwardVel = vel.x * (-Math.sin(rotation)) + vel.y * Math.cos(rotation);
+        const rightVel = vel.x * Math.cos(rotation) + vel.y * Math.sin(rotation);
+
+        // Normalize using tanh to squash large values to -1..1, then map to 0..1
+        // Scaling factor 0.05 implies typical speeds of ~20-50 are mapped well.
+        inputs.push(0.5 + 0.5 * Math.tanh(forwardVel * 0.05));
+        inputs.push(0.5 + 0.5 * Math.tanh(rightVel * 0.05));
+        inputs.push(0.5 + 0.5 * Math.tanh(angVel * 0.5));
 
         this.lastInputs = inputs;
         const outputs = this.brain.feedForward(inputs);

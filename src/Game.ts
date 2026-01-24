@@ -22,7 +22,7 @@ export class Game {
 
     // Evolution settings
     private readonly POPULATION_SIZE = 50;
-    private readonly GENERATION_DURATION = 120; // Seconds
+    private readonly GENERATION_DURATION = 45; // Reduced from 120s for faster iteration
     private generationTimer: number = 0;
 
     private generation: number = 1;
@@ -30,7 +30,7 @@ export class Game {
     private allTimeBestScore: number = 0;
 
     private readonly WORLD_SIZE = 2000;
-    private readonly FOOD_COUNT = 50;
+    private readonly FOOD_COUNT = 100;
     private readonly POISON_COUNT = 25;
     private readonly BOID_COLLISION_RADIUS = 15;
 
@@ -141,25 +141,28 @@ export class Game {
 
         console.log(`Generation ${this.generation} complete. Survivors: ${this.boids.filter(b => !b.isDead).length}. Best Score: ${currentBestScore}.`);
 
-        const half = Math.floor(this.POPULATION_SIZE / 2);
+        const eliteCount = Math.floor(this.POPULATION_SIZE * 0.1); // Keep top 10% unchanged
+        const selectionPool = Math.floor(this.POPULATION_SIZE * 0.5); // Parents chosen from top 50%
 
-        // 1. Keep Top 50% (Survivors/Best) - Just reset them
-        for (let i = 0; i < half; i++) {
+        // 1. Keep Elites (No Mutation)
+        for (let i = 0; i < eliteCount; i++) {
             this.resetBoid(this.boids[i]);
         }
 
-        // 2. Replace Bottom 50% with mutated clones of Top 50%
-        for (let i = half; i < this.POPULATION_SIZE; i++) {
-            const parentIndex = i - half; // Map bottom half to top half 1:1
+        // 2. Fill the rest with mutated children of selection pool
+        for (let i = eliteCount; i < this.POPULATION_SIZE; i++) {
+            // Pick a random parent from the top 50%
+            const parentIndex = Math.floor(this.rng.random() * selectionPool);
             const parent = this.boids[parentIndex];
-            const offspring = this.boids[i];
+            const offspring = this.boids[i]; // Rewrite this boid
 
-            // Copy brain from parent
             offspring.copyBrainFrom(parent);
-            // Mutate
-            offspring.brain.mutate(0.1, 0.2); // 10% rate, 0.2 strength
 
-            // Reset state
+            // Dynamic Mutation:
+            // If parent is elite, mutate less? No, finding new peaks needs exploration.
+            // Using standard mutation but slightly more frequent for diversity.
+            offspring.brain.mutate(0.2, 0.5); // Rate 20%, Strength 0.5
+
             this.resetBoid(offspring);
         }
 
@@ -195,6 +198,15 @@ export class Game {
 
                 if (data.brains && Array.isArray(data.brains)) {
                     // Load full population
+                    // Check architecture compatibility first using first brain
+                    if (data.brains.length > 0 &&
+                        (data.brains[0].inputNodes !== this.boids[0].brain.inputNodes ||
+                            data.brains[0].outputNodes !== this.boids[0].brain.outputNodes)) {
+                        console.warn('Loaded population architecture mismatch. Resetting...');
+                        this.resetTraining();
+                        return;
+                    }
+
                     for (let i = 0; i < this.POPULATION_SIZE; i++) {
                         if (data.brains[i]) {
                             this.boids[i].brain = NeuralNetwork.fromJSON(data.brains[i]);
@@ -209,6 +221,14 @@ export class Game {
                     }
                 } else if (data.bestBrain) {
                     // Legacy support for single best brain save
+                    // Check compatibility
+                    if (data.bestBrain && (data.bestBrain.inputNodes !== this.boids[0].brain.inputNodes ||
+                        data.bestBrain.outputNodes !== this.boids[0].brain.outputNodes)) {
+                        console.warn('Loaded brain architecture mismatch. Resetting...');
+                        this.resetTraining();
+                        return;
+                    }
+
                     const loadedBrain = NeuralNetwork.fromJSON(data.bestBrain);
                     this.boids[0].brain = loadedBrain.copy();
                     for (let i = 1; i < this.POPULATION_SIZE; i++) {
@@ -227,6 +247,8 @@ export class Game {
         localStorage.removeItem('boid_training_data');
         this.generation = 1;
         this.generationTimer = 0;
+        this.totalTime = 0; // added reset
+        this.allTimeBestScore = 0; // added reset
         this.initializePopulation(); // Re-creates random brains
         console.log('Training reset.');
     }
