@@ -188,58 +188,77 @@ export class Game {
     private loadTrainingData(): void {
         const json = localStorage.getItem('boid_training_data');
         if (json) {
-            try {
-                const data = JSON.parse(json);
-                this.generation = data.generation;
-                this.totalTime = data.totalTime || 0;
-                this.allTimeBestScore = data.allTimeBestScore || 0;
+            this.applyTrainingData(json);
+        } else {
+            // Fallback: Load from bundled JSON file
+            console.log('No localStorage found, loading from localStorage.json...');
+            fetch('./localStorage.json')
+                .then(response => {
+                    if (!response.ok) throw new Error('localStorage.json not found');
+                    return response.text();
+                })
+                .then(jsonText => {
+                    this.applyTrainingData(jsonText);
+                    console.log('Loaded pre-trained brains from localStorage.json');
+                })
+                .catch(e => {
+                    console.log('No pre-trained data found, starting fresh.', e);
+                });
+        }
+    }
 
-                console.log('Loaded training data. Gen: ' + this.generation);
+    private applyTrainingData(json: string): void {
+        try {
+            const data = JSON.parse(json);
+            this.generation = data.generation;
+            this.totalTime = data.totalTime || 0;
+            this.allTimeBestScore = data.allTimeBestScore || 0;
 
-                if (data.brains && Array.isArray(data.brains)) {
-                    // Load full population
-                    // Check architecture compatibility first using first brain
-                    if (data.brains.length > 0 &&
-                        (data.brains[0].inputNodes !== this.boids[0].brain.inputNodes ||
-                            data.brains[0].outputNodes !== this.boids[0].brain.outputNodes)) {
-                        console.warn('Loaded population architecture mismatch. Resetting...');
-                        this.resetTraining();
-                        return;
-                    }
+            console.log('Loaded training data. Gen: ' + this.generation);
 
-                    for (let i = 0; i < this.POPULATION_SIZE; i++) {
-                        if (data.brains[i]) {
-                            this.boids[i].brain = NeuralNetwork.fromJSON(data.brains[i]);
-                        } else {
-                            // If population increased, fill remainder with mutations of best (or random if no brains)
-                            // Fallback: Copy from index 0 if available, else random
-                            if (i > 0) {
-                                this.boids[i].brain = this.boids[0].brain.copy();
-                                this.boids[i].brain.mutate(0.1, 0.2);
-                            }
-                        }
-                    }
-                } else if (data.bestBrain) {
-                    // Legacy support for single best brain save
-                    // Check compatibility
-                    if (data.bestBrain && (data.bestBrain.inputNodes !== this.boids[0].brain.inputNodes ||
-                        data.bestBrain.outputNodes !== this.boids[0].brain.outputNodes)) {
-                        console.warn('Loaded brain architecture mismatch. Resetting...');
-                        this.resetTraining();
-                        return;
-                    }
-
-                    const loadedBrain = NeuralNetwork.fromJSON(data.bestBrain);
-                    this.boids[0].brain = loadedBrain.copy();
-                    for (let i = 1; i < this.POPULATION_SIZE; i++) {
-                        this.boids[i].brain = loadedBrain.copy();
-                        this.boids[i].brain.mutate(0.1, 0.2);
-                    }
+            if (data.brains && Array.isArray(data.brains)) {
+                // Load full population
+                // Check architecture compatibility first using first brain
+                if (data.brains.length > 0 &&
+                    (data.brains[0].inputNodes !== this.boids[0].brain.inputNodes ||
+                        data.brains[0].outputNodes !== this.boids[0].brain.outputNodes)) {
+                    console.warn('Loaded population architecture mismatch. Resetting...');
+                    this.resetTraining();
+                    return;
                 }
 
-            } catch (e) {
-                console.error('Failed to load training data', e);
+                for (let i = 0; i < this.POPULATION_SIZE; i++) {
+                    if (data.brains[i]) {
+                        this.boids[i].brain = NeuralNetwork.fromJSON(data.brains[i]);
+                    } else {
+                        // If population increased, fill remainder with mutations of best (or random if no brains)
+                        // Fallback: Copy from index 0 if available, else random
+                        if (i > 0) {
+                            this.boids[i].brain = this.boids[0].brain.copy();
+                            this.boids[i].brain.mutate(0.1, 0.2);
+                        }
+                    }
+                }
+            } else if (data.bestBrain) {
+                // Legacy support for single best brain save
+                // Check compatibility
+                if (data.bestBrain && (data.bestBrain.inputNodes !== this.boids[0].brain.inputNodes ||
+                    data.bestBrain.outputNodes !== this.boids[0].brain.outputNodes)) {
+                    console.warn('Loaded brain architecture mismatch. Resetting...');
+                    this.resetTraining();
+                    return;
+                }
+
+                const loadedBrain = NeuralNetwork.fromJSON(data.bestBrain);
+                this.boids[0].brain = loadedBrain.copy();
+                for (let i = 1; i < this.POPULATION_SIZE; i++) {
+                    this.boids[i].brain = loadedBrain.copy();
+                    this.boids[i].brain.mutate(0.1, 0.2);
+                }
             }
+
+        } catch (e) {
+            console.error('Failed to load training data', e);
         }
     }
 
