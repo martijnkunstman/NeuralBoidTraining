@@ -22,13 +22,13 @@
     })();
     const w = "modulepreload", N = function(m, t) {
         return new URL(m, t).href;
-    }, x = {}, R = function(t, e, i) {
+    }, b = {}, R = function(t, e, i) {
         let s = Promise.resolve();
         if (e && e.length > 0) {
             const n = document.getElementsByTagName("link"), r = document.querySelector("meta[property=csp-nonce]"), h = r?.nonce || r?.getAttribute("nonce");
             s = Promise.allSettled(e.map((l)=>{
-                if (l = N(l, i), l in x) return;
-                x[l] = !0;
+                if (l = N(l, i), l in b) return;
+                b[l] = !0;
                 const d = l.endsWith(".css"), f = d ? '[rel="stylesheet"]' : "";
                 if (!!i) for(let a = n.length - 1; a >= 0; a--){
                     const u = n[a];
@@ -496,16 +496,16 @@
             this.ctx.save(), this.ctx.setTransform(1, 0, 0, 1, 0, 0), this.ctx.translate(e, i);
             const n = 5, r = s / 2, h = 0, l = o / (t.inputNodes + 1), d = h + r, f = o / (t.hiddenNodes + 1), p = d + r, c = o / (t.outputNodes + 1);
             for(let a = 0; a < t.inputNodes; a++)for(let u = 0; u < t.hiddenNodes; u++){
-                const g = t.weightsIH[u][a], y = (a + 1) * l, b = (u + 1) * f;
-                this.ctx.beginPath(), this.ctx.moveTo(h, y), this.ctx.lineTo(d, b);
-                const T = Math.abs(g) * .5 + .1;
-                this.ctx.strokeStyle = g > 0 ? `rgba(0, 255, 0, ${T})` : `rgba(255, 0, 0, ${T})`, this.ctx.lineWidth = Math.abs(g), this.ctx.stroke();
+                const g = t.weightsIH[u][a], y = (a + 1) * l, x = (u + 1) * f;
+                this.ctx.beginPath(), this.ctx.moveTo(h, y), this.ctx.lineTo(d, x);
+                const T = Math.min(Math.abs(g) * .3 + .05, 1);
+                this.ctx.strokeStyle = g > 0 ? `rgba(0, 255, 0, ${T})` : `rgba(255, 0, 0, ${T})`, this.ctx.lineWidth = 1, this.ctx.stroke();
             }
             for(let a = 0; a < t.hiddenNodes; a++)for(let u = 0; u < t.outputNodes; u++){
-                const g = t.weightsHO[u][a], y = (a + 1) * f, b = (u + 1) * c;
-                this.ctx.beginPath(), this.ctx.moveTo(d, y), this.ctx.lineTo(p, b);
-                const T = Math.abs(g) * .5 + .1;
-                this.ctx.strokeStyle = g > 0 ? `rgba(0, 255, 0, ${T})` : `rgba(255, 0, 0, ${T})`, this.ctx.lineWidth = Math.abs(g), this.ctx.stroke();
+                const g = t.weightsHO[u][a], y = (a + 1) * f, x = (u + 1) * c;
+                this.ctx.beginPath(), this.ctx.moveTo(d, y), this.ctx.lineTo(p, x);
+                const T = Math.min(Math.abs(g) * .3 + .05, 1);
+                this.ctx.strokeStyle = g > 0 ? `rgba(0, 255, 0, ${T})` : `rgba(255, 0, 0, ${T})`, this.ctx.lineWidth = 1, this.ctx.stroke();
             }
             for(let a = 0; a < t.inputNodes; a++){
                 const u = (a + 1) * l, g = t.lastInput[a] || 0;
