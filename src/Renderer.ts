@@ -244,9 +244,9 @@ export class Renderer {
                 this.ctx.beginPath();
                 this.ctx.moveTo(inputX, iy);
                 this.ctx.lineTo(hiddenX, hy);
-                const alpha = Math.abs(weight) * 0.5 + 0.1;
+                const alpha = Math.min(Math.abs(weight) * 0.3 + 0.05, 1.0);
                 this.ctx.strokeStyle = weight > 0 ? `rgba(0, 255, 0, ${alpha})` : `rgba(255, 0, 0, ${alpha})`;
-                this.ctx.lineWidth = Math.abs(weight);
+                this.ctx.lineWidth = 1;
                 this.ctx.stroke();
             }
         }
@@ -261,9 +261,9 @@ export class Renderer {
                 this.ctx.beginPath();
                 this.ctx.moveTo(hiddenX, hy);
                 this.ctx.lineTo(outputX, oy);
-                const alpha = Math.abs(weight) * 0.5 + 0.1;
+                const alpha = Math.min(Math.abs(weight) * 0.3 + 0.05, 1.0);
                 this.ctx.strokeStyle = weight > 0 ? `rgba(0, 255, 0, ${alpha})` : `rgba(255, 0, 0, ${alpha})`;
-                this.ctx.lineWidth = Math.abs(weight);
+                this.ctx.lineWidth = 1;
                 this.ctx.stroke();
             }
         }
