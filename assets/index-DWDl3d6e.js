@@ -20,24 +20,24 @@
             fetch(s.href, o);
         }
     })();
-    const w = "modulepreload", N = function(g, t) {
-        return new URL(g, t).href;
-    }, b = {}, O = function(t, e, i) {
+    const w = "modulepreload", N = function(m, t) {
+        return new URL(m, t).href;
+    }, b = {}, R = function(t, e, i) {
         let s = Promise.resolve();
         if (e && e.length > 0) {
             const n = document.getElementsByTagName("link"), r = document.querySelector("meta[property=csp-nonce]"), h = r?.nonce || r?.getAttribute("nonce");
             s = Promise.allSettled(e.map((l)=>{
                 if (l = N(l, i), l in b) return;
                 b[l] = !0;
-                const d = l.endsWith(".css"), p = d ? '[rel="stylesheet"]' : "";
+                const d = l.endsWith(".css"), u = d ? '[rel="stylesheet"]' : "";
                 if (!!i) for(let a = n.length - 1; a >= 0; a--){
-                    const c = n[a];
-                    if (c.href === l && (!d || c.rel === "stylesheet")) return;
+                    const f = n[a];
+                    if (f.href === l && (!d || f.rel === "stylesheet")) return;
                 }
-                else if (document.querySelector(`link[href="${l}"]${p}`)) return;
-                const f = document.createElement("link");
-                if (f.rel = d ? "stylesheet" : w, d || (f.as = "script"), f.crossOrigin = "", f.href = l, h && f.setAttribute("nonce", h), document.head.appendChild(f), d) return new Promise((a, c)=>{
-                    f.addEventListener("load", a), f.addEventListener("error", ()=>c(new Error(`Unable to preload CSS for ${l}`)));
+                else if (document.querySelector(`link[href="${l}"]${u}`)) return;
+                const c = document.createElement("link");
+                if (c.rel = d ? "stylesheet" : w, d || (c.as = "script"), c.crossOrigin = "", c.href = l, h && c.setAttribute("nonce", h), document.head.appendChild(c), d) return new Promise((a, f)=>{
+                    c.addEventListener("load", a), c.addEventListener("error", ()=>f(new Error(`Unable to preload CSS for ${l}`)));
                 });
             }));
         }
@@ -52,7 +52,7 @@
             return t().catch(o);
         });
     };
-    class R {
+    class O {
         seed;
         a = 1664525;
         c = 1013904223;
@@ -190,7 +190,7 @@
         body;
         leftThruster = 0;
         rightThruster = 0;
-        THRUSTER_MAX = 800;
+        THRUSTER_MAX = 1600;
         sensors = [];
         SENSOR_COUNT = 21;
         SENSOR_ANGLE_SPREAD = Math.PI * .5;
@@ -207,7 +207,7 @@
         timeAlive = 0;
         life = 100;
         MAX_LIFE = 100;
-        LIFE_DECAY_RATE = 5;
+        LIFE_DECAY_RATE = 2;
         constructor(t, e){
             for(let n = 0; n < this.SENSOR_COUNT; n++){
                 const r = -this.SENSOR_ANGLE_SPREAD / 2 + n * this.SENSOR_ANGLE_SPREAD / (this.SENSOR_COUNT - 1);
@@ -220,7 +220,7 @@
                     endY: 0
                 });
             }
-            const i = t.RigidBodyDesc.dynamic().setTranslation(0, 0).setLinearDamping(.3).setAngularDamping(2);
+            const i = t.RigidBodyDesc.dynamic().setTranslation(0, 0).setLinearDamping(.6).setAngularDamping(1.5);
             this.body = e.createRigidBody(i);
             const s = new Float32Array([
                 0,
@@ -236,29 +236,29 @@
             const e = this.body.translation(), i = this.body.rotation();
             for (const s of this.sensors){
                 const o = i + Math.PI / 2 + s.angle, n = Math.cos(o), r = Math.sin(o), h = e.x, l = e.y;
-                let d = this.SENSOR_LENGTH, p = "NONE";
-                for (const m of this.foods){
-                    let f = m.x - h, a = m.y - l;
-                    f > t / 2 && (f -= t), f < -t / 2 && (f += t), a > t / 2 && (a -= t), a < -t / 2 && (a += t);
-                    const c = h + f, u = l + a, y = this.rayCircleIntersect(h, l, n, r, c, u, m.radius);
-                    y !== null && y < d && (d = y, p = "FOOD");
+                let d = this.SENSOR_LENGTH, u = "NONE";
+                for (const g of this.foods){
+                    let c = g.x - h, a = g.y - l;
+                    c > t / 2 && (c -= t), c < -t / 2 && (c += t), a > t / 2 && (a -= t), a < -t / 2 && (a += t);
+                    const f = h + c, p = l + a, y = this.rayCircleIntersect(h, l, n, r, f, p, g.radius);
+                    y !== null && y < d && (d = y, u = "FOOD");
                 }
-                for (const m of this.poisons){
-                    let f = m.x - h, a = m.y - l;
-                    f > t / 2 && (f -= t), f < -t / 2 && (f += t), a > t / 2 && (a -= t), a < -t / 2 && (a += t);
-                    const c = h + f, u = l + a, y = this.rayCircleIntersect(h, l, n, r, c, u, m.radius);
-                    y !== null && y < d && (d = y, p = "POISON");
+                for (const g of this.poisons){
+                    let c = g.x - h, a = g.y - l;
+                    c > t / 2 && (c -= t), c < -t / 2 && (c += t), a > t / 2 && (a -= t), a < -t / 2 && (a += t);
+                    const f = h + c, p = l + a, y = this.rayCircleIntersect(h, l, n, r, f, p, g.radius);
+                    y !== null && y < d && (d = y, u = "POISON");
                 }
-                s.reading = 1 - d / this.SENSOR_LENGTH, s.detectedType = p, s.endX = h + n * d, s.endY = l + r * d;
+                s.reading = 1 - d / this.SENSOR_LENGTH, s.detectedType = u, s.endX = h + n * d, s.endY = l + r * d;
             }
         }
         rayCircleIntersect(t, e, i, s, o, n, r) {
             const h = o - t, l = n - e, d = h * i + l * s;
-            let p = t + i * d, m = e + s * d;
-            const f = (p - o) * (p - o) + (m - n) * (m - n);
-            if (f > r * r) return null;
-            const a = Math.sqrt(r * r - f), c = d - a;
-            return c < 0 || c > this.SENSOR_LENGTH ? null : c;
+            let u = t + i * d, g = e + s * d;
+            const c = (u - o) * (u - o) + (g - n) * (g - n);
+            if (c > r * r) return null;
+            const a = Math.sqrt(r * r - c), f = d - a;
+            return f < 0 || f > this.SENSOR_LENGTH ? null : f;
         }
         initializeEnvironment(t, e, i) {
             this.foods = [], this.poisons = [];
@@ -477,48 +477,48 @@
         drawMinimap(t, e, i, s) {
             const r = this.canvas.width - 200 - 20, h = 20;
             this.ctx.save(), this.ctx.setTransform(1, 0, 0, 1, 0, 0), this.ctx.fillStyle = "rgba(0, 0, 0, 0.7)", this.ctx.fillRect(r, h, 200, 200), this.ctx.strokeStyle = "#4facfe", this.ctx.lineWidth = 2, this.ctx.strokeRect(r, h, 200, 200);
-            const l = 200 / this.worldSize, d = (a)=>(a + this.worldSize / 2) * l, p = (a)=>(this.worldSize / 2 - a) * l;
+            const l = 200 / this.worldSize, d = (a)=>(a + this.worldSize / 2) * l, u = (a)=>(this.worldSize / 2 - a) * l;
             this.ctx.strokeStyle = "rgba(79, 172, 254, 0.5)", this.ctx.lineWidth = 1, this.ctx.strokeRect(r, h, 200, 200), this.ctx.fillStyle = "#00ff88", i.forEach((a)=>{
-                const c = r + d(a.x), u = h + p(a.y);
-                this.ctx.fillRect(c - 1.5, u - 1.5, 3, 3);
+                const f = r + d(a.x), p = h + u(a.y);
+                this.ctx.fillRect(f - 1.5, p - 1.5, 3, 3);
             }), this.ctx.fillStyle = "#ff4444", s.forEach((a)=>{
-                const c = r + d(a.x), u = h + p(a.y);
-                this.ctx.fillRect(c - 1.5, u - 1.5, 3, 3);
+                const f = r + d(a.x), p = h + u(a.y);
+                this.ctx.fillRect(f - 1.5, p - 1.5, 3, 3);
             });
-            const m = r + d(t), f = h + p(e);
-            this.ctx.fillStyle = "#ffffff", this.ctx.beginPath(), this.ctx.arc(m, f, 4, 0, Math.PI * 2), this.ctx.fill(), this.ctx.strokeStyle = "#4facfe", this.ctx.lineWidth = 2, this.ctx.stroke(), this.ctx.restore();
+            const g = r + d(t), c = h + u(e);
+            this.ctx.fillStyle = "#ffffff", this.ctx.beginPath(), this.ctx.arc(g, c, 4, 0, Math.PI * 2), this.ctx.fill(), this.ctx.strokeStyle = "#4facfe", this.ctx.lineWidth = 2, this.ctx.stroke(), this.ctx.restore();
         }
         drawBrain(t, e, i, s, o) {
             this.ctx.save(), this.ctx.setTransform(1, 0, 0, 1, 0, 0), this.ctx.translate(e, i);
-            const n = 5, r = s / 2, h = 0, l = o / (t.inputNodes + 1), d = h + r, p = o / (t.hiddenNodes + 1), m = d + r, f = o / (t.outputNodes + 1);
-            for(let a = 0; a < t.inputNodes; a++)for(let c = 0; c < t.hiddenNodes; c++){
-                const u = t.weightsIH[c][a], y = (a + 1) * l, T = (c + 1) * p;
-                this.ctx.beginPath(), this.ctx.moveTo(h, y), this.ctx.lineTo(d, T);
-                const x = Math.abs(u) * .5 + .1;
-                this.ctx.strokeStyle = u > 0 ? `rgba(0, 255, 0, ${x})` : `rgba(255, 0, 0, ${x})`, this.ctx.lineWidth = Math.abs(u), this.ctx.stroke();
+            const n = 5, r = s / 2, h = 0, l = o / (t.inputNodes + 1), d = h + r, u = o / (t.hiddenNodes + 1), g = d + r, c = o / (t.outputNodes + 1);
+            for(let a = 0; a < t.inputNodes; a++)for(let f = 0; f < t.hiddenNodes; f++){
+                const p = t.weightsIH[f][a], y = (a + 1) * l, x = (f + 1) * u;
+                this.ctx.beginPath(), this.ctx.moveTo(h, y), this.ctx.lineTo(d, x);
+                const T = Math.abs(p) * .5 + .1;
+                this.ctx.strokeStyle = p > 0 ? `rgba(0, 255, 0, ${T})` : `rgba(255, 0, 0, ${T})`, this.ctx.lineWidth = Math.abs(p), this.ctx.stroke();
             }
-            for(let a = 0; a < t.hiddenNodes; a++)for(let c = 0; c < t.outputNodes; c++){
-                const u = t.weightsHO[c][a], y = (a + 1) * p, T = (c + 1) * f;
-                this.ctx.beginPath(), this.ctx.moveTo(d, y), this.ctx.lineTo(m, T);
-                const x = Math.abs(u) * .5 + .1;
-                this.ctx.strokeStyle = u > 0 ? `rgba(0, 255, 0, ${x})` : `rgba(255, 0, 0, ${x})`, this.ctx.lineWidth = Math.abs(u), this.ctx.stroke();
+            for(let a = 0; a < t.hiddenNodes; a++)for(let f = 0; f < t.outputNodes; f++){
+                const p = t.weightsHO[f][a], y = (a + 1) * u, x = (f + 1) * c;
+                this.ctx.beginPath(), this.ctx.moveTo(d, y), this.ctx.lineTo(g, x);
+                const T = Math.abs(p) * .5 + .1;
+                this.ctx.strokeStyle = p > 0 ? `rgba(0, 255, 0, ${T})` : `rgba(255, 0, 0, ${T})`, this.ctx.lineWidth = Math.abs(p), this.ctx.stroke();
             }
             for(let a = 0; a < t.inputNodes; a++){
-                const c = (a + 1) * l, u = t.lastInput[a] || 0;
-                this.ctx.beginPath(), this.ctx.arc(h, c, n, 0, Math.PI * 2), this.ctx.fillStyle = `rgba(255, 255, 255, ${u * .8 + .2})`, this.ctx.fill(), this.ctx.strokeStyle = "#fff", this.ctx.lineWidth = 1, this.ctx.stroke();
+                const f = (a + 1) * l, p = t.lastInput[a] || 0;
+                this.ctx.beginPath(), this.ctx.arc(h, f, n, 0, Math.PI * 2), this.ctx.fillStyle = `rgba(255, 255, 255, ${p * .8 + .2})`, this.ctx.fill(), this.ctx.strokeStyle = "#fff", this.ctx.lineWidth = 1, this.ctx.stroke();
             }
             for(let a = 0; a < t.hiddenNodes; a++){
-                const c = (a + 1) * p, u = t.lastHidden[a] || 0;
-                this.ctx.beginPath(), this.ctx.arc(d, c, n, 0, Math.PI * 2), this.ctx.fillStyle = `rgba(255, 255, 255, ${u * .8 + .2})`, this.ctx.fill(), this.ctx.strokeStyle = "#fff", this.ctx.stroke();
+                const f = (a + 1) * u, p = t.lastHidden[a] || 0;
+                this.ctx.beginPath(), this.ctx.arc(d, f, n, 0, Math.PI * 2), this.ctx.fillStyle = `rgba(255, 255, 255, ${p * .8 + .2})`, this.ctx.fill(), this.ctx.strokeStyle = "#fff", this.ctx.stroke();
             }
             for(let a = 0; a < t.outputNodes; a++){
-                const c = (a + 1) * f, u = t.lastOutput[a] || 0;
-                this.ctx.beginPath(), this.ctx.arc(m, c, n, 0, Math.PI * 2), this.ctx.fillStyle = `rgba(255, 255, 255, ${u * .8 + .2})`, this.ctx.fill(), this.ctx.strokeStyle = "#fff", this.ctx.stroke();
+                const f = (a + 1) * c, p = t.lastOutput[a] || 0;
+                this.ctx.beginPath(), this.ctx.arc(g, f, n, 0, Math.PI * 2), this.ctx.fillStyle = `rgba(255, 255, 255, ${p * .8 + .2})`, this.ctx.fill(), this.ctx.strokeStyle = "#fff", this.ctx.stroke();
             }
             this.ctx.fillStyle = "#fff", this.ctx.font = "12px Arial", this.ctx.fillText("Brain Activity", 0, -10), this.ctx.restore();
         }
     }
-    class _ {
+    class B {
         element;
         leftStat;
         rightStat;
@@ -549,7 +549,7 @@
             this.velStat.innerText = `Velocity: ${Math.round(l)} | Angle: ${d}°`, this.rotStat.innerText = `Rotation Power: ${s.toFixed(2)}`, this.foodStat.innerText = `Food: ${o}`, this.poisonStat.innerText = `Poison: ${n}`, this.collectedStat.innerText = `Collected: ${r} food, ${h} poison`;
         }
     }
-    class B {
+    class _ {
         x;
         y;
         radius;
@@ -565,7 +565,7 @@
             t.beginPath(), t.arc(this.x, this.y, this.radius, 0, Math.PI * 2), t.fillStyle = this.color, t.fill(), t.strokeStyle = "#00ff88", t.lineWidth = 2, t.stroke();
         }
     }
-    class M {
+    class A {
         x;
         y;
         radius;
@@ -581,7 +581,7 @@
             t.beginPath(), t.arc(this.x, this.y, this.radius, 0, Math.PI * 2), t.fillStyle = this.color, t.fill(), t.strokeStyle = "#ff0000", t.lineWidth = 2, t.stroke();
         }
     }
-    class A {
+    class M {
         foodCollected = 0;
         poisonCollected = 0;
         collisionRadius;
@@ -596,11 +596,11 @@
         }
         spawnFood() {
             const t = this.worldSize / 2, e = this.rng.randomRange(-t + 50, t - 50), i = this.rng.randomRange(-t + 50, t - 50);
-            return new B(e, i);
+            return new _(e, i);
         }
         spawnPoison() {
             const t = this.worldSize / 2, e = this.rng.randomRange(-t + 50, t - 50), i = this.rng.randomRange(-t + 50, t - 50);
-            return new M(e, i);
+            return new A(e, i);
         }
         getFoodCollected() {
             return this.foodCollected;
@@ -622,25 +622,35 @@
         isPaused = !1;
         resetBtn;
         onReset;
-        constructor(t, e){
-            this.onPauseToggle = t, this.onReset = e, this.element = document.createElement("div"), this.element.style.position = "absolute", this.element.style.bottom = "20px", this.element.style.right = "20px", this.element.style.padding = "15px", this.element.style.background = "rgba(0, 0, 0, 0.8)", this.element.style.borderRadius = "8px", this.element.style.border = "1px solid rgba(255, 255, 255, 0.1)", this.element.style.color = "#fff", this.element.style.fontFamily = "monospace", this.element.style.fontSize = "12px", this.element.style.minWidth = "250px";
-            const i = document.createElement("div");
-            i.style.display = "flex", i.style.justifyContent = "space-between", i.style.alignItems = "center", i.style.marginBottom = "10px";
-            const s = document.createElement("span");
-            s.innerText = "STATUS", s.style.color = "#4facfe", s.style.fontWeight = "bold";
-            const o = document.createElement("div");
-            o.style.display = "flex", o.style.gap = "5px", this.pauseBtn = document.createElement("button"), this.pauseBtn.innerText = "PAUSE", this.pauseBtn.style.background = "#ff4b2b", this.pauseBtn.style.border = "none", this.pauseBtn.style.color = "white", this.pauseBtn.style.padding = "2px 8px", this.pauseBtn.style.borderRadius = "4px", this.pauseBtn.style.cursor = "pointer", this.pauseBtn.onclick = ()=>this.togglePause(), this.resetBtn = document.createElement("button"), this.resetBtn.innerText = "RESET", this.resetBtn.style.background = "#aa0000", this.resetBtn.style.border = "none", this.resetBtn.style.color = "white", this.resetBtn.style.padding = "2px 8px", this.resetBtn.style.borderRadius = "4px", this.resetBtn.style.cursor = "pointer", this.resetBtn.onclick = ()=>{
+        trainInput;
+        trainBtn;
+        onFastTrain;
+        constructor(t, e, i){
+            this.onPauseToggle = t, this.onReset = e, this.onFastTrain = i, this.element = document.createElement("div"), this.element.style.position = "absolute", this.element.style.bottom = "20px", this.element.style.right = "20px", this.element.style.padding = "15px", this.element.style.background = "rgba(0, 0, 0, 0.8)", this.element.style.borderRadius = "8px", this.element.style.border = "1px solid rgba(255, 255, 255, 0.1)", this.element.style.color = "#fff", this.element.style.fontFamily = "monospace", this.element.style.fontSize = "12px", this.element.style.minWidth = "250px";
+            const s = document.createElement("div");
+            s.style.display = "flex", s.style.justifyContent = "space-between", s.style.alignItems = "center", s.style.marginBottom = "10px";
+            const o = document.createElement("span");
+            o.innerText = "STATUS", o.style.color = "#4facfe", o.style.fontWeight = "bold";
+            const n = document.createElement("div");
+            n.style.display = "flex", n.style.gap = "5px", this.pauseBtn = document.createElement("button"), this.pauseBtn.innerText = "PAUSE", this.pauseBtn.style.background = "#ff4b2b", this.pauseBtn.style.border = "none", this.pauseBtn.style.color = "white", this.pauseBtn.style.padding = "2px 8px", this.pauseBtn.style.borderRadius = "4px", this.pauseBtn.style.cursor = "pointer", this.pauseBtn.onclick = ()=>this.togglePause(), this.resetBtn = document.createElement("button"), this.resetBtn.innerText = "RESET", this.resetBtn.style.background = "#aa0000", this.resetBtn.style.border = "none", this.resetBtn.style.color = "white", this.resetBtn.style.padding = "2px 8px", this.resetBtn.style.borderRadius = "4px", this.resetBtn.style.cursor = "pointer", this.resetBtn.onclick = ()=>{
                 confirm("Are you sure you want to reset training? This will clear saved data.") && this.onReset();
-            }, o.appendChild(this.pauseBtn), o.appendChild(this.resetBtn), i.appendChild(s), i.appendChild(o), this.element.appendChild(i);
-            const n = (r, h = "#aaa")=>{
-                const l = document.createElement("div");
-                l.style.marginBottom = "5px", l.style.display = "flex", l.style.justifyContent = "space-between";
-                const d = document.createElement("span");
-                d.innerText = r, d.style.color = h;
-                const p = document.createElement("span");
-                return p.style.fontWeight = "bold", l.appendChild(d), l.appendChild(p), this.element.appendChild(l), p;
+            }, n.appendChild(this.pauseBtn), n.appendChild(this.resetBtn), s.appendChild(o), s.appendChild(n), this.element.appendChild(s);
+            const r = document.createElement("div");
+            r.style.marginBottom = "10px", r.style.display = "flex", r.style.gap = "5px", this.trainInput = document.createElement("input"), this.trainInput.type = "number", this.trainInput.value = "5", this.trainInput.style.width = "40px", this.trainInput.style.background = "#333", this.trainInput.style.border = "1px solid #555", this.trainInput.style.color = "white", this.trainInput.style.padding = "2px", this.trainInput.style.borderRadius = "4px", this.trainBtn = document.createElement("button"), this.trainBtn.innerText = "FAST TRAIN", this.trainBtn.style.background = "#8800ff", this.trainBtn.style.border = "none", this.trainBtn.style.color = "white", this.trainBtn.style.padding = "2px 8px", this.trainBtn.style.borderRadius = "4px", this.trainBtn.style.cursor = "pointer", this.trainBtn.style.flexGrow = "1", this.trainBtn.onclick = ()=>{
+                const l = parseInt(this.trainInput.value) || 1;
+                this.trainBtn.disabled = !0, this.trainBtn.innerText = "TRAINING...", setTimeout(()=>{
+                    this.onFastTrain(l), this.trainBtn.disabled = !1, this.trainBtn.innerText = "FAST TRAIN";
+                }, 50);
+            }, r.appendChild(this.trainInput), r.appendChild(this.trainBtn), this.element.appendChild(r);
+            const h = (l, d = "#aaa")=>{
+                const u = document.createElement("div");
+                u.style.marginBottom = "5px", u.style.display = "flex", u.style.justifyContent = "space-between";
+                const g = document.createElement("span");
+                g.innerText = l, g.style.color = d;
+                const c = document.createElement("span");
+                return c.style.fontWeight = "bold", u.appendChild(g), u.appendChild(c), this.element.appendChild(u), c;
             };
-            this.genRow = n("Generation:", "#4facfe"), this.aliveRow = n("Alive:", "#00ff88"), this.scoreRow = n("Current Best:", "#ffcc00"), this.highScoreRow = n("High Score:", "#ffa500"), this.timeRow = n("Gen Time:", "#ff4444"), this.totalTimeRow = n("Total Time:", "#ffffff"), document.body.appendChild(this.element);
+            this.genRow = h("Generation:", "#4facfe"), this.aliveRow = h("Alive:", "#00ff88"), this.scoreRow = h("Current Best:", "#ffcc00"), this.highScoreRow = h("High Score:", "#ffa500"), this.timeRow = h("Gen Time:", "#ff4444"), this.totalTimeRow = h("Total Time:", "#ffffff"), document.body.appendChild(this.element);
         }
         togglePause() {
             this.isPaused = !this.isPaused, this.pauseBtn.innerText = this.isPaused ? "RESUME" : "PAUSE", this.pauseBtn.style.background = this.isPaused ? "#4facfe" : "#ff4b2b", this.onPauseToggle();
@@ -663,7 +673,7 @@
         isPaused = !1;
         RAPIER;
         POPULATION_SIZE = 50;
-        GENERATION_DURATION = 45;
+        GENERATION_DURATION = 120;
         generationTimer = 0;
         generation = 1;
         totalTime = 0;
@@ -673,11 +683,13 @@
         POISON_COUNT = 25;
         BOID_COLLISION_RADIUS = 15;
         constructor(t){
-            const e = Date.now();
-            this.rng = new R(e), console.log("World Seed:", e), this.RAPIER = t, this.world = new P(t, this.WORLD_SIZE), this.camera = new I, this.renderer = new v(this.WORLD_SIZE), this.hud = new _(e, this.FOOD_COUNT, this.POISON_COUNT), this.collisionManager = new A(this.WORLD_SIZE, this.BOID_COLLISION_RADIUS, this.rng), this.debugPanel = new D(()=>{
+            const e = Math.floor(Date.now() / 36e5);
+            this.rng = new O(e), console.log("World Seed:", e), this.RAPIER = t, this.world = new P(t, this.WORLD_SIZE), this.camera = new I, this.renderer = new v(this.WORLD_SIZE), this.hud = new B(e, this.FOOD_COUNT, this.POISON_COUNT), this.collisionManager = new M(this.WORLD_SIZE, this.BOID_COLLISION_RADIUS, this.rng), this.debugPanel = new D(()=>{
                 this.isPaused = !this.isPaused;
             }, ()=>{
                 this.resetTraining();
+            }, (i)=>{
+                this.fastTrain(i);
             }), this.initializePopulation(), this.loadTrainingData();
         }
         initializePopulation() {
@@ -742,6 +754,16 @@
         resetTraining() {
             localStorage.removeItem("boid_training_data"), this.generation = 1, this.generationTimer = 0, this.initializePopulation(), console.log("Training reset.");
         }
+        fastTrain(t) {
+            const e = this.GENERATION_DURATION * 60, i = t * e;
+            console.log(`Starting fast training for ${t} generations (${i} steps)...`);
+            const s = performance.now(), o = this.generation + t;
+            let n = 0;
+            const r = i * 2;
+            for(; this.generation < o && n < r;)this.update(), n++;
+            const h = performance.now() - s;
+            console.log(`Fast training complete. Advanced to Gen ${this.generation}. Took ${h.toFixed(0)}ms.`), this.draw();
+        }
         draw() {
             this.renderer.clear();
             let t = this.boids[0], e = -1 / 0;
@@ -762,8 +784,8 @@
     }
     async function C() {
         console.log("Starting boid simulation...");
-        const g = await O(()=>import("./rapier-D9GItMpu.js"), [], import.meta.url);
-        g.init && await g.init(), console.log("RAPIER module ready"), new H(g).start();
+        const m = await R(()=>import("./rapier-D9GItMpu.js"), [], import.meta.url);
+        m.init && await m.init(), console.log("RAPIER module ready"), new H(m).start();
     }
     C().catch(console.error);
 })();
