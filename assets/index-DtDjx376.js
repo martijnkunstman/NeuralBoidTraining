@@ -186,7 +186,7 @@
             return e.weightsIH = t.weightsIH, e.weightsHO = t.weightsHO, e.biasH = t.biasH, e.biasO = t.biasO, e;
         }
     }
-    class I {
+    class E {
         body;
         leftThruster = 0;
         rightThruster = 0;
@@ -390,7 +390,7 @@
             return this.sensors;
         }
     }
-    class E {
+    class I {
         x = 0;
         y = 0;
         follow(t, e) {
@@ -688,7 +688,7 @@
         BOID_COLLISION_RADIUS = 15;
         constructor(t){
             const e = Math.floor(Date.now() / 36e5);
-            this.rng = new O(e), console.log("World Seed:", e), this.RAPIER = t, this.world = new P(t, this.WORLD_SIZE), this.camera = new E, this.renderer = new v(this.WORLD_SIZE), this.hud = new B(e, this.FOOD_COUNT, this.POISON_COUNT), this.collisionManager = new A(this.WORLD_SIZE, this.BOID_COLLISION_RADIUS, this.rng), this.debugPanel = new D(()=>{
+            this.rng = new O(e), console.log("World Seed:", e), this.RAPIER = t, this.world = new P(t, this.WORLD_SIZE), this.camera = new I, this.renderer = new v(this.WORLD_SIZE), this.hud = new B(e, this.FOOD_COUNT, this.POISON_COUNT), this.collisionManager = new A(this.WORLD_SIZE, this.BOID_COLLISION_RADIUS, this.rng), this.debugPanel = new D(()=>{
                 this.isPaused = !this.isPaused;
             }, ()=>{
                 this.resetTraining();
@@ -699,7 +699,7 @@
         initializePopulation() {
             this.boids = [];
             for(let t = 0; t < this.POPULATION_SIZE; t++){
-                const e = new I(this.RAPIER, this.world.getPhysicsWorld());
+                const e = new E(this.RAPIER, this.world.getPhysicsWorld());
                 this.resetBoid(e), this.boids.push(e);
             }
         }
@@ -743,7 +743,17 @@
         }
         loadTrainingData() {
             const t = localStorage.getItem("boid_training_data");
-            if (t) try {
+            t ? this.applyTrainingData(t) : (console.log("No localStorage found, loading from localStorage.json..."), fetch("./localStorage.json").then((e)=>{
+                if (!e.ok) throw new Error("localStorage.json not found");
+                return e.text();
+            }).then((e)=>{
+                this.applyTrainingData(e), console.log("Loaded pre-trained brains from localStorage.json");
+            }).catch((e)=>{
+                console.log("No pre-trained data found, starting fresh.", e);
+            }));
+        }
+        applyTrainingData(t) {
+            try {
                 const e = JSON.parse(t);
                 if (this.generation = e.generation, this.totalTime = e.totalTime || 0, this.allTimeBestScore = e.allTimeBestScore || 0, console.log("Loaded training data. Gen: " + this.generation), e.brains && Array.isArray(e.brains)) {
                     if (e.brains.length > 0 && (e.brains[0].inputNodes !== this.boids[0].brain.inputNodes || e.brains[0].outputNodes !== this.boids[0].brain.outputNodes)) {
