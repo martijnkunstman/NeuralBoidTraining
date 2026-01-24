@@ -22,22 +22,22 @@
     })();
     const w = "modulepreload", N = function(m, t) {
         return new URL(m, t).href;
-    }, b = {}, R = function(t, e, i) {
+    }, x = {}, R = function(t, e, i) {
         let s = Promise.resolve();
         if (e && e.length > 0) {
             const n = document.getElementsByTagName("link"), r = document.querySelector("meta[property=csp-nonce]"), h = r?.nonce || r?.getAttribute("nonce");
             s = Promise.allSettled(e.map((l)=>{
-                if (l = N(l, i), l in b) return;
-                b[l] = !0;
-                const d = l.endsWith(".css"), u = d ? '[rel="stylesheet"]' : "";
+                if (l = N(l, i), l in x) return;
+                x[l] = !0;
+                const d = l.endsWith(".css"), f = d ? '[rel="stylesheet"]' : "";
                 if (!!i) for(let a = n.length - 1; a >= 0; a--){
-                    const f = n[a];
-                    if (f.href === l && (!d || f.rel === "stylesheet")) return;
+                    const u = n[a];
+                    if (u.href === l && (!d || u.rel === "stylesheet")) return;
                 }
-                else if (document.querySelector(`link[href="${l}"]${u}`)) return;
+                else if (document.querySelector(`link[href="${l}"]${f}`)) return;
                 const c = document.createElement("link");
-                if (c.rel = d ? "stylesheet" : w, d || (c.as = "script"), c.crossOrigin = "", c.href = l, h && c.setAttribute("nonce", h), document.head.appendChild(c), d) return new Promise((a, f)=>{
-                    c.addEventListener("load", a), c.addEventListener("error", ()=>f(new Error(`Unable to preload CSS for ${l}`)));
+                if (c.rel = d ? "stylesheet" : w, d || (c.as = "script"), c.crossOrigin = "", c.href = l, h && c.setAttribute("nonce", h), document.head.appendChild(c), d) return new Promise((a, u)=>{
+                    c.addEventListener("load", a), c.addEventListener("error", ()=>u(new Error(`Unable to preload CSS for ${l}`)));
                 });
             }));
         }
@@ -186,7 +186,7 @@
             return e.weightsIH = t.weightsIH, e.weightsHO = t.weightsHO, e.biasH = t.biasH, e.biasO = t.biasO, e;
         }
     }
-    class E {
+    class I {
         body;
         leftThruster = 0;
         rightThruster = 0;
@@ -196,8 +196,8 @@
         SENSOR_ANGLE_SPREAD = Math.PI * .5;
         SENSOR_LENGTH = 600;
         brain;
-        INPUT_NODES = 14;
-        HIDDEN_NODES = 12;
+        INPUT_NODES = 17;
+        HIDDEN_NODES = 16;
         OUTPUT_NODES = 2;
         lastInputs = [];
         score = 0;
@@ -207,7 +207,7 @@
         timeAlive = 0;
         life = 100;
         MAX_LIFE = 100;
-        LIFE_DECAY_RATE = 2;
+        LIFE_DECAY_RATE = 1;
         constructor(t, e){
             for(let n = 0; n < this.SENSOR_COUNT; n++){
                 const r = -this.SENSOR_ANGLE_SPREAD / 2 + n * this.SENSOR_ANGLE_SPREAD / (this.SENSOR_COUNT - 1);
@@ -220,7 +220,7 @@
                     endY: 0
                 });
             }
-            const i = t.RigidBodyDesc.dynamic().setTranslation(0, 0).setLinearDamping(.6).setAngularDamping(1.5);
+            const i = t.RigidBodyDesc.dynamic().setTranslation(0, 0).setLinearDamping(.4).setAngularDamping(1.5);
             this.body = e.createRigidBody(i);
             const s = new Float32Array([
                 0,
@@ -236,29 +236,29 @@
             const e = this.body.translation(), i = this.body.rotation();
             for (const s of this.sensors){
                 const o = i + Math.PI / 2 + s.angle, n = Math.cos(o), r = Math.sin(o), h = e.x, l = e.y;
-                let d = this.SENSOR_LENGTH, u = "NONE";
-                for (const g of this.foods){
-                    let c = g.x - h, a = g.y - l;
+                let d = this.SENSOR_LENGTH, f = "NONE";
+                for (const p of this.foods){
+                    let c = p.x - h, a = p.y - l;
                     c > t / 2 && (c -= t), c < -t / 2 && (c += t), a > t / 2 && (a -= t), a < -t / 2 && (a += t);
-                    const f = h + c, p = l + a, y = this.rayCircleIntersect(h, l, n, r, f, p, g.radius);
-                    y !== null && y < d && (d = y, u = "FOOD");
+                    const u = h + c, g = l + a, y = this.rayCircleIntersect(h, l, n, r, u, g, p.radius);
+                    y !== null && y < d && (d = y, f = "FOOD");
                 }
-                for (const g of this.poisons){
-                    let c = g.x - h, a = g.y - l;
+                for (const p of this.poisons){
+                    let c = p.x - h, a = p.y - l;
                     c > t / 2 && (c -= t), c < -t / 2 && (c += t), a > t / 2 && (a -= t), a < -t / 2 && (a += t);
-                    const f = h + c, p = l + a, y = this.rayCircleIntersect(h, l, n, r, f, p, g.radius);
-                    y !== null && y < d && (d = y, u = "POISON");
+                    const u = h + c, g = l + a, y = this.rayCircleIntersect(h, l, n, r, u, g, p.radius);
+                    y !== null && y < d && (d = y, f = "POISON");
                 }
-                s.reading = 1 - d / this.SENSOR_LENGTH, s.detectedType = u, s.endX = h + n * d, s.endY = l + r * d;
+                s.reading = 1 - d / this.SENSOR_LENGTH, s.detectedType = f, s.endX = h + n * d, s.endY = l + r * d;
             }
         }
         rayCircleIntersect(t, e, i, s, o, n, r) {
             const h = o - t, l = n - e, d = h * i + l * s;
-            let u = t + i * d, g = e + s * d;
-            const c = (u - o) * (u - o) + (g - n) * (g - n);
+            let f = t + i * d, p = e + s * d;
+            const c = (f - o) * (f - o) + (p - n) * (p - n);
             if (c > r * r) return null;
-            const a = Math.sqrt(r * r - c), f = d - a;
-            return f < 0 || f > this.SENSOR_LENGTH ? null : f;
+            const a = Math.sqrt(r * r - c), u = d - a;
+            return u < 0 || u > this.SENSOR_LENGTH ? null : u;
         }
         initializeEnvironment(t, e, i) {
             this.foods = [], this.poisons = [];
@@ -271,9 +271,12 @@
         }
         checkCollisions(t) {
             const e = this.getPosition(), i = 15;
-            for(let s = this.poisons.length - 1; s >= 0; s--)this.poisons[s].isColliding(e.x, e.y, i) && (this.poisons.splice(s, 1), this.poisons.push(t.spawnPoison()), this.score -= 50, this.life -= 50);
-            for(let s = this.foods.length - 1; s >= 0; s--)this.foods[s].isColliding(e.x, e.y, i) && (this.foods.splice(s, 1), this.foods.push(t.spawnFood()), this.score += 10, this.life += 20, this.life > this.MAX_LIFE && (this.life = this.MAX_LIFE));
-            this.score += 1 / 60, this.timeAlive += 1 / 60, this.life -= this.LIFE_DECAY_RATE / 60, this.life <= 0 && (this.life = 0, this.isDead = !0);
+            for(let o = this.poisons.length - 1; o >= 0; o--)this.poisons[o].isColliding(e.x, e.y, i) && (this.poisons.splice(o, 1), this.poisons.push(t.spawnPoison()), this.score -= 50, this.life -= 50);
+            for(let o = this.foods.length - 1; o >= 0; o--)this.foods[o].isColliding(e.x, e.y, i) && (this.foods.splice(o, 1), this.foods.push(t.spawnFood()), this.score += 25, this.life += 20, this.life > this.MAX_LIFE && (this.life = this.MAX_LIFE));
+            this.score += 1 / 60, this.timeAlive += 1 / 60;
+            let s = 0;
+            for (const o of this.sensors)o.detectedType === "FOOD" && (s += o.reading * .01);
+            this.score += s, this.life -= this.LIFE_DECAY_RATE / 60, this.life <= 0 && (this.life = 0, this.isDead = !0);
         }
         copyBrainFrom(t) {
             this.brain = t.brain.copy();
@@ -290,25 +293,26 @@
         }
         decide() {
             const t = [];
-            for(let o = 0; o < 7; o++){
-                let n = 0;
-                for(let r = 0; r < 3; r++){
-                    const h = o * 3 + r, l = this.sensors[h];
-                    l.detectedType === "FOOD" && l.reading > n && (n = l.reading);
+            for(let d = 0; d < 7; d++){
+                let f = 0;
+                for(let p = 0; p < 3; p++){
+                    const c = d * 3 + p, a = this.sensors[c];
+                    a.detectedType === "FOOD" && a.reading > f && (f = a.reading);
                 }
-                t.push(n);
+                t.push(f);
             }
-            for(let o = 0; o < 7; o++){
-                let n = 0;
-                for(let r = 0; r < 3; r++){
-                    const h = o * 3 + r, l = this.sensors[h];
-                    l.detectedType === "POISON" && l.reading > n && (n = l.reading);
+            for(let d = 0; d < 7; d++){
+                let f = 0;
+                for(let p = 0; p < 3; p++){
+                    const c = d * 3 + p, a = this.sensors[c];
+                    a.detectedType === "POISON" && a.reading > f && (f = a.reading);
                 }
-                t.push(n);
+                t.push(f);
             }
-            this.lastInputs = t;
-            const s = this.brain.feedForward(t);
-            this.leftThruster = s[0] * this.THRUSTER_MAX, this.rightThruster = s[1] * this.THRUSTER_MAX;
+            const s = this.body.linvel(), o = this.body.angvel(), n = this.body.rotation(), r = s.x * -Math.sin(n) + s.y * Math.cos(n), h = s.x * Math.cos(n) + s.y * Math.sin(n);
+            t.push(.5 + .5 * Math.tanh(r * .05)), t.push(.5 + .5 * Math.tanh(h * .05)), t.push(.5 + .5 * Math.tanh(o * .5)), this.lastInputs = t;
+            const l = this.brain.feedForward(t);
+            this.leftThruster = l[0] * this.THRUSTER_MAX, this.rightThruster = l[1] * this.THRUSTER_MAX;
         }
         applyThrusterForces() {
             const t = this.body.rotation(), e = -Math.sin(t), i = Math.cos(t), s = {
@@ -386,7 +390,7 @@
             return this.sensors;
         }
     }
-    class I {
+    class E {
         x = 0;
         y = 0;
         follow(t, e) {
@@ -477,43 +481,43 @@
         drawMinimap(t, e, i, s) {
             const r = this.canvas.width - 200 - 20, h = 20;
             this.ctx.save(), this.ctx.setTransform(1, 0, 0, 1, 0, 0), this.ctx.fillStyle = "rgba(0, 0, 0, 0.7)", this.ctx.fillRect(r, h, 200, 200), this.ctx.strokeStyle = "#4facfe", this.ctx.lineWidth = 2, this.ctx.strokeRect(r, h, 200, 200);
-            const l = 200 / this.worldSize, d = (a)=>(a + this.worldSize / 2) * l, u = (a)=>(this.worldSize / 2 - a) * l;
+            const l = 200 / this.worldSize, d = (a)=>(a + this.worldSize / 2) * l, f = (a)=>(this.worldSize / 2 - a) * l;
             this.ctx.strokeStyle = "rgba(79, 172, 254, 0.5)", this.ctx.lineWidth = 1, this.ctx.strokeRect(r, h, 200, 200), this.ctx.fillStyle = "#00ff88", i.forEach((a)=>{
-                const f = r + d(a.x), p = h + u(a.y);
-                this.ctx.fillRect(f - 1.5, p - 1.5, 3, 3);
+                const u = r + d(a.x), g = h + f(a.y);
+                this.ctx.fillRect(u - 1.5, g - 1.5, 3, 3);
             }), this.ctx.fillStyle = "#ff4444", s.forEach((a)=>{
-                const f = r + d(a.x), p = h + u(a.y);
-                this.ctx.fillRect(f - 1.5, p - 1.5, 3, 3);
+                const u = r + d(a.x), g = h + f(a.y);
+                this.ctx.fillRect(u - 1.5, g - 1.5, 3, 3);
             });
-            const g = r + d(t), c = h + u(e);
-            this.ctx.fillStyle = "#ffffff", this.ctx.beginPath(), this.ctx.arc(g, c, 4, 0, Math.PI * 2), this.ctx.fill(), this.ctx.strokeStyle = "#4facfe", this.ctx.lineWidth = 2, this.ctx.stroke(), this.ctx.restore();
+            const p = r + d(t), c = h + f(e);
+            this.ctx.fillStyle = "#ffffff", this.ctx.beginPath(), this.ctx.arc(p, c, 4, 0, Math.PI * 2), this.ctx.fill(), this.ctx.strokeStyle = "#4facfe", this.ctx.lineWidth = 2, this.ctx.stroke(), this.ctx.restore();
         }
         drawBrain(t, e, i, s, o) {
             this.ctx.save(), this.ctx.setTransform(1, 0, 0, 1, 0, 0), this.ctx.translate(e, i);
-            const n = 5, r = s / 2, h = 0, l = o / (t.inputNodes + 1), d = h + r, u = o / (t.hiddenNodes + 1), g = d + r, c = o / (t.outputNodes + 1);
-            for(let a = 0; a < t.inputNodes; a++)for(let f = 0; f < t.hiddenNodes; f++){
-                const p = t.weightsIH[f][a], y = (a + 1) * l, x = (f + 1) * u;
-                this.ctx.beginPath(), this.ctx.moveTo(h, y), this.ctx.lineTo(d, x);
-                const T = Math.abs(p) * .5 + .1;
-                this.ctx.strokeStyle = p > 0 ? `rgba(0, 255, 0, ${T})` : `rgba(255, 0, 0, ${T})`, this.ctx.lineWidth = Math.abs(p), this.ctx.stroke();
+            const n = 5, r = s / 2, h = 0, l = o / (t.inputNodes + 1), d = h + r, f = o / (t.hiddenNodes + 1), p = d + r, c = o / (t.outputNodes + 1);
+            for(let a = 0; a < t.inputNodes; a++)for(let u = 0; u < t.hiddenNodes; u++){
+                const g = t.weightsIH[u][a], y = (a + 1) * l, b = (u + 1) * f;
+                this.ctx.beginPath(), this.ctx.moveTo(h, y), this.ctx.lineTo(d, b);
+                const T = Math.abs(g) * .5 + .1;
+                this.ctx.strokeStyle = g > 0 ? `rgba(0, 255, 0, ${T})` : `rgba(255, 0, 0, ${T})`, this.ctx.lineWidth = Math.abs(g), this.ctx.stroke();
             }
-            for(let a = 0; a < t.hiddenNodes; a++)for(let f = 0; f < t.outputNodes; f++){
-                const p = t.weightsHO[f][a], y = (a + 1) * u, x = (f + 1) * c;
-                this.ctx.beginPath(), this.ctx.moveTo(d, y), this.ctx.lineTo(g, x);
-                const T = Math.abs(p) * .5 + .1;
-                this.ctx.strokeStyle = p > 0 ? `rgba(0, 255, 0, ${T})` : `rgba(255, 0, 0, ${T})`, this.ctx.lineWidth = Math.abs(p), this.ctx.stroke();
+            for(let a = 0; a < t.hiddenNodes; a++)for(let u = 0; u < t.outputNodes; u++){
+                const g = t.weightsHO[u][a], y = (a + 1) * f, b = (u + 1) * c;
+                this.ctx.beginPath(), this.ctx.moveTo(d, y), this.ctx.lineTo(p, b);
+                const T = Math.abs(g) * .5 + .1;
+                this.ctx.strokeStyle = g > 0 ? `rgba(0, 255, 0, ${T})` : `rgba(255, 0, 0, ${T})`, this.ctx.lineWidth = Math.abs(g), this.ctx.stroke();
             }
             for(let a = 0; a < t.inputNodes; a++){
-                const f = (a + 1) * l, p = t.lastInput[a] || 0;
-                this.ctx.beginPath(), this.ctx.arc(h, f, n, 0, Math.PI * 2), this.ctx.fillStyle = `rgba(255, 255, 255, ${p * .8 + .2})`, this.ctx.fill(), this.ctx.strokeStyle = "#fff", this.ctx.lineWidth = 1, this.ctx.stroke();
+                const u = (a + 1) * l, g = t.lastInput[a] || 0;
+                this.ctx.beginPath(), this.ctx.arc(h, u, n, 0, Math.PI * 2), this.ctx.fillStyle = `rgba(255, 255, 255, ${g * .8 + .2})`, this.ctx.fill(), this.ctx.strokeStyle = "#fff", this.ctx.lineWidth = 1, this.ctx.stroke();
             }
             for(let a = 0; a < t.hiddenNodes; a++){
-                const f = (a + 1) * u, p = t.lastHidden[a] || 0;
-                this.ctx.beginPath(), this.ctx.arc(d, f, n, 0, Math.PI * 2), this.ctx.fillStyle = `rgba(255, 255, 255, ${p * .8 + .2})`, this.ctx.fill(), this.ctx.strokeStyle = "#fff", this.ctx.stroke();
+                const u = (a + 1) * f, g = t.lastHidden[a] || 0;
+                this.ctx.beginPath(), this.ctx.arc(d, u, n, 0, Math.PI * 2), this.ctx.fillStyle = `rgba(255, 255, 255, ${g * .8 + .2})`, this.ctx.fill(), this.ctx.strokeStyle = "#fff", this.ctx.stroke();
             }
             for(let a = 0; a < t.outputNodes; a++){
-                const f = (a + 1) * c, p = t.lastOutput[a] || 0;
-                this.ctx.beginPath(), this.ctx.arc(g, f, n, 0, Math.PI * 2), this.ctx.fillStyle = `rgba(255, 255, 255, ${p * .8 + .2})`, this.ctx.fill(), this.ctx.strokeStyle = "#fff", this.ctx.stroke();
+                const u = (a + 1) * c, g = t.lastOutput[a] || 0;
+                this.ctx.beginPath(), this.ctx.arc(p, u, n, 0, Math.PI * 2), this.ctx.fillStyle = `rgba(255, 255, 255, ${g * .8 + .2})`, this.ctx.fill(), this.ctx.strokeStyle = "#fff", this.ctx.stroke();
             }
             this.ctx.fillStyle = "#fff", this.ctx.font = "12px Arial", this.ctx.fillText("Brain Activity", 0, -10), this.ctx.restore();
         }
@@ -565,7 +569,7 @@
             t.beginPath(), t.arc(this.x, this.y, this.radius, 0, Math.PI * 2), t.fillStyle = this.color, t.fill(), t.strokeStyle = "#00ff88", t.lineWidth = 2, t.stroke();
         }
     }
-    class A {
+    class M {
         x;
         y;
         radius;
@@ -581,7 +585,7 @@
             t.beginPath(), t.arc(this.x, this.y, this.radius, 0, Math.PI * 2), t.fillStyle = this.color, t.fill(), t.strokeStyle = "#ff0000", t.lineWidth = 2, t.stroke();
         }
     }
-    class M {
+    class A {
         foodCollected = 0;
         poisonCollected = 0;
         collisionRadius;
@@ -600,7 +604,7 @@
         }
         spawnPoison() {
             const t = this.worldSize / 2, e = this.rng.randomRange(-t + 50, t - 50), i = this.rng.randomRange(-t + 50, t - 50);
-            return new A(e, i);
+            return new M(e, i);
         }
         getFoodCollected() {
             return this.foodCollected;
@@ -643,12 +647,12 @@
                 }, 50);
             }, r.appendChild(this.trainInput), r.appendChild(this.trainBtn), this.element.appendChild(r);
             const h = (l, d = "#aaa")=>{
-                const u = document.createElement("div");
-                u.style.marginBottom = "5px", u.style.display = "flex", u.style.justifyContent = "space-between";
-                const g = document.createElement("span");
-                g.innerText = l, g.style.color = d;
+                const f = document.createElement("div");
+                f.style.marginBottom = "5px", f.style.display = "flex", f.style.justifyContent = "space-between";
+                const p = document.createElement("span");
+                p.innerText = l, p.style.color = d;
                 const c = document.createElement("span");
-                return c.style.fontWeight = "bold", u.appendChild(g), u.appendChild(c), this.element.appendChild(u), c;
+                return c.style.fontWeight = "bold", f.appendChild(p), f.appendChild(c), this.element.appendChild(f), c;
             };
             this.genRow = h("Generation:", "#4facfe"), this.aliveRow = h("Alive:", "#00ff88"), this.scoreRow = h("Current Best:", "#ffcc00"), this.highScoreRow = h("High Score:", "#ffa500"), this.timeRow = h("Gen Time:", "#ff4444"), this.totalTimeRow = h("Total Time:", "#ffffff"), document.body.appendChild(this.element);
         }
@@ -673,18 +677,18 @@
         isPaused = !1;
         RAPIER;
         POPULATION_SIZE = 50;
-        GENERATION_DURATION = 120;
+        GENERATION_DURATION = 45;
         generationTimer = 0;
         generation = 1;
         totalTime = 0;
         allTimeBestScore = 0;
         WORLD_SIZE = 2e3;
-        FOOD_COUNT = 50;
+        FOOD_COUNT = 100;
         POISON_COUNT = 25;
         BOID_COLLISION_RADIUS = 15;
         constructor(t){
             const e = Math.floor(Date.now() / 36e5);
-            this.rng = new O(e), console.log("World Seed:", e), this.RAPIER = t, this.world = new P(t, this.WORLD_SIZE), this.camera = new I, this.renderer = new v(this.WORLD_SIZE), this.hud = new B(e, this.FOOD_COUNT, this.POISON_COUNT), this.collisionManager = new M(this.WORLD_SIZE, this.BOID_COLLISION_RADIUS, this.rng), this.debugPanel = new D(()=>{
+            this.rng = new O(e), console.log("World Seed:", e), this.RAPIER = t, this.world = new P(t, this.WORLD_SIZE), this.camera = new E, this.renderer = new v(this.WORLD_SIZE), this.hud = new B(e, this.FOOD_COUNT, this.POISON_COUNT), this.collisionManager = new A(this.WORLD_SIZE, this.BOID_COLLISION_RADIUS, this.rng), this.debugPanel = new D(()=>{
                 this.isPaused = !this.isPaused;
             }, ()=>{
                 this.resetTraining();
@@ -695,7 +699,7 @@
         initializePopulation() {
             this.boids = [];
             for(let t = 0; t < this.POPULATION_SIZE; t++){
-                const e = new E(this.RAPIER, this.world.getPhysicsWorld());
+                const e = new I(this.RAPIER, this.world.getPhysicsWorld());
                 this.resetBoid(e), this.boids.push(e);
             }
         }
@@ -717,14 +721,14 @@
             (this.generationTimer > this.GENERATION_DURATION || t <= 1) && this.evolve();
         }
         evolve() {
-            this.boids.sort((i, s)=>s.score - i.score);
+            this.boids.sort((s, o)=>o.score - s.score);
             const t = this.boids[0].score;
-            t > this.allTimeBestScore && (this.allTimeBestScore = t), console.log(`Generation ${this.generation} complete. Survivors: ${this.boids.filter((i)=>!i.isDead).length}. Best Score: ${t}.`);
-            const e = Math.floor(this.POPULATION_SIZE / 2);
-            for(let i = 0; i < e; i++)this.resetBoid(this.boids[i]);
-            for(let i = e; i < this.POPULATION_SIZE; i++){
-                const s = i - e, o = this.boids[s], n = this.boids[i];
-                n.copyBrainFrom(o), n.brain.mutate(.1, .2), this.resetBoid(n);
+            t > this.allTimeBestScore && (this.allTimeBestScore = t), console.log(`Generation ${this.generation} complete. Survivors: ${this.boids.filter((s)=>!s.isDead).length}. Best Score: ${t}.`);
+            const e = Math.floor(this.POPULATION_SIZE * .1), i = Math.floor(this.POPULATION_SIZE * .5);
+            for(let s = 0; s < e; s++)this.resetBoid(this.boids[s]);
+            for(let s = e; s < this.POPULATION_SIZE; s++){
+                const o = Math.floor(this.rng.random() * i), n = this.boids[o], r = this.boids[s];
+                r.copyBrainFrom(n), r.brain.mutate(.2, .5), this.resetBoid(r);
             }
             this.generation++, this.generationTimer = 0, this.saveTrainingData();
         }
@@ -741,8 +745,17 @@
             const t = localStorage.getItem("boid_training_data");
             if (t) try {
                 const e = JSON.parse(t);
-                if (this.generation = e.generation, this.totalTime = e.totalTime || 0, this.allTimeBestScore = e.allTimeBestScore || 0, console.log("Loaded training data. Gen: " + this.generation), e.brains && Array.isArray(e.brains)) for(let i = 0; i < this.POPULATION_SIZE; i++)e.brains[i] ? this.boids[i].brain = S.fromJSON(e.brains[i]) : i > 0 && (this.boids[i].brain = this.boids[0].brain.copy(), this.boids[i].brain.mutate(.1, .2));
-                else if (e.bestBrain) {
+                if (this.generation = e.generation, this.totalTime = e.totalTime || 0, this.allTimeBestScore = e.allTimeBestScore || 0, console.log("Loaded training data. Gen: " + this.generation), e.brains && Array.isArray(e.brains)) {
+                    if (e.brains.length > 0 && (e.brains[0].inputNodes !== this.boids[0].brain.inputNodes || e.brains[0].outputNodes !== this.boids[0].brain.outputNodes)) {
+                        console.warn("Loaded population architecture mismatch. Resetting..."), this.resetTraining();
+                        return;
+                    }
+                    for(let i = 0; i < this.POPULATION_SIZE; i++)e.brains[i] ? this.boids[i].brain = S.fromJSON(e.brains[i]) : i > 0 && (this.boids[i].brain = this.boids[0].brain.copy(), this.boids[i].brain.mutate(.1, .2));
+                } else if (e.bestBrain) {
+                    if (e.bestBrain && (e.bestBrain.inputNodes !== this.boids[0].brain.inputNodes || e.bestBrain.outputNodes !== this.boids[0].brain.outputNodes)) {
+                        console.warn("Loaded brain architecture mismatch. Resetting..."), this.resetTraining();
+                        return;
+                    }
                     const i = S.fromJSON(e.bestBrain);
                     this.boids[0].brain = i.copy();
                     for(let s = 1; s < this.POPULATION_SIZE; s++)this.boids[s].brain = i.copy(), this.boids[s].brain.mutate(.1, .2);
@@ -752,7 +765,7 @@
             }
         }
         resetTraining() {
-            localStorage.removeItem("boid_training_data"), this.generation = 1, this.generationTimer = 0, this.initializePopulation(), console.log("Training reset.");
+            localStorage.removeItem("boid_training_data"), this.generation = 1, this.generationTimer = 0, this.totalTime = 0, this.allTimeBestScore = 0, this.initializePopulation(), console.log("Training reset.");
         }
         fastTrain(t) {
             const e = this.GENERATION_DURATION * 60, i = t * e;
