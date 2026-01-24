@@ -17,13 +17,13 @@ export class Boid {
     private body: RAPIER.RigidBody;
     private leftThruster: number = 0;
     private rightThruster: number = 0;
-    private readonly THRUSTER_MAX = 800.0;
+    private readonly THRUSTER_MAX = 1600.0;
 
 
     private sensors: Sensor[] = [];
     private readonly SENSOR_COUNT = 21;
     private readonly SENSOR_ANGLE_SPREAD = Math.PI * 0.5;
-    private readonly SENSOR_LENGTH = 400;
+    private readonly SENSOR_LENGTH = 600;
 
     public brain: NeuralNetwork;
     private readonly INPUT_NODES = 14;
@@ -61,8 +61,8 @@ export class Boid {
         // Create rigid body
         const bodyDesc = RAPIER.RigidBodyDesc.dynamic()
             .setTranslation(0, 0)
-            .setLinearDamping(0.3)
-            .setAngularDamping(2.0);
+            .setLinearDamping(0.6)
+            .setAngularDamping(1.5);
         this.body = world.createRigidBody(bodyDesc);
 
         // Triangle Shape (pointing up)

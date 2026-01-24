@@ -22,14 +22,14 @@ export class Game {
 
     // Evolution settings
     private readonly POPULATION_SIZE = 50;
-    private readonly GENERATION_DURATION = 45; // Seconds
+    private readonly GENERATION_DURATION = 120; // Seconds
     private generationTimer: number = 0;
 
     private generation: number = 1;
     private totalTime: number = 0;
     private allTimeBestScore: number = 0;
 
-    private readonly WORLD_SIZE = 3000;
+    private readonly WORLD_SIZE = 2000;
     private readonly FOOD_COUNT = 50;
     private readonly POISON_COUNT = 25;
     private readonly BOID_COLLISION_RADIUS = 15;
