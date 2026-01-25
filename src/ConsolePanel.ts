@@ -10,7 +10,7 @@ export class ConsolePanel extends Panel {
     private originalConsoleLog: (...args: any[]) => void;
 
     constructor() {
-        super('Console Output', 'bottom-center', '600px', '200px');
+        super('Console Output', 'bottom-right', '600px', '200px');
 
         // Intercept console.log
         this.originalConsoleLog = console.log.bind(console);

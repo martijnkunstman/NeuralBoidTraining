@@ -11,6 +11,7 @@ export class StatsPanel extends Panel {
 
     constructor(seed: number, foodCount: number, poisonCount: number) {
         super('Boid Systems', 'top-left', '260px');
+        this.element.style.display = 'none';
 
         this.createRow('Seed:', seed.toString());
         this.addSeparator();

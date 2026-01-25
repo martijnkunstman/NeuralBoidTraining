@@ -1,13 +1,6 @@
 import { Panel } from './Panel';
 
 export class DebugPanel extends Panel {
-    private genRow: HTMLElement;
-    private aliveRow: HTMLElement;
-    private scoreRow: HTMLElement;
-    private highScoreRow: HTMLElement;
-    private timeRow: HTMLElement;
-    private totalTimeRow: HTMLElement;
-
     private pauseBtn!: HTMLButtonElement;
     private onPauseToggle: () => void;
     private isPaused: boolean = false;
@@ -20,26 +13,14 @@ export class DebugPanel extends Panel {
     private onFastTrain: (gens: number) => void;
 
     constructor(onPauseToggle: () => void, onReset: () => void, onFastTrain: (gens: number) => void) {
-        super('Simulation Control', 'bottom-right', '280px');
+        super('Simulation Control', 'top-left', '280px');
 
         this.onPauseToggle = onPauseToggle;
         this.onReset = onReset;
         this.onFastTrain = onFastTrain;
 
         this.setupControls();
-        this.addSeparator();
-
-        this.genRow = this.createRow('Generation:', '0');
-        this.aliveRow = this.createRow('Alive:', '0');
-        this.scoreRow = this.createRow('Current Best:', '0.00');
-        this.scoreRow.style.color = '#ffcc00';
-        this.highScoreRow = this.createRow('High Score:', '0.00');
-        this.highScoreRow.style.color = '#ffa500';
-
-        this.addSeparator();
-
-        this.timeRow = this.createRow('Gen Time:', '0.0s');
-        this.totalTimeRow = this.createRow('Total Time:', '0:00');
+        // Stats text removed as requested
     }
 
     private setupControls(): void {
@@ -47,7 +28,7 @@ export class DebugPanel extends Panel {
         controls.style.display = 'flex';
         controls.style.flexDirection = 'column';
         controls.style.gap = '8px';
-        controls.style.marginBottom = '10px';
+        controls.style.marginBottom = '0'; // align bottom
 
         // Row 1: Pause & Reset
         const btnRow = document.createElement('div');
@@ -109,29 +90,13 @@ export class DebugPanel extends Panel {
         this.content.appendChild(controls);
     }
 
-    private addSeparator(): void {
-        const sep = document.createElement('div');
-        sep.style.height = '1px';
-        sep.style.background = 'rgba(255, 255, 255, 0.1)';
-        sep.style.margin = '8px 0';
-        this.content.appendChild(sep);
-    }
-
     private togglePause(): void {
         this.isPaused = !this.isPaused;
         this.pauseBtn.innerText = this.isPaused ? 'RESUME' : 'PAUSE';
         this.onPauseToggle();
     }
 
-    update(generation: number, aliveCount: number, currentBest: number, allTimeBest: number, genTime: number, totalTime: number): void {
-        this.genRow.innerText = generation.toString();
-        this.aliveRow.innerText = aliveCount.toString();
-        this.scoreRow.innerText = currentBest.toFixed(2);
-        this.highScoreRow.innerText = allTimeBest.toFixed(2);
-        this.timeRow.innerText = genTime.toFixed(1) + 's';
-
-        const m = Math.floor(totalTime / 60);
-        const s = Math.floor(totalTime % 60);
-        this.totalTimeRow.innerText = `${m}:${s.toString().padStart(2, '0')}`;
+    update(_generation: number, _aliveCount: number, _currentBest: number, _allTimeBest: number, _genTime: number, _totalTime: number): void {
+        // No stats displayed
     }
 }
