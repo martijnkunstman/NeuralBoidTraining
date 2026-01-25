@@ -1,6 +1,10 @@
 import { Game } from './Game';
+import { ConsolePanel } from './ConsolePanel';
 
 async function run() {
+    // Initialize console panel first to capture all logs
+    new ConsolePanel();
+
     console.log('Starting boid simulation...');
 
     // Dynamic import is the most compatible way for Rapier in Vite

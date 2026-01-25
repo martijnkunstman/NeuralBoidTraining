@@ -30,7 +30,7 @@ export class Game {
     private allTimeBestScore: number = 0;
 
     private readonly WORLD_SIZE = 2000;
-    private readonly FOOD_COUNT = 100;
+    private readonly FOOD_COUNT = 25;
     private readonly POISON_COUNT = 25;
     private readonly BOID_COLLISION_RADIUS = 15;
 
