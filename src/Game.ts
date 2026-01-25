@@ -280,6 +280,31 @@ export class Game {
         console.log('Training data saved for Gen ' + this.generation);
     }
 
+
+    // Helper to validate data schema and architecture compatibility
+    private isValidData(data: any): boolean {
+        if (!data) return false;
+
+        // Check basic fields
+        if (!data.generation || !data.brains) return false;
+
+        // Check Architecture Compatibility
+        // We assume the first brain in the array is representative
+        const savedInput = data.brains[0]?.inputNodes;
+        const savedOutput = data.brains[0]?.outputNodes;
+
+        // Determine current expected architecture from the first initialized boid
+        const currentInput = this.boids[0]?.brain.inputNodes;
+        const currentOutput = this.boids[0]?.brain.outputNodes;
+
+        if (savedInput !== currentInput || savedOutput !== currentOutput) {
+            console.log(`Data (Gen ${data.generation}) ignored due to architecture mismatch (Saved: ${savedInput}->${savedOutput}, Current: ${currentInput}->${currentOutput})`);
+            return false;
+        }
+
+        return true;
+    }
+
     private async loadTrainingData(): Promise<void> {
         console.log('Checking for training data...');
 
@@ -307,23 +332,27 @@ export class Game {
             console.log('Error reading browser localStorage.');
         }
 
-        // 3. Compare and Load
-        const fileGen = fileData?.generation || -1;
-        const browserGen = browserData?.generation || -1;
+        // 3. Validation
+        const fileValid = this.isValidData(fileData);
+        const browserValid = this.isValidData(browserData);
 
-        console.log(`Found Data - File Gen: ${fileGen}, Browser Gen: ${browserGen}`);
+        const fileGen = fileValid ? fileData.generation : -1;
+        const browserGen = browserValid ? browserData.generation : -1;
+
+        console.log(`Found Data - File Gen: ${fileGen} (${fileValid ? 'Valid' : 'Invalid'}), Browser Gen: ${browserGen} (${browserValid ? 'Valid' : 'Invalid'})`);
 
         if (fileGen === -1 && browserGen === -1) {
-            console.log('No training data found. Starting fresh.');
+            console.log('No valid training data found. Starting fresh.');
             return;
         }
 
-        if (fileGen >= browserGen) {
-            console.log(`Loading from localStorage.json (Gen ${fileGen})`);
-            this.applyData(fileData);
-        } else {
+        // 4. Selection (Prioritize Browser if equal, or whichever is higher)
+        if (browserGen >= fileGen) {
             console.log(`Loading from browser localStorage (Gen ${browserGen})`);
             this.applyData(browserData);
+        } else {
+            console.log(`Loading from localStorage.json (Gen ${fileGen})`);
+            this.applyData(fileData);
         }
     }
 
