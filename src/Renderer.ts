@@ -29,7 +29,7 @@ export class Renderer {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    drawWorld(camera: Camera, foods: Food[], poisons: Poison[]): void {
+    drawWorld(camera: Camera, foods: Food[], poisons: Poison[], ignoredFoods: Food[] = []): void {
         this.ctx.save();
         this.ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
         this.ctx.scale(1, -1); // Flip Y to match Rapier's Y-up
@@ -44,7 +44,10 @@ export class Renderer {
         this.drawBorders();
 
         // Draw food and poison with ghost wrapping
-        foods.forEach(food => this.drawItemWithGhosts(food, camera.x, camera.y));
+        foods.forEach(food => {
+            const isIgnored = ignoredFoods.includes(food);
+            this.drawItemWithGhosts(food, camera.x, camera.y, isIgnored ? '#0000FF' : undefined);
+        });
         poisons.forEach(poison => this.drawItemWithGhosts(poison, camera.x, camera.y));
 
         this.ctx.restore();
@@ -82,12 +85,23 @@ export class Renderer {
         this.ctx.fillRect(half - cornerSize + 3, half - cornerSize + 3, cornerSize, cornerSize);
     }
 
-    private drawItemWithGhosts(item: Food | Poison, camX: number, camY: number): void {
+    private drawItemWithGhosts(item: Food | Poison, camX: number, camY: number, color?: string): void {
         const viewDist = Math.max(this.canvas.width, this.canvas.height) / 2 + 100;
         const half = this.worldSize / 2;
 
+        const draw = () => {
+            if (color) {
+                this.ctx.fillStyle = color;
+                this.ctx.beginPath();
+                this.ctx.arc(item.x, item.y, item.radius, 0, Math.PI * 2);
+                this.ctx.fill();
+            } else {
+                item.draw(this.ctx);
+            }
+        };
+
         // Draw main item
-        item.draw(this.ctx);
+        draw();
 
         // Check if we need to draw ghost copies
         const offsets = [];
@@ -100,8 +114,8 @@ export class Renderer {
         for (const offset of offsets) {
             this.ctx.save();
             this.ctx.translate(offset.dx, offset.dy);
-            item.draw(this.ctx);
-            this.ctx.restore();
+            draw();
+            this.ctx.restore(); // Restore transform
         }
     }
 
@@ -154,7 +168,7 @@ export class Renderer {
     }
 
 
-    drawMinimap(boidX: number, boidY: number, foods: Food[], poisons: Poison[]): void {
+    drawMinimap(boidX: number, boidY: number, foods: Food[], poisons: Poison[], ignoredFoods: Food[] = []): void {
         const minimapSize = 200;
         const minimapPadding = 20;
         const minimapX = this.canvas.width - minimapSize - minimapPadding;
@@ -183,8 +197,9 @@ export class Renderer {
         this.ctx.strokeRect(minimapX, minimapY, minimapSize, minimapSize);
 
         // Draw food on minimap
-        this.ctx.fillStyle = '#00ff88';
         foods.forEach(food => {
+            const isIgnored = ignoredFoods.includes(food);
+            this.ctx.fillStyle = isIgnored ? '#0000FF' : '#00ff88';
             const mx = minimapX + centerMinimapX(food.x);
             const my = minimapY + centerMinimapY(food.y);
             this.ctx.fillRect(mx - 1.5, my - 1.5, 3, 3);

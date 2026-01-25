@@ -36,10 +36,8 @@ export class CollisionManager {
                 x: this.rng.randomRange(-half + 50, half - 50),
                 y: this.rng.randomRange(-half + 50, half - 50)
             });
-            this.poisonSpawnQueue.push({
-                x: this.rng.randomRange(-half + 50, half - 50),
-                y: this.rng.randomRange(-half + 50, half - 50)
-            });
+            // Poison is now persistent, no need for spawn queue. 
+            // If we needed it, we'd ensure safe distance, but we only spawn initially now.
         }
     }
 
@@ -77,8 +75,15 @@ export class CollisionManager {
 
     public spawnPoison(): Poison {
         const half = this.worldSize / 2;
-        const x = this.rng.randomRange(-half + 50, half - 50);
-        const y = this.rng.randomRange(-half + 50, half - 50);
+        const safeRadius = 250; // Safe zone around center where boids start
+        let x, y, dist;
+
+        do {
+            x = this.rng.randomRange(-half + 50, half - 50);
+            y = this.rng.randomRange(-half + 50, half - 50);
+            dist = Math.sqrt(x * x + y * y);
+        } while (dist < safeRadius);
+
         return new Poison(x, y, 30);
     }
 

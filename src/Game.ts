@@ -74,11 +74,11 @@ export class Game {
 
 
 
-    private generateTemplateEnvironment(): void {
-        // Generate spawn queue for synchronized respawns
+    private resetEnvironment(): void {
+        // Generate spawn queue for synchronized respawns (only food now)
         this.collisionManager.generateSpawnQueue();
 
-        // Generate template food/poison layout once per generation
+        // Generate shared global environment
         this.templateFoods = [];
         this.templatePoisons = [];
         for (let i = 0; i < this.FOOD_COUNT; i++) {
@@ -91,7 +91,7 @@ export class Game {
 
     private initializePopulation(): void {
         this.boids = [];
-        this.generateTemplateEnvironment();
+        this.resetEnvironment();
         for (let i = 0; i < this.POPULATION_SIZE; i++) {
             const boid = new Boid(this.RAPIER, this.world.getPhysicsWorld());
             this.resetBoid(boid);
@@ -106,8 +106,8 @@ export class Game {
         boid.getBody().setAngvel(0, true);
         boid.getBody().setRotation(0, true); // All start facing the same direction
 
-        // Reset Environment using template (same layout for all boids)
-        boid.initializeEnvironment(this.FOOD_COUNT, this.POISON_COUNT, this.collisionManager, this.templateFoods, this.templatePoisons);
+        // Reset Environment using shared global state
+        boid.initializeEnvironment(this.templateFoods, this.templatePoisons);
     }
 
     private update(): void {
@@ -159,8 +159,8 @@ export class Game {
 
         console.log(`Generation ${this.generation} complete. Survivors: ${this.boids.filter(b => !b.isDead).length}. Best Score: ${currentBestScore}.`);
 
-        // Generate new template environment for the next generation
-        this.generateTemplateEnvironment();
+        // Reset environment for the next generation
+        this.resetEnvironment();
 
         const eliteCount = Math.floor(this.POPULATION_SIZE * 0.1); // Keep top 10% unchanged
         const selectionPool = Math.floor(this.POPULATION_SIZE * 0.5); // Parents chosen from top 50%
@@ -182,7 +182,7 @@ export class Game {
             // Dynamic Mutation:
             // If parent is elite, mutate less? No, finding new peaks needs exploration.
             // Using standard mutation but slightly more frequent for diversity.
-            offspring.brain.mutate(0.2, 0.5); // Rate 20%, Strength 0.5
+            offspring.brain.mutate(0.05, 0.1); // Reduced: Rate 5%, Strength 0.1 (Smaller evolution steps)
 
             this.resetBoid(offspring);
         }
@@ -256,7 +256,7 @@ export class Game {
                         // Fallback: Copy from index 0 if available, else random
                         if (i > 0) {
                             this.boids[i].brain = this.boids[0].brain.copy();
-                            this.boids[i].brain.mutate(0.1, 0.2);
+                            this.boids[i].brain.mutate(0.05, 0.1);
                         }
                     }
                 }
@@ -274,7 +274,7 @@ export class Game {
                 this.boids[0].brain = loadedBrain.copy();
                 for (let i = 1; i < this.POPULATION_SIZE; i++) {
                     this.boids[i].brain = loadedBrain.copy();
-                    this.boids[i].brain.mutate(0.1, 0.2);
+                    this.boids[i].brain.mutate(0.05, 0.1);
                 }
             }
 
@@ -370,9 +370,9 @@ export class Game {
         }
 
         // Draw everything
-        this.renderer.drawWorld(this.camera, bestBoid.foods, bestBoid.poisons); // Draw best boid's view of world
+        this.renderer.drawWorld(this.camera, bestBoid.foods, bestBoid.poisons, bestBoid.eatenFoodHistory); // Draw best boid's view of world
         this.renderer.drawBoids(this.boids, this.camera, bestBoid);
-        this.renderer.drawMinimap(pos.x, pos.y, bestBoid.foods, bestBoid.poisons);
+        this.renderer.drawMinimap(pos.x, pos.y, bestBoid.foods, bestBoid.poisons, bestBoid.eatenFoodHistory);
 
         // Draw Brain of best boid
         const brainWidth = 200;

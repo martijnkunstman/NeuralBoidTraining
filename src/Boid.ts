@@ -42,9 +42,11 @@ export class Boid {
     private readonly MAX_LIFE = 100;
     private readonly LIFE_DECAY_RATE = 1; // Reduced from 2 - they live longer now
 
-    // Spawn indices for synchronized respawns
-    private foodSpawnIndex: number = 0;
-    private poisonSpawnIndex: number = 0;
+    // Food History (Memory)
+    public eatenFoodHistory: Food[] = [];
+    private readonly MEMORY_SIZE = 5;
+
+    // Spawn indices no longer needed for shared environment (managed globally)
 
 
     constructor(RAPIER: typeof import('@dimforge/rapier2d-compat'), world: RAPIER.World) {
@@ -106,6 +108,9 @@ export class Boid {
 
             // Check Foods
             for (const food of this.foods) {
+                // Ignore food if we just ate it
+                if (this.eatenFoodHistory.includes(food)) continue;
+
                 // Ghost sensing: find closest wrapped position
                 let dx = food.x - startX;
                 let dy = food.y - startY;
@@ -198,31 +203,18 @@ export class Boid {
         return t1;
     }
 
-    // Initialize environment with own food/poison (from templates if provided)
-    initializeEnvironment(foodCount: number, poisonCount: number, spawner: CollisionManager, templateFoods?: Food[], templatePoisons?: Poison[]) {
-        this.foods = [];
-        this.poisons = [];
-
-        if (templateFoods && templatePoisons) {
-            // Clone from templates - same positions but independent instances
-            for (const food of templateFoods) {
-                this.foods.push(new Food(food.x, food.y, food.radius));
-            }
-            for (const poison of templatePoisons) {
-                this.poisons.push(new Poison(poison.x, poison.y, poison.radius));
-            }
-        } else {
-            // Generate new random positions
-            for (let i = 0; i < foodCount; i++) this.foods.push(spawner.spawnFood());
-            for (let i = 0; i < poisonCount; i++) this.poisons.push(spawner.spawnPoison());
-        }
+    // Initialize environment with shared global food/poison
+    initializeEnvironment(globalFoods: Food[], globalPoisons: Poison[]) {
+        // Store REFERENCES to the shared global arrays
+        // We do NOT clone them. All boids see the exact same array objects.
+        this.foods = globalFoods;
+        this.poisons = globalPoisons;
+        this.eatenFoodHistory = [];
 
         this.score = 0;
         this.timeAlive = 0;
         this.life = 100;
         this.isDead = false;
-        this.foodSpawnIndex = 0;
-        this.poisonSpawnIndex = 0;
 
         // Reset physics
         this.body.setLinvel({ x: 0, y: 0 }, true);
@@ -233,26 +225,33 @@ export class Boid {
         const pos = this.getPosition();
         const BOID_RADIUS = 15; // From Game.ts constants
 
-        // Check poison
-        for (let i = this.poisons.length - 1; i >= 0; i--) {
-            if (this.poisons[i].isColliding(pos.x, pos.y, BOID_RADIUS)) {
-                this.poisons.splice(i, 1);
-                this.poisons.push(spawner.spawnPoisonFromQueue(this.poisonSpawnIndex));
-                this.poisonSpawnIndex++;
-                this.score -= 100;
-                this.life -= 100;
+        // Check poison (Persistent - does NOT remove poison)
+        for (const poison of this.poisons) {
+            if (poison.isColliding(pos.x, pos.y, BOID_RADIUS)) {
+                // Persistent penalty for touching poison
+                this.score -= 2;
+                this.life -= 2;
             }
         }
 
-        // Check food
-        for (let i = this.foods.length - 1; i >= 0; i--) {
-            if (this.foods[i].isColliding(pos.x, pos.y, BOID_RADIUS)) {
-                this.foods.splice(i, 1);
-                this.foods.push(spawner.spawnFoodFromQueue(this.foodSpawnIndex));
-                this.foodSpawnIndex++;
-                this.score += 25; // Increased from 10
+        // Check food (Memory - persistent globally, locally unavailable)
+        for (const food of this.foods) {
+            // Check if already in memory
+            if (this.eatenFoodHistory.includes(food)) continue;
+
+            if (food.isColliding(pos.x, pos.y, BOID_RADIUS)) {
+                // Eat it!
+                this.score += 25;
                 this.life += 20;
                 if (this.life > this.MAX_LIFE) this.life = this.MAX_LIFE;
+
+                // Add to history
+                this.eatenFoodHistory.push(food);
+
+                // Keep history limited to 5
+                if (this.eatenFoodHistory.length > this.MEMORY_SIZE) {
+                    this.eatenFoodHistory.shift(); // Remove oldest
+                }
             }
         }
 
