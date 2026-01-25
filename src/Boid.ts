@@ -22,11 +22,11 @@ export class Boid {
 
     private sensors: Sensor[] = [];
     private readonly SENSOR_COUNT = 7;
-    private readonly SENSOR_ANGLE_SPREAD = Math.PI * 0.5;
+    private readonly SENSOR_ANGLE_SPREAD = Math.PI * 0.8; // Widened to ~144 degrees
     private readonly SENSOR_LENGTH = 600;
 
     public brain: NeuralNetwork;
-    private readonly INPUT_NODES = 17; // Added 3 inputs for velocity
+    private readonly INPUT_NODES = 18; // Added 3 inputs for velocity + 1 for Health
     private readonly HIDDEN_NODES = 16;
     private readonly OUTPUT_NODES = 2;
 
@@ -235,8 +235,8 @@ export class Boid {
         for (const poison of this.poisons) {
             if (poison.isColliding(pos.x, pos.y, BOID_RADIUS)) {
                 // Persistent penalty for touching poison
-                this.score -= 2;
-                this.life -= 2;
+                this.score -= 10; // Increased penalty
+                this.life -= 10; // Increased damage
             }
         }
 
@@ -358,6 +358,9 @@ export class Boid {
         inputs.push(0.5 + 0.5 * Math.tanh(forwardVel * 0.05));
         inputs.push(0.5 + 0.5 * Math.tanh(rightVel * 0.05));
         inputs.push(0.5 + 0.5 * Math.tanh(angVel * 0.5));
+
+        // Input 17: Health (Normalized 0-1)
+        inputs.push(this.life / this.MAX_LIFE);
 
         this.lastInputs = inputs;
         const outputs = this.brain.feedForward(inputs);

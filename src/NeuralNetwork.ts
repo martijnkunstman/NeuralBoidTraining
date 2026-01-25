@@ -71,7 +71,7 @@ export class NeuralNetwork {
                 sum += this.weightsIH[i][j] * this.lastInput[j];
             }
             sum += this.biasH[i];
-            this.lastHidden[i] = this.sigmoid(sum);
+            this.lastHidden[i] = Math.tanh(sum);
         }
 
         // Generating the Output's Output

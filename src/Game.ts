@@ -255,8 +255,8 @@ export class Game {
             // Crossover
             offspring.brain = parentA.brain.crossover(parentB.brain);
 
-            // Mutation: slightly reduced rate since crossover provides diversity
-            offspring.brain.mutate(0.05, 0.1);
+            // Mutation: More aggressive
+            offspring.brain.mutate(0.1, 0.2);
 
             this.resetBoid(offspring);
         }
