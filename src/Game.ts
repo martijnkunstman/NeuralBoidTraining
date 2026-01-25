@@ -7,6 +7,8 @@ import { HUD } from './HUD';
 import { CollisionManager } from './CollisionManager';
 import { DebugPanel } from './DebugPanel';
 import { NeuralNetwork } from './NeuralNetwork';
+import { Food } from './Food';
+import { Poison } from './Poison';
 
 export class Game {
     private world: World;
@@ -19,6 +21,10 @@ export class Game {
     private debugPanel: DebugPanel;
     private isPaused: boolean = false;
     private RAPIER: typeof import('@dimforge/rapier2d-compat');
+
+    // Template environment (shared layout for all boids)
+    private templateFoods: Food[] = [];
+    private templatePoisons: Poison[] = [];
 
     // Evolution settings
     private readonly POPULATION_SIZE = 50;
@@ -68,8 +74,24 @@ export class Game {
 
 
 
+    private generateTemplateEnvironment(): void {
+        // Generate spawn queue for synchronized respawns
+        this.collisionManager.generateSpawnQueue();
+
+        // Generate template food/poison layout once per generation
+        this.templateFoods = [];
+        this.templatePoisons = [];
+        for (let i = 0; i < this.FOOD_COUNT; i++) {
+            this.templateFoods.push(this.collisionManager.spawnFood());
+        }
+        for (let i = 0; i < this.POISON_COUNT; i++) {
+            this.templatePoisons.push(this.collisionManager.spawnPoison());
+        }
+    }
+
     private initializePopulation(): void {
         this.boids = [];
+        this.generateTemplateEnvironment();
         for (let i = 0; i < this.POPULATION_SIZE; i++) {
             const boid = new Boid(this.RAPIER, this.world.getPhysicsWorld());
             this.resetBoid(boid);
@@ -78,18 +100,14 @@ export class Game {
     }
 
     private resetBoid(boid: Boid): void {
-        // Random position
-        const half = this.WORLD_SIZE / 2;
-        const x = this.rng.randomRange(-half, half);
-        const y = this.rng.randomRange(-half, half);
-
-        boid.getBody().setTranslation({ x, y }, true);
+        // All boids start at the same position (center of world)
+        boid.getBody().setTranslation({ x: 0, y: 0 }, true);
         boid.getBody().setLinvel({ x: 0, y: 0 }, true);
         boid.getBody().setAngvel(0, true);
-        boid.getBody().setRotation(Math.random() * Math.PI * 2, true);
+        boid.getBody().setRotation(0, true); // All start facing the same direction
 
-        // Reset Environment
-        boid.initializeEnvironment(this.FOOD_COUNT, this.POISON_COUNT, this.collisionManager);
+        // Reset Environment using template (same layout for all boids)
+        boid.initializeEnvironment(this.FOOD_COUNT, this.POISON_COUNT, this.collisionManager, this.templateFoods, this.templatePoisons);
     }
 
     private update(): void {
@@ -140,6 +158,9 @@ export class Game {
         }
 
         console.log(`Generation ${this.generation} complete. Survivors: ${this.boids.filter(b => !b.isDead).length}. Best Score: ${currentBestScore}.`);
+
+        // Generate new template environment for the next generation
+        this.generateTemplateEnvironment();
 
         const eliteCount = Math.floor(this.POPULATION_SIZE * 0.1); // Keep top 10% unchanged
         const selectionPool = Math.floor(this.POPULATION_SIZE * 0.5); // Parents chosen from top 50%
@@ -308,18 +329,15 @@ export class Game {
         this.draw();
     }
 
+    // Track last focused boid to detect switches vs wraps
+    private lastBestBoid: Boid | null = null;
+
     private draw(): void {
         // Clear canvas
         this.renderer.clear();
 
         // Update camera to follow boid
         // Find best boid (highest score) for camera and viz
-        // Since we only sort at end of gen, we search linear
-        // Since some boids might be dead/removed, bestBoid might not be index 0 if not sorted.
-        // Also boids array might be empty if we are in middle of update? 
-        // But draw happens after update. If all died, we called evolve() which refilled them.
-        // So boids should not be empty.
-
         let bestBoid = this.boids[0];
         let maxScore = -Infinity;
         if (this.boids.length > 0) {
@@ -331,9 +349,25 @@ export class Game {
             }
         }
 
-        // Update camera to follow best boid
+        // Update camera
         const pos = bestBoid.getPosition();
-        this.camera.follow(pos.x, pos.y);
+
+        if (this.lastBestBoid === bestBoid) {
+            // Same boid, check for large jump indicating world wrap
+            // Camera position is the "last known position", so check distance to new position
+            const dist = Math.sqrt(Math.pow(pos.x - this.camera.x, 2) + Math.pow(pos.y - this.camera.y, 2));
+
+            // If distance is large (e.g. > world/3), assume wrap and snap instantly
+            if (dist > this.WORLD_SIZE / 3) {
+                this.camera.snap(pos.x, pos.y);
+            } else {
+                this.camera.follow(pos.x, pos.y);
+            }
+        } else {
+            // Switched to a different boid - use smooth transition
+            this.camera.follow(pos.x, pos.y);
+            this.lastBestBoid = bestBoid;
+        }
 
         // Draw everything
         this.renderer.drawWorld(this.camera, bestBoid.foods, bestBoid.poisons); // Draw best boid's view of world

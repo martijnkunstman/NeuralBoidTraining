@@ -2,6 +2,11 @@ import { Food } from './Food';
 import { Poison } from './Poison';
 import { SeededRandom } from './SeededRandom';
 
+interface SpawnPosition {
+    x: number;
+    y: number;
+}
+
 export class CollisionManager {
     private foodCollected: number = 0;
     private poisonCollected: number = 0;
@@ -9,10 +14,33 @@ export class CollisionManager {
     private readonly worldSize: number;
     private rng: SeededRandom;
 
+    // Pre-generated spawn queues for synchronized respawns
+    private foodSpawnQueue: SpawnPosition[] = [];
+    private poisonSpawnQueue: SpawnPosition[] = [];
+    private readonly QUEUE_SIZE = 500; // Enough spawns for a generation
+
     constructor(worldSize: number, collisionRadius: number, rng: SeededRandom) {
         this.worldSize = worldSize;
         this.collisionRadius = collisionRadius;
         this.rng = rng;
+    }
+
+    // Generate spawn queues at the start of each generation
+    public generateSpawnQueue(): void {
+        this.foodSpawnQueue = [];
+        this.poisonSpawnQueue = [];
+        const half = this.worldSize / 2;
+
+        for (let i = 0; i < this.QUEUE_SIZE; i++) {
+            this.foodSpawnQueue.push({
+                x: this.rng.randomRange(-half + 50, half - 50),
+                y: this.rng.randomRange(-half + 50, half - 50)
+            });
+            this.poisonSpawnQueue.push({
+                x: this.rng.randomRange(-half + 50, half - 50),
+                y: this.rng.randomRange(-half + 50, half - 50)
+            });
+        }
     }
 
     checkCollisions(
@@ -52,6 +80,18 @@ export class CollisionManager {
         const x = this.rng.randomRange(-half + 50, half - 50);
         const y = this.rng.randomRange(-half + 50, half - 50);
         return new Poison(x, y, 30);
+    }
+
+    // Spawn food using pre-generated queue position
+    public spawnFoodFromQueue(index: number): Food {
+        const pos = this.foodSpawnQueue[index % this.QUEUE_SIZE];
+        return new Food(pos.x, pos.y, 30);
+    }
+
+    // Spawn poison using pre-generated queue position
+    public spawnPoisonFromQueue(index: number): Poison {
+        const pos = this.poisonSpawnQueue[index % this.QUEUE_SIZE];
+        return new Poison(pos.x, pos.y, 30);
     }
 
     getFoodCollected(): number {
