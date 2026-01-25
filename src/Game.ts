@@ -8,6 +8,7 @@ import { CollisionManager } from './CollisionManager';
 import { DebugPanel } from './DebugPanel';
 import { NeuralNetwork } from './NeuralNetwork';
 import { Food } from './Food';
+import { InputManager } from './InputManager';
 import { Poison } from './Poison';
 
 export class Game {
@@ -21,6 +22,7 @@ export class Game {
     private debugPanel: DebugPanel;
     private isPaused: boolean = false;
     private RAPIER: typeof import('@dimforge/rapier2d-compat');
+    private inputManager: InputManager;
 
     // Template environment (shared layout for all boids)
     private templateFoods: Food[] = [];
@@ -35,9 +37,9 @@ export class Game {
     private totalTime: number = 0;
     private allTimeBestScore: number = 0;
 
-    private readonly WORLD_SIZE = 2000;
-    private readonly FOOD_COUNT = 25;
-    private readonly POISON_COUNT = 25;
+    private readonly WORLD_SIZE = 3000;
+    private readonly FOOD_COUNT = 50;
+    private readonly POISON_COUNT = 50;
     private readonly BOID_COLLISION_RADIUS = 15;
 
     constructor(RAPIER: typeof import('@dimforge/rapier2d-compat')) {
@@ -53,6 +55,7 @@ export class Game {
         this.camera = new Camera();
         this.renderer = new Renderer(this.WORLD_SIZE);
         this.hud = new HUD(SEED, this.FOOD_COUNT, this.POISON_COUNT);
+        this.inputManager = new InputManager(); // Initialize InputManager
         this.collisionManager = new CollisionManager(
             this.WORLD_SIZE,
             this.BOID_COLLISION_RADIUS,
@@ -110,8 +113,64 @@ export class Game {
         boid.initializeEnvironment(this.templateFoods, this.templatePoisons);
     }
 
+    private getBestBoid(): Boid {
+        let bestBoid = this.boids[0];
+        let maxScore = -Infinity;
+        if (this.boids.length > 0) {
+            for (const b of this.boids) {
+                if (b.score > maxScore) {
+                    maxScore = b.score;
+                    bestBoid = b;
+                }
+            }
+        }
+        return bestBoid;
+    }
+
     private update(): void {
-        if (this.isPaused) return;
+        if (this.isPaused) {
+            // Manual Override Mode
+            const focusedBoid = this.getBestBoid();
+
+            // Handle Manual Input for Focused Boid
+            let leftThrust = 0;
+            let rightThrust = 0;
+            const THRUSTER_MAX = 1600.0; // Hardcoded matches Boid.ts, could be public static
+
+            if (this.inputManager.isKeyPressed('arrowup')) {
+                leftThrust = THRUSTER_MAX;
+                rightThrust = THRUSTER_MAX;
+            }
+            if (this.inputManager.isKeyPressed('arrowleft')) {
+                rightThrust = THRUSTER_MAX;
+            }
+            if (this.inputManager.isKeyPressed('arrowright')) {
+                leftThrust = THRUSTER_MAX;
+            }
+
+            // Apply control to focused boid
+            // Freeze others
+            for (const boid of this.boids) {
+                this.world.wrapPosition(boid.getBody());
+
+                if (boid === focusedBoid) {
+                    boid.setThrustersManual(leftThrust, rightThrust);
+                    boid.applyThrusterForces();
+                    // Still need to update sensors/collisions to eat food?
+                    // Let's allow eating food in manual mode for fun, but maybe not score recording?
+                    // For now, let's just do minimal physics step.
+                    // Actually, if we want to "steer", we need physics step.
+                } else {
+                    // Freeze
+                    boid.getBody().setLinvel({ x: 0, y: 0 }, true);
+                    boid.getBody().setAngvel(0, true);
+                }
+            }
+
+            // Step physics
+            this.world.step();
+            return;
+        }
 
         // Evolution logic
         this.generationTimer += 1 / 60; // Assuming 60fps
@@ -338,16 +397,7 @@ export class Game {
 
         // Update camera to follow boid
         // Find best boid (highest score) for camera and viz
-        let bestBoid = this.boids[0];
-        let maxScore = -Infinity;
-        if (this.boids.length > 0) {
-            for (const b of this.boids) {
-                if (b.score > maxScore) {
-                    maxScore = b.score;
-                    bestBoid = b;
-                }
-            }
-        }
+        let bestBoid = this.getBestBoid();
 
         // Update camera
         const pos = bestBoid.getPosition();

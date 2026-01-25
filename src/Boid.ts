@@ -67,8 +67,8 @@ export class Boid {
         // Create rigid body
         const bodyDesc = RAPIER.RigidBodyDesc.dynamic()
             .setTranslation(0, 0)
-            .setLinearDamping(0.4) // Reduced from 0.6 to help them move easier
-            .setAngularDamping(1.5);
+            .setLinearDamping(0.8) // Increased to make them slow down faster
+            .setAngularDamping(2.5); // Increased to make rotation stop faster
         this.body = world.createRigidBody(bodyDesc);
 
         // Triangle Shape (pointing up)
@@ -365,7 +365,12 @@ export class Boid {
         this.rightThruster = outputs[1] * this.THRUSTER_MAX;
     }
 
-    private applyThrusterForces(): void {
+    setThrustersManual(left: number, right: number): void {
+        this.leftThruster = left;
+        this.rightThruster = right;
+    }
+
+    public applyThrusterForces(): void {
         const rotation = this.body.rotation();
         const fx = -Math.sin(rotation);
         const fy = Math.cos(rotation);
