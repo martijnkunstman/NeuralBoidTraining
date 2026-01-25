@@ -44,7 +44,7 @@ export class CollisionManager {
         const half = this.worldSize / 2;
         const x = this.rng.randomRange(-half + 50, half - 50);
         const y = this.rng.randomRange(-half + 50, half - 50);
-        return new Food(x, y, 35);
+        return new Food(x, y, 30);
     }
 
     public spawnPoison(): Poison {

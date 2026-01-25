@@ -21,7 +21,7 @@ export class Boid {
 
 
     private sensors: Sensor[] = [];
-    private readonly SENSOR_COUNT = 21;
+    private readonly SENSOR_COUNT = 7;
     private readonly SENSOR_ANGLE_SPREAD = Math.PI * 0.5;
     private readonly SENSOR_LENGTH = 600;
 
@@ -219,8 +219,8 @@ export class Boid {
             if (this.poisons[i].isColliding(pos.x, pos.y, BOID_RADIUS)) {
                 this.poisons.splice(i, 1);
                 this.poisons.push(spawner.spawnPoison());
-                this.score -= 50;
-                this.life -= 50;
+                this.score -= 100;
+                this.life -= 100;
             }
         }
 
@@ -292,41 +292,15 @@ export class Boid {
     decide(): void {
         const inputs: number[] = [];
 
-        // We have 21 sensors.
-        // First 7 inputs: Food detection. 21 sensors / 7 = 3 sensors per input.
-        // Max value of the group.
-
-        // Group 1: Sensors 0, 1, 2
-        // Group 2: Sensors 3, 4, 5
-        // ...
-
-        const SENSORS_PER_INPUT = 3;
-        const INPUT_GROUPS = 7;
-
-        // inputs[0-6]: Food
-        for (let i = 0; i < INPUT_GROUPS; i++) {
-            let maxVal = 0;
-            for (let j = 0; j < SENSORS_PER_INPUT; j++) {
-                const sensorIdx = i * SENSORS_PER_INPUT + j;
-                const sensor = this.sensors[sensorIdx];
-                if (sensor.detectedType === 'FOOD') {
-                    if (sensor.reading > maxVal) maxVal = sensor.reading;
-                }
-            }
-            inputs.push(maxVal);
+        // We have 7 sensors, each directly mapped to neural network inputs.
+        // inputs[0-6]: Food detection (reading if food detected, 0 otherwise)
+        for (const sensor of this.sensors) {
+            inputs.push(sensor.detectedType === 'FOOD' ? sensor.reading : 0);
         }
 
-        // inputs[7-13]: Poison
-        for (let i = 0; i < INPUT_GROUPS; i++) {
-            let maxVal = 0;
-            for (let j = 0; j < SENSORS_PER_INPUT; j++) {
-                const sensorIdx = i * SENSORS_PER_INPUT + j;
-                const sensor = this.sensors[sensorIdx];
-                if (sensor.detectedType === 'POISON') {
-                    if (sensor.reading > maxVal) maxVal = sensor.reading;
-                }
-            }
-            inputs.push(maxVal);
+        // inputs[7-13]: Poison detection (reading if poison detected, 0 otherwise)
+        for (const sensor of this.sensors) {
+            inputs.push(sensor.detectedType === 'POISON' ? sensor.reading : 0);
         }
 
         // inputs[14, 15, 16]: Proprioception (Self-sensing)
