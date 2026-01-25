@@ -221,7 +221,7 @@ export class Boid {
         this.body.setAngvel(0, true);
     }
 
-    checkCollisions(spawner: CollisionManager): void {
+    checkCollisions(_spawner: CollisionManager): void {
         const pos = this.getPosition();
         const BOID_RADIUS = 15; // From Game.ts constants
 
@@ -404,12 +404,12 @@ export class Boid {
         }
     }
 
-    draw(ctx: CanvasRenderingContext2D): void {
+    draw(ctx: CanvasRenderingContext2D, showSensors: boolean = false): void {
         const pos = this.getPosition();
 
         // Draw Sensors (World Space because they are calculated in world space)
         // We do this BEFORE rotation because we have world coords
-        if (!this.isDead) {
+        if (!this.isDead && showSensors) {
             ctx.save();
             ctx.lineWidth = 1;
             for (const sensor of this.sensors) {

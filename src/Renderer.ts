@@ -1,7 +1,7 @@
 import { Food } from './Food';
 import { Poison } from './Poison';
 import { Camera } from './Camera';
-import { NeuralNetwork } from './NeuralNetwork';
+
 
 import { Boid } from './Boid';
 
@@ -135,21 +135,21 @@ export class Renderer {
             const alpha = isBest ? 1.0 : 0.3; // dim others
 
             this.ctx.globalAlpha = alpha;
-            this.drawBoidWithGhosts(boid, camera.x, camera.y, viewDist, half);
+            this.drawBoidWithGhosts(boid, camera.x, camera.y, viewDist, half, isBest);
             this.ctx.globalAlpha = 1.0;
         });
 
         this.ctx.restore();
     }
 
-    private drawBoidWithGhosts(boid: Boid, camX: number, camY: number, viewDist: number, half: number): void {
+    private drawBoidWithGhosts(boid: Boid, camX: number, camY: number, viewDist: number, half: number, showSensors: boolean = false): void {
         const pos = boid.getPosition();
 
         // Helper to draw at position
         const drawAt = (x: number, y: number) => {
             this.ctx.save();
             this.ctx.translate(x, y);
-            boid.draw(this.ctx);
+            boid.draw(this.ctx, showSensors);
             this.ctx.restore();
         };
 
@@ -168,167 +168,5 @@ export class Renderer {
     }
 
 
-    drawMinimap(boidX: number, boidY: number, foods: Food[], poisons: Poison[], ignoredFoods: Food[] = []): void {
-        const minimapSize = 200;
-        const minimapPadding = 20;
-        const minimapX = this.canvas.width - minimapSize - minimapPadding;
-        const minimapY = minimapPadding;
-
-        this.ctx.save();
-        this.ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
-
-        // Minimap background
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-        this.ctx.fillRect(minimapX, minimapY, minimapSize, minimapSize);
-
-        // Minimap border
-        this.ctx.strokeStyle = '#4facfe';
-        this.ctx.lineWidth = 2;
-        this.ctx.strokeRect(minimapX, minimapY, minimapSize, minimapSize);
-
-        // Scale factor for minimap
-        const scale = minimapSize / this.worldSize;
-        const centerMinimapX = (coord: number) => (coord + this.worldSize / 2) * scale;
-        const centerMinimapY = (coord: number) => (this.worldSize / 2 - coord) * scale; // Flip Y-axis
-
-        // Draw world border on minimap
-        this.ctx.strokeStyle = 'rgba(79, 172, 254, 0.5)';
-        this.ctx.lineWidth = 1;
-        this.ctx.strokeRect(minimapX, minimapY, minimapSize, minimapSize);
-
-        // Draw food on minimap
-        foods.forEach(food => {
-            const isIgnored = ignoredFoods.includes(food);
-            this.ctx.fillStyle = isIgnored ? '#0000FF' : '#00ff88';
-            const mx = minimapX + centerMinimapX(food.x);
-            const my = minimapY + centerMinimapY(food.y);
-            this.ctx.fillRect(mx - 1.5, my - 1.5, 3, 3);
-        });
-
-        // Draw poison on minimap
-        this.ctx.fillStyle = '#ff4444';
-        poisons.forEach(poison => {
-            const mx = minimapX + centerMinimapX(poison.x);
-            const my = minimapY + centerMinimapY(poison.y);
-            this.ctx.fillRect(mx - 1.5, my - 1.5, 3, 3);
-        });
-
-        // Draw boid on minimap
-        const boidMinimapX = minimapX + centerMinimapX(boidX);
-        const boidMinimapY = minimapY + centerMinimapY(boidY);
-        this.ctx.fillStyle = '#ffffff';
-        this.ctx.beginPath();
-        this.ctx.arc(boidMinimapX, boidMinimapY, 4, 0, Math.PI * 2);
-        this.ctx.fill();
-        this.ctx.strokeStyle = '#4facfe';
-        this.ctx.lineWidth = 2;
-        this.ctx.stroke();
-
-        this.ctx.restore();
-    }
-
-    drawBrain(brain: NeuralNetwork, x: number, y: number, w: number, h: number): void {
-        this.ctx.save();
-        this.ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform for UI drawing
-        this.ctx.translate(x, y);
-
-        const nodeRadius = 5;
-        const layerGap = w / 2; // gaps between 3 layers: Input -> Hidden -> Output
-
-        // Calculate Y positions for nodes to center them vertically
-        // Input Layer
-        const inputX = 0;
-        const inputStepY = h / (brain.inputNodes + 1);
-
-        // Hidden Layer
-        const hiddenX = inputX + layerGap;
-        const hiddenStepY = h / (brain.hiddenNodes + 1);
-
-        // Output Layer
-        const outputX = hiddenX + layerGap;
-        const outputStepY = h / (brain.outputNodes + 1);
-
-        // Draw Weights
-        // Input -> Hidden
-        for (let i = 0; i < brain.inputNodes; i++) {
-            for (let j = 0; j < brain.hiddenNodes; j++) {
-                const weight = brain.weightsIH[j][i];
-                const iy = (i + 1) * inputStepY;
-                const hy = (j + 1) * hiddenStepY;
-
-                this.ctx.beginPath();
-                this.ctx.moveTo(inputX, iy);
-                this.ctx.lineTo(hiddenX, hy);
-                const alpha = Math.min(Math.abs(weight) * 0.3 + 0.05, 1.0);
-                this.ctx.strokeStyle = weight > 0 ? `rgba(0, 255, 0, ${alpha})` : `rgba(255, 0, 0, ${alpha})`;
-                this.ctx.lineWidth = 1;
-                this.ctx.stroke();
-            }
-        }
-
-        // Hidden -> Output
-        for (let i = 0; i < brain.hiddenNodes; i++) {
-            for (let j = 0; j < brain.outputNodes; j++) {
-                const weight = brain.weightsHO[j][i];
-                const hy = (i + 1) * hiddenStepY;
-                const oy = (j + 1) * outputStepY;
-
-                this.ctx.beginPath();
-                this.ctx.moveTo(hiddenX, hy);
-                this.ctx.lineTo(outputX, oy);
-                const alpha = Math.min(Math.abs(weight) * 0.3 + 0.05, 1.0);
-                this.ctx.strokeStyle = weight > 0 ? `rgba(0, 255, 0, ${alpha})` : `rgba(255, 0, 0, ${alpha})`;
-                this.ctx.lineWidth = 1;
-                this.ctx.stroke();
-            }
-        }
-
-        // Draw Nodes
-        // Input Nodes
-        for (let i = 0; i < brain.inputNodes; i++) {
-            const iy = (i + 1) * inputStepY;
-            const val = brain.lastInput[i] || 0;
-
-            this.ctx.beginPath();
-            this.ctx.arc(inputX, iy, nodeRadius, 0, Math.PI * 2);
-            this.ctx.fillStyle = `rgba(255, 255, 255, ${val * 0.8 + 0.2})`;
-            this.ctx.fill();
-            this.ctx.strokeStyle = '#fff';
-            this.ctx.lineWidth = 1;
-            this.ctx.stroke();
-        }
-
-        // Hidden Nodes
-        for (let i = 0; i < brain.hiddenNodes; i++) {
-            const hy = (i + 1) * hiddenStepY;
-            const val = brain.lastHidden[i] || 0;
-
-            this.ctx.beginPath();
-            this.ctx.arc(hiddenX, hy, nodeRadius, 0, Math.PI * 2);
-            this.ctx.fillStyle = `rgba(255, 255, 255, ${val * 0.8 + 0.2})`;
-            this.ctx.fill();
-            this.ctx.strokeStyle = '#fff';
-            this.ctx.stroke();
-        }
-
-        // Output Nodes
-        for (let i = 0; i < brain.outputNodes; i++) {
-            const oy = (i + 1) * outputStepY;
-            const val = brain.lastOutput[i] || 0;
-
-            this.ctx.beginPath();
-            this.ctx.arc(outputX, oy, nodeRadius, 0, Math.PI * 2);
-            this.ctx.fillStyle = `rgba(255, 255, 255, ${val * 0.8 + 0.2})`;
-            this.ctx.fill();
-            this.ctx.strokeStyle = '#fff';
-            this.ctx.stroke();
-        }
-
-        // Borders / Label
-        this.ctx.fillStyle = '#fff';
-        this.ctx.font = '12px Arial';
-        this.ctx.fillText("Brain Activity", 0, -10);
-
-        this.ctx.restore();
-    }
+    // Minimap and Brain drawing removed (Moved to dedicated Panels)
 }

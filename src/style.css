@@ -1,0 +1,144 @@
+:root {
+    --panel-bg: rgba(0, 0, 0, 0.85);
+    --panel-border: 1px solid rgba(79, 172, 254, 0.3);
+    --panel-header-bg: rgba(79, 172, 254, 0.1);
+    --text-primary: #fff;
+    --text-accent: #4facfe;
+    --font-mono: 'Consolas', 'Monaco', monospace;
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    background: #000;
+}
+
+.game-panel {
+    position: absolute;
+    background: var(--panel-bg);
+    border: var(--panel-border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    transition: height 0.3s ease, min-height 0.3s ease;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
+    z-index: 100;
+}
+
+.game-panel.collapsed {
+    height: auto !important;
+    min-height: 0 !important;
+}
+
+.panel-header {
+    padding: 8px 12px;
+    background: var(--panel-header-bg);
+    border-bottom: var(--panel-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: var(--text-accent);
+}
+
+.panel-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.panel-toggle {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background 0.2s;
+    font-weight: bold;
+}
+
+.panel-header:hover .panel-toggle {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.panel-content {
+    padding: 12px;
+    overflow-y: auto;
+    flex: 1;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.game-panel.collapsed .panel-content {
+    display: none;
+}
+
+/* Scrollbar styling */
+.panel-content::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.panel-content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.panel-content::-webkit-scrollbar-thumb {
+    background: rgba(79, 172, 254, 0.4);
+    border-radius: 3px;
+}
+
+.panel-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(79, 172, 254, 0.6);
+}
+
+/* Specific Positions */
+.panel-top-left { top: 20px; left: 20px; }
+.panel-top-right { top: 20px; right: 20px; }
+.panel-bottom-left { bottom: 20px; left: 20px; }
+.panel-bottom-right { bottom: 20px; right: 20px; }
+.panel-bottom-center { 
+    bottom: 20px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+}
+
+/* Button utility within panels */
+.panel-btn {
+    background: rgba(79, 172, 254, 0.2);
+    border: 1px solid rgba(79, 172, 254, 0.5);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 11px;
+    transition: all 0.2s;
+}
+
+.panel-btn:hover {
+    background: rgba(79, 172, 254, 0.4);
+    transform: translateY(-1px);
+}
+
+.panel-btn:active {
+    transform: translateY(1px);
+}
+
+.panel-input {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #555;
+    color: #fff;
+    padding: 4px;
+    border-radius: 4px;
+    font-family: inherit;
+}

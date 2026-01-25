@@ -3,9 +3,11 @@ import { World } from './World';
 import { Boid } from './Boid';
 import { Camera } from './Camera';
 import { Renderer } from './Renderer';
-import { HUD } from './HUD';
+import { StatsPanel } from './StatsPanel';
 import { CollisionManager } from './CollisionManager';
 import { DebugPanel } from './DebugPanel';
+import { MinimapPanel } from './MinimapPanel';
+import { BrainPanel } from './BrainPanel';
 import { NeuralNetwork } from './NeuralNetwork';
 import { Food } from './Food';
 import { InputManager } from './InputManager';
@@ -16,7 +18,9 @@ export class Game {
     private boids: Boid[] = [];
     private camera: Camera;
     private renderer: Renderer;
-    private hud: HUD;
+    private statsPanel: StatsPanel;
+    private minimapPanel: MinimapPanel;
+    private brainPanel: BrainPanel;
     private collisionManager: CollisionManager;
     private rng: SeededRandom;
     private debugPanel: DebugPanel;
@@ -54,7 +58,12 @@ export class Game {
         this.world = new World(RAPIER, this.WORLD_SIZE);
         this.camera = new Camera();
         this.renderer = new Renderer(this.WORLD_SIZE);
-        this.hud = new HUD(SEED, this.FOOD_COUNT, this.POISON_COUNT);
+
+        // Initialize UI Panels
+        this.statsPanel = new StatsPanel(SEED, this.FOOD_COUNT, this.POISON_COUNT);
+        this.minimapPanel = new MinimapPanel(this.WORLD_SIZE);
+        this.brainPanel = new BrainPanel();
+
         this.inputManager = new InputManager(); // Initialize InputManager
         this.collisionManager = new CollisionManager(
             this.WORLD_SIZE,
@@ -265,82 +274,98 @@ export class Game {
         console.log('Training data saved for Gen ' + this.generation);
     }
 
-    private loadTrainingData(): void {
-        const json = localStorage.getItem('boid_training_data');
-        if (json) {
-            this.applyTrainingData(json);
+    private async loadTrainingData(): Promise<void> {
+        console.log('Checking for training data...');
+
+        let fileData: any = null;
+        let browserData: any = null;
+
+        // 1. Try to fetch file
+        try {
+            const response = await fetch('./localStorage.json');
+            if (response.ok) {
+                const text = await response.text();
+                fileData = JSON.parse(text);
+            }
+        } catch (e) {
+            console.log('No valid localStorage.json file found.');
+        }
+
+        // 2. Try to get browser storage
+        try {
+            const json = localStorage.getItem('boid_training_data');
+            if (json) {
+                browserData = JSON.parse(json);
+            }
+        } catch (e) {
+            console.log('Error reading browser localStorage.');
+        }
+
+        // 3. Compare and Load
+        const fileGen = fileData?.generation || -1;
+        const browserGen = browserData?.generation || -1;
+
+        console.log(`Found Data - File Gen: ${fileGen}, Browser Gen: ${browserGen}`);
+
+        if (fileGen === -1 && browserGen === -1) {
+            console.log('No training data found. Starting fresh.');
+            return;
+        }
+
+        if (fileGen >= browserGen) {
+            console.log(`Loading from localStorage.json (Gen ${fileGen})`);
+            this.applyData(fileData);
         } else {
-            // Fallback: Load from bundled JSON file
-            console.log('No localStorage found, loading from localStorage.json...');
-            fetch('./localStorage.json')
-                .then(response => {
-                    if (!response.ok) throw new Error('localStorage.json not found');
-                    return response.text();
-                })
-                .then(jsonText => {
-                    this.applyTrainingData(jsonText);
-                    console.log('Loaded pre-trained brains from localStorage.json');
-                })
-                .catch(e => {
-                    console.log('No pre-trained data found, starting fresh.', e);
-                });
+            console.log(`Loading from browser localStorage (Gen ${browserGen})`);
+            this.applyData(browserData);
         }
     }
 
-    private applyTrainingData(json: string): void {
-        try {
-            const data = JSON.parse(json);
-            this.generation = data.generation;
-            this.totalTime = data.totalTime || 0;
-            this.allTimeBestScore = data.allTimeBestScore || 0;
+    // Helper to apply parsed data object
+    private applyData(data: any): void {
+        this.generation = data.generation;
+        this.totalTime = data.totalTime || 0;
+        this.allTimeBestScore = data.allTimeBestScore || 0;
 
-            console.log('Loaded training data. Gen: ' + this.generation);
+        console.log('Applying training data. Gen: ' + this.generation);
 
-            if (data.brains && Array.isArray(data.brains)) {
-                // Load full population
-                // Check architecture compatibility first using first brain
-                if (data.brains.length > 0 &&
-                    (data.brains[0].inputNodes !== this.boids[0].brain.inputNodes ||
-                        data.brains[0].outputNodes !== this.boids[0].brain.outputNodes)) {
-                    console.warn('Loaded population architecture mismatch. Resetting...');
-                    this.resetTraining();
-                    return;
-                }
-
-                for (let i = 0; i < this.POPULATION_SIZE; i++) {
-                    if (data.brains[i]) {
-                        this.boids[i].brain = NeuralNetwork.fromJSON(data.brains[i]);
-                    } else {
-                        // If population increased, fill remainder with mutations of best (or random if no brains)
-                        // Fallback: Copy from index 0 if available, else random
-                        if (i > 0) {
-                            this.boids[i].brain = this.boids[0].brain.copy();
-                            this.boids[i].brain.mutate(0.05, 0.1);
-                        }
-                    }
-                }
-            } else if (data.bestBrain) {
-                // Legacy support for single best brain save
-                // Check compatibility
-                if (data.bestBrain && (data.bestBrain.inputNodes !== this.boids[0].brain.inputNodes ||
-                    data.bestBrain.outputNodes !== this.boids[0].brain.outputNodes)) {
-                    console.warn('Loaded brain architecture mismatch. Resetting...');
-                    this.resetTraining();
-                    return;
-                }
-
-                const loadedBrain = NeuralNetwork.fromJSON(data.bestBrain);
-                this.boids[0].brain = loadedBrain.copy();
-                for (let i = 1; i < this.POPULATION_SIZE; i++) {
-                    this.boids[i].brain = loadedBrain.copy();
-                    this.boids[i].brain.mutate(0.05, 0.1);
-                }
+        if (data.brains && Array.isArray(data.brains)) {
+            if (data.brains.length > 0 &&
+                (data.brains[0].inputNodes !== this.boids[0].brain.inputNodes ||
+                    data.brains[0].outputNodes !== this.boids[0].brain.outputNodes)) {
+                console.warn('Architecture mismatch. Resetting...');
+                this.resetTraining();
+                return;
             }
 
-        } catch (e) {
-            console.error('Failed to load training data', e);
+            for (let i = 0; i < this.POPULATION_SIZE; i++) {
+                if (data.brains[i]) {
+                    this.boids[i].brain = NeuralNetwork.fromJSON(data.brains[i]);
+                } else {
+                    if (i > 0) {
+                        this.boids[i].brain = this.boids[0].brain.copy();
+                        this.boids[i].brain.mutate(0.05, 0.1);
+                    }
+                }
+            }
+        } else if (data.bestBrain) {
+            if (data.bestBrain && (data.bestBrain.inputNodes !== this.boids[0].brain.inputNodes ||
+                data.bestBrain.outputNodes !== this.boids[0].brain.outputNodes)) {
+                console.warn('Architecture mismatch. Resetting...');
+                this.resetTraining();
+                return;
+            }
+
+            const loadedBrain = NeuralNetwork.fromJSON(data.bestBrain);
+            this.boids[0].brain = loadedBrain.copy();
+            for (let i = 1; i < this.POPULATION_SIZE; i++) {
+                this.boids[i].brain = loadedBrain.copy();
+                this.boids[i].brain.mutate(0.05, 0.1);
+            }
         }
     }
+
+
 
     private resetTraining(): void {
         localStorage.removeItem('boid_training_data');
@@ -422,24 +447,21 @@ export class Game {
         // Draw everything
         this.renderer.drawWorld(this.camera, bestBoid.foods, bestBoid.poisons, bestBoid.eatenFoodHistory); // Draw best boid's view of world
         this.renderer.drawBoids(this.boids, this.camera, bestBoid);
-        this.renderer.drawMinimap(pos.x, pos.y, bestBoid.foods, bestBoid.poisons, bestBoid.eatenFoodHistory);
 
-        // Draw Brain of best boid
-        const brainWidth = 200;
-        const brainHeight = 300;
-        const margin = 20;
-        this.renderer.drawBrain(bestBoid.brain, margin, window.innerHeight - brainHeight - margin, brainWidth, brainHeight);
+        // Update dedicated UI panels
+        this.minimapPanel.draw(pos.x, pos.y, bestBoid.foods, bestBoid.poisons, bestBoid.eatenFoodHistory);
+        this.brainPanel.draw(bestBoid.brain);
 
-        // Update HUD
-        this.hud.updateStats(
+        // Update HUD (StatsPanel)
+        this.statsPanel.updateStats(
             bestBoid.getLeftThrusterPercent(),
             bestBoid.getRightThrusterPercent(),
             bestBoid.getVelocity(),
             bestBoid.getAngularVelocity(),
-            bestBoid.foods.length,
-            bestBoid.poisons.length,
-            0, // Global stats removed, using score instead
-            Math.floor(bestBoid.score)
+            this.generation, // Mapping to legacy slot
+            Math.floor(this.GENERATION_DURATION - this.generationTimer), // Mapping to legacy slot
+            Math.floor(bestBoid.score), // Mapping to legacy slot
+            0 // Unused
         );
 
         // Update Debug Panel with Neuroevolution Stats
@@ -451,29 +473,6 @@ export class Game {
             this.allTimeBestScore,
             this.generationTimer,
             this.totalTime
-        );
-
-        // Draw Generation Info on Canvas (Quick hack or add to Renderer?)
-        // Let's add it via previous HUD or Debug or just overlay
-        // I'll rely on HUD changes or just log it. 
-        // Better: Add text draw to renderer? 
-        // I'll skip explicit text draw for now, standard HUD has some fields I can repurpose or I can edit HUD later.
-        // For now, I passed `Math.floor(bestBoid.score)` as "Poison Collected" (last arg of HUD updateStats).
-        // Wait, HUD updateStats signature: 
-        // (lThrust, rThrust, vel, angVel, foodCount, poisonCount, foodCol, poisonCol)
-        // I can treat "Food Collected" as Gen and "Poison Collected" as Time?
-        // Let's repurpose:
-        // Food Collected -> Generation
-        // Poison Collected -> Timer
-        this.hud.updateStats(
-            bestBoid.getLeftThrusterPercent(),
-            bestBoid.getRightThrusterPercent(),
-            bestBoid.getVelocity(),
-            bestBoid.getAngularVelocity(),
-            this.generation, // Was Food Count
-            Math.floor(this.GENERATION_DURATION - this.generationTimer), // Was Poison Count
-            Math.floor(bestBoid.score), // Was Food Coll
-            0 // Was Poison Coll
         );
     }
 
