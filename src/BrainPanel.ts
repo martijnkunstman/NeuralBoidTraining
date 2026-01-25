@@ -103,7 +103,7 @@ export class BrainPanel extends Panel {
         this.ctx.stroke();
     }
 
-    private drawNodes(x: number, stepY: number, count: number, values: number[]) {
+    private drawNodes(x: number, stepY: number, count: number, values: number[] | Float32Array) {
         const nodeRadius = 4; // Moved locally or use class const if preferred
         for (let i = 0; i < count; i++) {
             const y = (i + 1) * stepY;

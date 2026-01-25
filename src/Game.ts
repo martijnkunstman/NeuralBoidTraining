@@ -33,7 +33,7 @@ export class Game {
     private templatePoisons: Poison[] = [];
 
     // Evolution settings
-    private readonly POPULATION_SIZE = 50;
+    private readonly POPULATION_SIZE = 100; // Increased from 50 (Performance optimization allows more)
     private readonly GENERATION_DURATION = 45; // Reduced from 120s for faster iteration
     private generationTimer: number = 0;
 
@@ -99,6 +99,9 @@ export class Game {
         for (let i = 0; i < this.POISON_COUNT; i++) {
             this.templatePoisons.push(this.collisionManager.spawnPoison());
         }
+
+        // Rebuild spatial grid with new environment
+        this.collisionManager.rebuildGrids(this.templateFoods, this.templatePoisons);
     }
 
     private initializePopulation(): void {
@@ -205,7 +208,7 @@ export class Game {
 
             if (!boid.isDead) {
                 aliveCount++;
-                boid.updateSensors(this.WORLD_SIZE);
+                boid.updateSensors(this.WORLD_SIZE, this.collisionManager);
                 boid.checkCollisions(this.collisionManager);
             }
         }
@@ -238,19 +241,22 @@ export class Game {
             this.resetBoid(this.boids[i]);
         }
 
-        // 2. Fill the rest with mutated children of selection pool
+        // 2. Fill the rest with mutated children of selection pool (using Crossover)
         for (let i = eliteCount; i < this.POPULATION_SIZE; i++) {
-            // Pick a random parent from the top 50%
-            const parentIndex = Math.floor(this.rng.random() * selectionPool);
-            const parent = this.boids[parentIndex];
+            // Pick two random parents from the top 50%
+            const parentIndexA = Math.floor(this.rng.random() * selectionPool);
+            const parentIndexB = Math.floor(this.rng.random() * selectionPool);
+
+            const parentA = this.boids[parentIndexA];
+            const parentB = this.boids[parentIndexB];
+
             const offspring = this.boids[i]; // Rewrite this boid
 
-            offspring.copyBrainFrom(parent);
+            // Crossover
+            offspring.brain = parentA.brain.crossover(parentB.brain);
 
-            // Dynamic Mutation:
-            // If parent is elite, mutate less? No, finding new peaks needs exploration.
-            // Using standard mutation but slightly more frequent for diversity.
-            offspring.brain.mutate(0.05, 0.1); // Reduced: Rate 5%, Strength 0.1 (Smaller evolution steps)
+            // Mutation: slightly reduced rate since crossover provides diversity
+            offspring.brain.mutate(0.05, 0.1);
 
             this.resetBoid(offspring);
         }
@@ -471,7 +477,7 @@ export class Game {
             aliveBoids,
             bestBoid.score,
             this.allTimeBestScore,
-            this.generationTimer,
+            Math.max(0, this.GENERATION_DURATION - this.generationTimer),
             this.totalTime
         );
     }

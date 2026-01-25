@@ -23,12 +23,39 @@ export class DebugPanel extends Panel {
         // Stats text removed as requested
     }
 
+    private genStat!: HTMLElement;
+    private timerStat!: HTMLElement;
+    private aliveStat!: HTMLElement;
+    private scoreStat!: HTMLElement;
+
     private setupControls(): void {
         const controls = document.createElement('div');
         controls.style.display = 'flex';
         controls.style.flexDirection = 'column';
         controls.style.gap = '8px';
         controls.style.marginBottom = '0'; // align bottom
+
+        // Stats Section
+        const statsCtn = document.createElement('div');
+        statsCtn.style.background = 'rgba(0,0,0,0.3)';
+        statsCtn.style.padding = '8px';
+        statsCtn.style.borderRadius = '4px';
+        statsCtn.style.marginBottom = '10px';
+        statsCtn.style.fontSize = '12px';
+        statsCtn.style.fontFamily = 'monospace';
+        statsCtn.style.color = '#00ff88';
+
+        this.genStat = document.createElement('div');
+        this.timerStat = document.createElement('div');
+        this.aliveStat = document.createElement('div');
+        this.scoreStat = document.createElement('div');
+
+        statsCtn.appendChild(this.genStat);
+        statsCtn.appendChild(this.timerStat);
+        statsCtn.appendChild(this.aliveStat);
+        statsCtn.appendChild(this.scoreStat);
+
+        controls.appendChild(statsCtn);
 
         // Row 1: Pause & Reset
         const btnRow = document.createElement('div');
@@ -96,7 +123,10 @@ export class DebugPanel extends Panel {
         this.onPauseToggle();
     }
 
-    update(_generation: number, _aliveCount: number, _currentBest: number, _allTimeBest: number, _genTime: number, _totalTime: number): void {
-        // No stats displayed
+    update(generation: number, aliveCount: number, currentBest: number, _allTimeBest: number, timeRemaining: number, _totalTime: number): void {
+        this.genStat.innerText = `Generation:  ${generation}`;
+        this.timerStat.innerText = `Time Left:   ${timeRemaining.toFixed(1)}s`;
+        this.aliveStat.innerText = `Alive:       ${aliveCount}`;
+        this.scoreStat.innerText = `Best Score:  ${currentBest.toFixed(2)}`;
     }
 }

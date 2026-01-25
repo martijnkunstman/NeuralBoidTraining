@@ -86,9 +86,15 @@ export class Boid {
      * Updates the sensors based on the current position and nearby entities.
      * Uses simplified raycasting against circular objects.
      */
-    updateSensors(worldSize: number): void {
+    updateSensors(worldSize: number, collisionManager: CollisionManager): void {
         const pos = this.body.translation();
         const rotation = this.body.rotation();
+
+        // Optimized: only check nearby entities from the grid
+        // The sensor length is SENSOR_LENGTH (600).
+        // Since we wrap, we explicitly query the grid for candidates.
+        const nearbyFoods = collisionManager.getNearbyFood(pos.x, pos.y, this.SENSOR_LENGTH);
+        const nearbyPoisons = collisionManager.getNearbyPoison(pos.x, pos.y, this.SENSOR_LENGTH);
 
         for (const sensor of this.sensors) {
             // Calculate sensor ray in world space
@@ -106,8 +112,8 @@ export class Boid {
             let closestDist = this.SENSOR_LENGTH;
             let detected = 'NONE';
 
-            // Check Foods
-            for (const food of this.foods) {
+            // Check Foods (Optimized List)
+            for (const food of nearbyFoods) {
                 // Ignore food if we just ate it
                 if (this.eatenFoodHistory.includes(food)) continue;
 
@@ -130,8 +136,8 @@ export class Boid {
                 }
             }
 
-            // Check Poisons
-            for (const poison of this.poisons) {
+            // Check Poisons (Optimized List)
+            for (const poison of nearbyPoisons) {
                 // Ghost sensing: find closest wrapped position
                 let dx = poison.x - startX;
                 let dy = poison.y - startY;
