@@ -22,13 +22,13 @@
     })();
     const v = "modulepreload", M = function(f, t) {
         return new URL(f, t).href;
-    }, O = {}, _ = function(t, e, s) {
+    }, I = {}, _ = function(t, e, s) {
         let i = Promise.resolve();
         if (e && e.length > 0) {
             const n = document.getElementsByTagName("link"), r = document.querySelector("meta[property=csp-nonce]"), a = r?.nonce || r?.getAttribute("nonce");
             i = Promise.allSettled(e.map((h)=>{
-                if (h = M(h, s), h in O) return;
-                O[h] = !0;
+                if (h = M(h, s), h in I) return;
+                I[h] = !0;
                 const l = h.endsWith(".css"), d = l ? '[rel="stylesheet"]' : "";
                 if (!!s) for(let p = n.length - 1; p >= 0; p--){
                     const g = n[p];
@@ -138,7 +138,7 @@
             for(let e = 0; e < this.hiddenNodes; e++){
                 let s = 0;
                 for(let i = 0; i < this.inputNodes; i++)s += this.weightsIH[e][i] * this.lastInput[i];
-                s += this.biasH[e], this.lastHidden[e] = this.sigmoid(s);
+                s += this.biasH[e], this.lastHidden[e] = Math.tanh(s);
             }
             for(let e = 0; e < this.outputNodes; e++){
                 let s = 0;
@@ -204,10 +204,10 @@
         THRUSTER_MAX = 1600;
         sensors = [];
         SENSOR_COUNT = 7;
-        SENSOR_ANGLE_SPREAD = Math.PI * .5;
+        SENSOR_ANGLE_SPREAD = Math.PI * .8;
         SENSOR_LENGTH = 600;
         brain;
-        INPUT_NODES = 17;
+        INPUT_NODES = 18;
         HIDDEN_NODES = 16;
         OUTPUT_NODES = 2;
         lastInputs = [];
@@ -282,7 +282,7 @@
         }
         checkCollisions(t) {
             const e = this.getPosition(), s = 15;
-            for (const o of this.poisons)o.isColliding(e.x, e.y, s) && (this.score -= 2, this.life -= 2);
+            for (const o of this.poisons)o.isColliding(e.x, e.y, s) && (this.score -= 10, this.life -= 10);
             for (const o of this.foods)this.eatenFoodHistory.includes(o) || o.isColliding(e.x, e.y, s) && (this.score += 25, this.life += 20, this.life > this.MAX_LIFE && (this.life = this.MAX_LIFE), this.eatenFoodHistory.push(o), this.eatenFoodHistory.length > this.MEMORY_SIZE && this.eatenFoodHistory.shift());
             this.score += 1 / 60, this.timeAlive += 1 / 60;
             let i = 0;
@@ -307,7 +307,7 @@
             for (const a of this.sensors)t.push(a.detectedType === "FOOD" ? a.reading : 0);
             for (const a of this.sensors)t.push(a.detectedType === "POISON" ? a.reading : 0);
             const e = this.body.linvel(), s = this.body.angvel(), i = this.body.rotation(), o = e.x * -Math.sin(i) + e.y * Math.cos(i), n = e.x * Math.cos(i) + e.y * Math.sin(i);
-            t.push(.5 + .5 * Math.tanh(o * .05)), t.push(.5 + .5 * Math.tanh(n * .05)), t.push(.5 + .5 * Math.tanh(s * .5)), this.lastInputs = t;
+            t.push(.5 + .5 * Math.tanh(o * .05)), t.push(.5 + .5 * Math.tanh(n * .05)), t.push(.5 + .5 * Math.tanh(s * .5)), t.push(this.life / this.MAX_LIFE), this.lastInputs = t;
             const r = this.brain.feedForward(t);
             this.leftThruster = r[0] * this.THRUSTER_MAX, this.rightThruster = r[1] * this.THRUSTER_MAX;
         }
@@ -540,7 +540,7 @@
             this.foodStat.innerText = t.toString(), this.poisonStat.innerText = e.toString();
         }
     }
-    class I {
+    class O {
         x;
         y;
         radius;
@@ -624,7 +624,7 @@
         }
         spawnFood() {
             const t = this.worldSize / 2, e = this.rng.randomRange(-t + 50, t - 50), s = this.rng.randomRange(-t + 50, t - 50);
-            return new I(e, s, 30);
+            return new O(e, s, 30);
         }
         spawnPoison() {
             const t = this.worldSize / 2, e = 250;
@@ -635,7 +635,7 @@
         }
         spawnFoodFromQueue(t) {
             const e = this.foodSpawnQueue[t % this.QUEUE_SIZE];
-            return new I(e.x, e.y, 30);
+            return new O(e.x, e.y, 30);
         }
         spawnPoisonFromQueue(t) {
             const e = this.poisonSpawnQueue[t % this.QUEUE_SIZE];
@@ -757,7 +757,7 @@
             }
         }
     }
-    class z {
+    class $ {
         keys = {};
         constructor(){
             window.addEventListener("keydown", (t)=>this.keys[t.key.toLowerCase()] = !0), window.addEventListener("keyup", (t)=>this.keys[t.key.toLowerCase()] = !1);
@@ -766,7 +766,7 @@
             return this.keys[t.toLowerCase()] || !1;
         }
     }
-    class $ {
+    class z {
         world;
         boids = [];
         camera;
@@ -794,7 +794,7 @@
         BOID_COLLISION_RADIUS = 15;
         constructor(t){
             const e = Math.floor(Date.now() / 36e5);
-            this.rng = new B(e), console.log("World Seed:", e), this.RAPIER = t, this.world = new C(t, this.WORLD_SIZE), this.camera = new H, this.renderer = new L(this.WORLD_SIZE), this.statsPanel = new D(e, this.FOOD_COUNT, this.POISON_COUNT), this.minimapPanel = new U(this.WORLD_SIZE), this.brainPanel = new k, this.inputManager = new z, this.collisionManager = new F(this.WORLD_SIZE, this.BOID_COLLISION_RADIUS, this.rng), this.debugPanel = new G(()=>{
+            this.rng = new B(e), console.log("World Seed:", e), this.RAPIER = t, this.world = new C(t, this.WORLD_SIZE), this.camera = new H, this.renderer = new L(this.WORLD_SIZE), this.statsPanel = new D(e, this.FOOD_COUNT, this.POISON_COUNT), this.minimapPanel = new U(this.WORLD_SIZE), this.brainPanel = new k, this.inputManager = new $, this.collisionManager = new F(this.WORLD_SIZE, this.BOID_COLLISION_RADIUS, this.rng), this.debugPanel = new G(()=>{
                 this.isPaused = !this.isPaused;
             }, ()=>{
                 this.resetTraining();
@@ -855,7 +855,7 @@
             for(let i = 0; i < e; i++)this.resetBoid(this.boids[i]);
             for(let i = e; i < this.POPULATION_SIZE; i++){
                 const o = Math.floor(this.rng.random() * s), n = Math.floor(this.rng.random() * s), r = this.boids[o], a = this.boids[n], h = this.boids[i];
-                h.brain = r.brain.crossover(a.brain), h.brain.mutate(.05, .1), this.resetBoid(h);
+                h.brain = r.brain.crossover(a.brain), h.brain.mutate(.1, .2), this.resetBoid(h);
             }
             this.generation++, this.generationTimer = 0, this.saveTrainingData();
         }
@@ -868,30 +868,35 @@
             };
             localStorage.setItem("boid_training_data", JSON.stringify(e)), console.log("Training data saved for Gen " + this.generation);
         }
+        isValidData(t) {
+            if (!t || !t.generation || !t.brains) return !1;
+            const e = t.brains[0]?.inputNodes, s = t.brains[0]?.outputNodes, i = this.boids[0]?.brain.inputNodes, o = this.boids[0]?.brain.outputNodes;
+            return e !== i || s !== o ? (console.log(`Data (Gen ${t.generation}) ignored due to architecture mismatch (Saved: ${e}->${s}, Current: ${i}->${o})`), !1) : !0;
+        }
         async loadTrainingData() {
             console.log("Checking for training data...");
             let t = null, e = null;
             try {
-                const o = await fetch("./localStorage.json");
-                if (o.ok) {
-                    const n = await o.text();
-                    t = JSON.parse(n);
+                const r = await fetch("./localStorage.json");
+                if (r.ok) {
+                    const a = await r.text();
+                    t = JSON.parse(a);
                 }
             } catch  {
                 console.log("No valid localStorage.json file found.");
             }
             try {
-                const o = localStorage.getItem("boid_training_data");
-                o && (e = JSON.parse(o));
+                const r = localStorage.getItem("boid_training_data");
+                r && (e = JSON.parse(r));
             } catch  {
                 console.log("Error reading browser localStorage.");
             }
-            const s = t?.generation || -1, i = e?.generation || -1;
-            if (console.log(`Found Data - File Gen: ${s}, Browser Gen: ${i}`), s === -1 && i === -1) {
-                console.log("No training data found. Starting fresh.");
+            const s = this.isValidData(t), i = this.isValidData(e), o = s ? t.generation : -1, n = i ? e.generation : -1;
+            if (console.log(`Found Data - File Gen: ${o} (${s ? "Valid" : "Invalid"}), Browser Gen: ${n} (${i ? "Valid" : "Invalid"})`), o === -1 && n === -1) {
+                console.log("No valid training data found. Starting fresh.");
                 return;
             }
-            s >= i ? (console.log(`Loading from localStorage.json (Gen ${s})`), this.applyData(t)) : (console.log(`Loading from browser localStorage (Gen ${i})`), this.applyData(e));
+            n >= o ? (console.log(`Loading from browser localStorage (Gen ${n})`), this.applyData(e)) : (console.log(`Loading from localStorage.json (Gen ${o})`), this.applyData(t));
         }
         applyData(t) {
             if (this.generation = t.generation, this.totalTime = t.totalTime || 0, this.allTimeBestScore = t.allTimeBestScore || 0, console.log("Applying training data. Gen: " + this.generation), t.brains && Array.isArray(t.brains)) {
@@ -977,7 +982,7 @@
     async function Z() {
         new W, console.log("Starting boid simulation...");
         const f = await _(()=>import("./rapier-D9GItMpu.js"), [], import.meta.url);
-        f.init && await f.init(), console.log("RAPIER module ready"), new $(f).start();
+        f.init && await f.init(), console.log("RAPIER module ready"), new z(f).start();
     }
     Z().catch(console.error);
 })();
